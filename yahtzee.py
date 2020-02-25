@@ -74,7 +74,7 @@ def calcScore(player, playerDict, diceResults):
 
 	if scoreSelected == 'Chance':
 		playerDict[player]['scoreBottom']['Chance'] = np.sum(diceResults)
-	
+
 	#TODO handle error state where player selects and score is 0
 	# Three of a kind
 	# Four of a kind
@@ -102,18 +102,18 @@ while gameComplete != True:
 	scoreSelected=''
 	for player in playerDict:
 		print('\n%s your turn. Your current Total Score: %s.' % (player, str(int(playerDict.get(player,{}).get('Grand total')))))
-		
+
 		#First roll
 		time.sleep(1)
 		rollDice(dice)
 		print('\nFIRST ROLL: %s %s %s %s %s %s' % (dice[1]['result'], dice[2]['result'], dice[3]['result'], dice[4]['result'], dice[5]['result'], dice[6]['result']))
 		keepDice(dice)
-		
+
 		#Second roll
 		rollDice(dice)
 		print('\nSECOND ROLL: %s %s %s %s %s %s' % (dice[1]['result'], dice[2]['result'], dice[3]['result'], dice[4]['result'], dice[5]['result'], dice[6]['result']))
 		keepDice(dice)
-		
+
 		#Third and final roll
 		rollDice(dice)
 		print('\nFINAL ROLL: %s %s %s %s %s %s\n' % (dice[1]['result'], dice[2]['result'], dice[3]['result'], dice[4]['result'], dice[5]['result'], dice[6]['result']))
@@ -125,9 +125,9 @@ while gameComplete != True:
 		for i in range(len(dice)):
 			dice[i+1]['keeper']=False
 		time.sleep(1)
-	
+
 	round=round+1
-	
+
 #show remaining score card options for current dice (if applicable)
 #choose score card option (if applicable)
 #reset for next player
