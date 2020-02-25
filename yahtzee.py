@@ -14,18 +14,16 @@ scoringDict={'scoreTop':{'Ones':{'ref':1,'score':False},'Twos':{'ref':2,'score':
 			'scoreBottom':{'Three of a kind':False,'Four of a kind':False,'Full house':False,'Small straight':False, 'Large straight':False,'Yahtzee':False,'Chance':False,'Yahtzee bonus':False},
 			'totalScore':{'Sum of upper':False,'Bonus':False,'Total upper':False,'Total bottom':False,},'Grand total':False}
 hyperlink_format = '<a href="{link}">{text}</a>'
+scoreSelected=''
 
-print('WELCOME TO YAHTZEE!\n %s for the newbs.' % (hyperlink_format.format(link='https://www.hasbro.com/common/instruct/Yahtzee.pdf', text='Yahtzee Rules')))
-
-#set number of players (1-4) and enter names
-playerCount=pyip.inputInt(prompt='\nEnter number of players (1-4):\n', min=1, max=4)
-for x in range(playerCount):
-	playerDict[pyip.inputStr(prompt='\nEnter name of player '+str(x+1)+':\n')] = scoringDict
-
-#show current player score card
+# create player dictionary
+def createPlayerDict(n):
+	for x in range(numberOfPlayers):
+		playerDict[pyip.inputStr(prompt='\nEnter name of player '+str(x+1)+':\n')] = scoringDict
+	return playerDict
 
 #roll dice function
-def rollDice(diceDict):
+def rollDice(dice):
 	for i in range(len(dice)):
 		if dice[i+1]['keeper']==False:
 			dice[i+1]['result']=randint(1,6)
@@ -34,11 +32,11 @@ def rollDice(diceDict):
 	return dice
 
 #keep dice function (would be nice to have UI for this)
-def keepDice(diceDict):
-	keepAll = pyip.inputYesNo(prompt='\nDo you want to keep all of these dice?\n')
+def keepDice(dice):
+	keepAll = pyip.inputYesNo(prompt=('%s do you want to keep ALL of these dice?\n' % (player)))
 	if keepAll == 'no':
 		for i in range(len(dice)):
-			selectKeepers = pyip.inputYesNo(prompt='\nDo you want to keep the %s?\n' % (dice[i+1]['result']))
+			selectKeepers = pyip.inputYesNo(prompt='%s do you want to keep the %s?\n' % (player, dice[i+1]['result']))
 			if selectKeepers == 'no':
 				dice[i+1]['keeper']=False
 			else:
@@ -48,9 +46,10 @@ def keepDice(diceDict):
 			dice[i+1]['keeper']=True
 	return dice
 
-#function to select scoring for the final dice roll of the current player
-def selectScore(diceDict):
+#select scoring after final dice roll of current player
+def selectScore(player, diceDict):
 	#display only False scoring options
+	global scoreSelected
 	scoreOptions = []
 	for k in playerDict[player]['scoreTop']:
 		if playerDict[player]['scoreTop'][k]['score'] == False:
@@ -58,71 +57,77 @@ def selectScore(diceDict):
 	for k in playerDict[player]['scoreBottom']:
 		if playerDict[player]['scoreBottom'][k] == False:
 			scoreOptions.append(k)
-	scoreSelect = str(pyip.inputMenu(scoreOptions))
-	
+	scoreSelected = pyip.inputMenu(scoreOptions)
 	#confirm option
-	if pyip.inputYesNo(prompt='\nAre you sure you want to select %s?\n' % (scoreSelect)) == 'no':
-		selectScore(dice)
-	
-	#calculate score based on scoring type selected
-	if scoreSelect in playerDict[player]['scoreTop']:
-		for n in diceResults:
-			if n == playerDict[player]['scoreTop'][scoreSelect]['ref']:
-				playerDict[player]['scoreTop'][scoreSelect]['score']+=n
-	if scoreSelect == 'Chance':
-		playerDict[player]['scoreBottom']['Chance'] = np.sum(diceResults)
+	if pyip.inputYesNo(prompt='\n%s are you sure you want to select %s?\n' % (player, scoreSelected)) == 'no':
+		selectScore(player, dice)
+	return scoreSelected
 
+def calcScore(player, playerDict, diceResults):
+	#calculate score based on scoreSelected in selectScore()
+	if scoreSelected in playerDict[player]['scoreTop']:
+		for n in diceResults:
+			if n == playerDict[player]['scoreTop'][scoreSelected]['ref']:
+				playerDict[player]['scoreTop'][scoreSelected]['score']+=n
+			else:
+				playerDict[player]['scoreTop'][scoreSelected]['score']=0
+
+	if scoreSelected == 'Chance':
+		playerDict[player]['scoreBottom']['Chance'] = np.sum(diceResults)
+	
+	#TODO handle error state where player selects and score is 0
+	# Three of a kind
+	# Four of a kind
+	# Full house
+	# Small straight
+	# Large straight
+	# Yahtzee
+	# Yahtzee bonus
 	#TODO how to handle totalScore recalculation each round?
 	#playerDict[player]['totalScore']['Sum of upper']= #some kind of numpy summation of playerDict[player][scoreTop][x]['score']
 	#playerDict[player]['totalScore']['Grand total'] = #some kind of numpy summation of playerDict[player][totalScore][x- Grand Total]
+	return playerDict
 
-	'''
-	* Three of a kind
-	* Four of a kind
-	* Full house
-	* Small straight
-	* Large straight
-	* Yahtzee
-	* Yahtzee bonus
-	'''
-	#TODO remove below, which is used to check saving scoreSelect to playerDict
-	print(playerDict)
+#YAHTZEE ROUNDS CODE
+print('WELCOME TO YAHTZEE!\n %s for the newbs.' % (hyperlink_format.format(link='https://www.hasbro.com/common/instruct/Yahtzee.pdf', text='Yahtzee Rules')))
 
+#set number of players (1-4) and enter names
+numberOfPlayers=pyip.inputInt(prompt='\nEnter number of players (1-4):\n', min=1, max=4)
+createPlayerDict(numberOfPlayers)
 
-	#return score in playerDict
-
-#{'scoreTop':{'Ones':False,'Twos':False,'Threes':False,'Fours':False,'Fives':False,'Sixes':False},
-#		'scoreBottom':{'Three of a kind':False,'Four of a kind':False,'Full house':False,
-#		'Small straight':False, 'Large straight':False,'Yahtzee':False,'Chance':False,'Yahtzee bonus':False},
-
-#yahtzee rounds code
 round=1
-roundComplete=False
-while roundComplete != True:
+gameComplete=False
+while gameComplete != True:
 	print('\nHERE WE GO! ROUND %s.' % (str(round)))
+	scoreSelected=''
 	for player in playerDict:
-		print('%s your turn. Your current Total Score: %s.' % (player, str(int(playerDict.get(player,{}).get('Grand total')))))
-
-		#rollDice, player select dice, second diceRoll of 'keeper'==False dice, get final dice
+		print('\n%s your turn. Your current Total Score: %s.' % (player, str(int(playerDict.get(player,{}).get('Grand total')))))
+		
+		#First roll
 		time.sleep(1)
 		rollDice(dice)
 		print('\nFIRST ROLL: %s %s %s %s %s %s' % (dice[1]['result'], dice[2]['result'], dice[3]['result'], dice[4]['result'], dice[5]['result'], dice[6]['result']))
 		keepDice(dice)
-
+		
+		#Second roll
 		rollDice(dice)
 		print('\nSECOND ROLL: %s %s %s %s %s %s' % (dice[1]['result'], dice[2]['result'], dice[3]['result'], dice[4]['result'], dice[5]['result'], dice[6]['result']))
 		keepDice(dice)
 		
+		#Third and final roll
 		rollDice(dice)
 		print('\nFINAL ROLL: %s %s %s %s %s %s\n' % (dice[1]['result'], dice[2]['result'], dice[3]['result'], dice[4]['result'], dice[5]['result'], dice[6]['result']))
 		diceResults=[dice[1]['result'], dice[2]['result'], dice[3]['result'], dice[4]['result'], dice[5]['result'], dice[6]['result']]
-		selectScore(dice)
+		selectScore(player, dice)
+		calcScore(player, playerDict, diceResults)
+		print(playerDict)
 
 		for i in range(len(dice)):
 			dice[i+1]['keeper']=False
+		time.sleep(1)
 	
 	round=round+1
-	time.sleep(1)
+	
 #show remaining score card options for current dice (if applicable)
 #choose score card option (if applicable)
 #reset for next player
@@ -130,3 +135,20 @@ while roundComplete != True:
 #end of available rounds show player score, next player (if applicable)
 #end of game show player scores, ranking (winner), and games won tally
 #play again?
+
+'''
+{'Taya': {'scoreTop': {'Ones': {'ref': 1, 'score': False}, 'Twos': {'ref': 2, 'score': 4},
+'Threes': {'ref': 3, 'score': False}, 'Fours': {'ref': 4, 'score': False},
+'Fives': {'ref': 5, 'score': False}, 'Sixes': {'ref': 6, 'score': False}},
+'scoreBottom': {'Three of a kind': False, 'Four of a kind': False, 'Full house': False,
+'Small straight': False, 'Large straight': False, 'Yahtzee': False, 'Chance': False,
+'Yahtzee bonus': False}, 'totalScore': {'Sum of upper': False, 'Bonus': False,
+'Total upper': False, 'Total bottom': False}, 'Grand total': False},
+'Paul': {'scoreTop': {'Ones': {'ref': 1, 'score': False}, 'Twos': {'ref': 2, 'score': 4},
+'Threes': {'ref': 3, 'score': False}, 'Fours': {'ref': 4, 'score': False},
+'Fives': {'ref': 5, 'score': False}, 'Sixes': {'ref': 6, 'score': False}},
+'scoreBottom': {'Three of a kind': False, 'Four of a kind': False, 'Full house': False,
+'Small straight': False, 'Large straight': False, 'Yahtzee': False, 'Chance': False,
+'Yahtzee bonus': False}, 'totalScore': {'Sum of upper': False, 'Bonus': False,
+'Total upper': False, 'Total bottom': False}, 'Grand total': False}}
+'''
