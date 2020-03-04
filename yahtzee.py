@@ -1,11 +1,9 @@
 #!python3
 import pyinputplus as pyip
-import numpy as np
 from random import randint
 import time
 
-# this is a multiplayer yahtzee game
-# instructions: https://www.hasbro.com/common/instruct/Yahtzee.pdf
+# Usage: this is a multiplayer yahtzee game
 
 # global objects
 playerDict = {}
@@ -14,11 +12,10 @@ scoringDict = {'scoreTop': {'Ones': {'ref': 1, 'score': False}, 'Twos': {'ref': 
 hyperlink_format = '<a href="{link}">{text}</a>'
 numberOfPlayers = 0
 gameComplete = False
-scoreSelected = ''
 
 
 # create player dictionary via numbers and names of players
-def createPlayerDict():
+def createPlayerDict(playerDict, scoringDict):
     numberOfPlayers = pyip.inputInt(prompt='\nEnter number of players (1-4):\n', min=1, max=4)
     for _ in range(numberOfPlayers):
         playerDict[pyip.inputStr(prompt='\nEnter name of player '+str(_+1)+':\n')] = scoringDict
@@ -26,10 +23,10 @@ def createPlayerDict():
 
 
 # roll dice function
-def rollDice(diceDict):
+def rollDice():
     for i in range(len(diceDict)):
         if diceDict[i+1]['keeper'] is False:
-            diceDict[i+1]['result'] = randint(1,6)
+            diceDict[i+1]['result'] = randint(1, 6)
     return diceDict
 
 
@@ -37,7 +34,7 @@ def rollDice(diceDict):
 def keepDice(diceDict, player):
     keepAll = pyip.inputYesNo(prompt=(f'{player} do you want to KEEP ALL of these dice?\n'))
     if keepAll == 'no':
-        rerollAll = pyip.inputYesNo(prompt=(f'{player} do you want to REROLL ALL of these dice?'))
+        rerollAll = pyip.inputYesNo(prompt=(f'{player} do you want to REROLL ALL of these dice?\n'))
         if rerollAll == 'no':
             for i in range(len(diceDict)):
                 selectKeepers = pyip.inputYesNo(prompt='%s do you want to keep the %s?\n' % (player, diceDict[i+1]['result']))
@@ -71,27 +68,14 @@ def selectScore(player, playerDict, diceDict, scoreSelected):
     return playerDict, scoreSelected, diceDict
 
 
-def calcScore(player, playerDict, scoreSelected, diceResults):
+def calcScore(player, playerDict, scoreSelected, diceDict):
     # calculate score based on scoreSelected in selectScore()
-    print('print before calcScore')
-    print(player)
-    print(playerDict)
-    print(diceResults)
-    print(scoreSelected)
     if scoreSelected in playerDict[player]['scoreTop']:
-        print(playerDict[player]['scoreTop'])
-        for n in diceResults:
-            if n == playerDict[player]['scoreTop'][scoreSelected]['ref']:
-                playerDict[player]['scoreTop'][scoreSelected]['score'] += n
-                print('if statmement')
-                print(playerDict)
+        for d in diceDict.values():
+            if d['result'] == playerDict[player]['scoreTop'][scoreSelected]['ref']:
+                playerDict[player]['scoreTop'][scoreSelected]['score'] += d['result']
             else:
                 playerDict[player]['scoreTop'][scoreSelected]['score'] += 0
-                print('else statmement')
-                print(playerDict)
-
-    if scoreSelected == 'Chance':
-        playerDict[player]['scoreBottom']['Chance'] = np.sum(diceResults)
 
     # TODO handle err state where player selects & score is 0 for options below
     # TODO create below scoring options
@@ -105,10 +89,6 @@ def calcScore(player, playerDict, scoreSelected, diceResults):
     # TODO how to handle totalScore recalculation each round?
     # playerDict[player]['totalScore']['Sum of upper']= #some kind of numpy summation of playerDict[player][scoreTop][x]['score']
     # playerDict[player]['totalScore']['Grand total'] = #some kind of numpy summation of playerDict[player][totalScore][x- Grand Total]
-    print('playerDict and diceResults AFTER calcScore')
-    print(player)
-    print(playerDict)
-    print(diceResults)
     return playerDict
 
 
@@ -120,53 +100,47 @@ def resetDice(diceDict):
 
 
 # main yahtzee rounds code for managing rolls, dice, players, scores
-def yahtzeeRounds():  # rm for arg testing: playerDict, diceDict, scoringDict
+def yahtzeeRounds(playerDict, diceDict):
     round = 1
     while gameComplete is not True:
         print(f'HERE WE GO! ROUND {round}.')
         for player in playerDict:
+            scoreSelected = ''
             print('\n%s your turn. Your current Total Score: %s.' % (player, str(int(playerDict.get(player, {}).get('Grand total')))))
 
             # First roll
             time.sleep(1)
-            diceDict = rollDice(diceDict)
+            diceDict = rollDice()
             print('\nFIRST ROLL: %s %s %s %s %s %s' % (diceDict[1]['result'], diceDict[2]['result'], diceDict[3]['result'], diceDict[4]['result'], diceDict[5]['result'], diceDict[6]['result']))
             diceDict = keepDice(diceDict, player)
 
             # Second roll
-            diceDict = rollDice(diceDict)
+            diceDict = rollDice()
             print('\nSECOND ROLL: %s %s %s %s %s %s' % (diceDict[1]['result'], diceDict[2]['result'], diceDict[3]['result'], diceDict[4]['result'], diceDict[5]['result'], diceDict[6]['result']))
             diceDict = keepDice(diceDict, player)
 
             # Third and final roll
-            diceDict = rollDice(diceDict)
+            diceDict = rollDice()
             print('\nFINAL ROLL: %s %s %s %s %s %s\n' % (diceDict[1]['result'], diceDict[2]['result'], diceDict[3]['result'], diceDict[4]['result'], diceDict[5]['result'], diceDict[6]['result']))
 
-            diceResults = [diceDict[1]['result'], diceDict[2]['result'], diceDict[3]['result'], diceDict[4]['result'], diceDict[5]['result'], diceDict[6]['result']]
-
             playerDict, scoreSelected, diceDict = selectScore(player, playerDict, diceDict, scoreSelected)
-            playerDict = calcScore(player, playerDict, scoreSelected, diceResults)
+            playerDict = calcScore(player, playerDict, scoreSelected, diceDict)
 
-            # cleanup and reset for next player (or round if 1 player)
-            print('yahtzeeRounds() cleanup')
-            print(playerDict)
+            # reset dice for next player (or next round if 1 player)
             diceDict = resetDice(diceDict)
-            scoreSelected = ''
 
         round = round+1
+# TODO
 # show remaining score card options for current dice (if applicable)
 # choose score card option (if applicable)
-# reset for next player
 # end of available rounds show player score, next player (if applicable)
 # end of game show player scores, ranking (winner), and games won tally
-# play again?
+# play again
 
 
-# main game init
+# starting the game
 yahtzeeRulesUrl = hyperlink_format.format(link='https://www.hasbro.com/common/instruct/Yahtzee.pdf', text='Yahtzee Rules')
-print(f'WELCOME TO YAHTZEE!\n {yahtzeeRulesUrl} for the newbs.')
+print(f'WELCOME TO YAHTZEE!\n {yahtzeeRulesUrl} for first timers.')
 
-print(playerDict)
-createPlayerDict()
-print(playerDict)
-yahtzeeRounds()  # rm args for testing: playerDict, diceDict, scoringDict
+createPlayerDict(playerDict, scoringDict)
+yahtzeeRounds(playerDict, diceDict)
