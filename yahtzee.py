@@ -8,17 +8,16 @@ import time
 # global objects
 playerDict = {}
 diceDict = {1: {'keeper': False, 'result': 0}, 2: {'keeper': False, 'result': 0}, 3: {'keeper': False, 'result': 0}, 4: {'keeper': False, 'result': 0}, 5: {'keeper': False, 'result': 0}, 6: {'keeper': False, 'result': 0}}
-scoringDict = {'scoreTop': {'Ones': {'ref': 1, 'score': False}, 'Twos': {'ref': 2, 'score': False}, 'Threes': {'ref': 3, 'score': False}, 'Fours': {'ref': 4, 'score': False}, 'Fives': {'ref': 5, 'score': False}, 'Sixes': {'ref': 6, 'score': False}}, 'scoreBottom': {'Three of a kind': False, 'Four of a kind': False, 'Full house': False, 'Small straight': False, 'Large straight': False, 'Yahtzee': False, 'Chance': False, 'Yahtzee bonus': False}, 'totalScore': {'Sum of upper': False, 'Bonus': False, 'Total upper': False, 'Total bottom': False, }, 'Grand total': False}
 hyperlink_format = '<a href="{link}">{text}</a>'
 numberOfPlayers = 0
 gameComplete = False
 
 
 # create player dictionary via numbers and names of players
-def createPlayerDict(playerDict, scoringDict):
+def createPlayerDict(playerDict):
     numberOfPlayers = pyip.inputInt(prompt='\nEnter number of players (1-4):\n', min=1, max=4)
     for _ in range(numberOfPlayers):
-        playerDict[pyip.inputStr(prompt='\nEnter name of player '+str(_+1)+':\n')] = scoringDict
+        playerDict[pyip.inputStr(prompt='\nEnter name of player '+str(_+1)+':\n')] = {'scoreTop': {'Ones': {'ref': 1, 'score': False}, 'Twos': {'ref': 2, 'score': False}, 'Threes': {'ref': 3, 'score': False}, 'Fours': {'ref': 4, 'score': False}, 'Fives': {'ref': 5, 'score': False}, 'Sixes': {'ref': 6, 'score': False}}, 'scoreBottom': {'Three of a kind': False, 'Four of a kind': False, 'Full house': False, 'Small straight': False, 'Large straight': False, 'Yahtzee': False, 'Chance': False, 'Yahtzee bonus': False}, 'totalScore': {'Sum of upper': False, 'Bonus': False, 'Total upper': False, 'Total bottom': False, }, 'Grand total': False}
     return playerDict
 
 
@@ -125,6 +124,8 @@ def yahtzeeRounds(playerDict, diceDict):
 
             playerDict, scoreSelected, diceDict = selectScore(player, playerDict, diceDict, scoreSelected)
             playerDict = calcScore(player, playerDict, scoreSelected, diceDict)
+            print(playerDict)
+            print(diceDict)
 
             # reset dice for next player (or next round if 1 player)
             diceDict = resetDice(diceDict)
@@ -142,5 +143,5 @@ def yahtzeeRounds(playerDict, diceDict):
 yahtzeeRulesUrl = hyperlink_format.format(link='https://www.hasbro.com/common/instruct/Yahtzee.pdf', text='Yahtzee Rules')
 print(f'WELCOME TO YAHTZEE!\n {yahtzeeRulesUrl} for first timers.')
 
-createPlayerDict(playerDict, scoringDict)
+createPlayerDict(playerDict)
 yahtzeeRounds(playerDict, diceDict)
