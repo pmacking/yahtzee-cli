@@ -1,4 +1,5 @@
 #!python3
+
 import pyinputplus as pyip
 from random import randint
 import time
@@ -68,13 +69,45 @@ def selectScore(player, playerDict, diceDict, scoreSelected):
 
 
 def calcScore(player, playerDict, scoreSelected, diceDict):
-    # calculate score based on scoreSelected in selectScore()
+    """
+    Calculates score for the round based on diceDict results and user's selection from selectScore()
+
+    Args: player, playerDict, scoreSelected, diceDict
+    Returns: playerDict
+    """
+    diceList = [diceDict[1]['result'], diceDict[2]['result'], diceDict[3]['result'], diceDict[4]['result'], diceDict[5]['result'], diceDict[6]['result']]
+
+    # calc all 'ScoreTop' options
     if scoreSelected in playerDict[player]['scoreTop']:
         for d in diceDict.values():
             if d['result'] == playerDict[player]['scoreTop'][scoreSelected]['ref']:
                 playerDict[player]['scoreTop'][scoreSelected]['score'] += d['result']
+                print(f'\nYour score for {scoreSelected}: {playerDict[player]['scoreTop'][scoreSelected]['score']}')
             else:
                 playerDict[player]['scoreTop'][scoreSelected]['score'] += 0
+                print(f'\nYour score for {scoreSelected}: 0')
+
+    # calc 'Three of a kind'
+    elif scoreSelected == 'Three of a kind':
+        diceList = [d for d in diceList if diceList.count(d) > 2]
+        diceList.sort(reverse=True)
+        if diceList == []:
+            print(f'\nYou did not roll three of a kind, your score for {scoreSelected}: 0')
+            playerDict[player]['scoreBottom'][scoreSelected] = 0
+        else:
+            print(f'\nYour scored for {scoreSelected}: {sum(diceList)[:3]}')
+            playerDict[player]['scoreBottom'][scoreSelected] = sum(diceList[:3])
+
+    # calc 'Four of a kind'
+    elif scoreSelected == 'Four of a kind':
+        diceList = [d for d in diceList if diceList.count(d) > 3]
+        diceList.sort(reverse=True)
+        if diceList == []:
+            print('\nYou did not roll four of a kind, your score: 0')
+            playerDict[player]['scoreBottom'][scoreSelected] = 0
+        else:
+            print(f'\nYour score for {scoreSelected}: {sum(diceList[:4])}')
+            playerDict[player]['scoreBottom'][scoreSelected] = sum(diceList[:4])
 
     # TODO handle err state where player selects & score is 0 for options below
     # TODO create below scoring options
@@ -85,9 +118,15 @@ def calcScore(player, playerDict, scoreSelected, diceDict):
     # Large straight
     # Yahtzee
     # Yahtzee bonus
+
+    # {'Taya':
+    #     {'scoreTop': {'Ones': {'ref': 1, 'score': False}, 'Twos': {'ref': 2, 'score': False}, 'Threes': {'ref': 3, 'score': False}, 'Fours': {'ref': 4, 'score': 12}, 'Fives': {'ref': 5, 'score': False}, 'Sixes': {'ref': 6, 'score': False}},
+    #     'scoreBottom': {'Three of a kind': False, 'Four of a kind': False, 'Full house': False, 'Small straight': False, 'Large straight': False, 'Yahtzee': False, 'Chance': False, 'Yahtzee bonus': False},
+    #     'totalScore': {'Sum of upper': False, 'Bonus': False, 'Total upper': False, 'Total bottom': False}, 'Grand total': False},
+
     # TODO how to handle totalScore recalculation each round?
-    # playerDict[player]['totalScore']['Sum of upper']= #some kind of numpy summation of playerDict[player][scoreTop][x]['score']
-    # playerDict[player]['totalScore']['Grand total'] = #some kind of numpy summation of playerDict[player][totalScore][x- Grand Total]
+        # playerDict[player]['totalScore']['Sum of upper']= #some kind of numpy summation of playerDict[player][scoreTop][x]['score']
+        # playerDict[player]['totalScore']['Grand total'] = #some kind of numpy summation of playerDict[player][totalScore][x- Grand Total]
     return playerDict
 
 
@@ -107,6 +146,8 @@ def yahtzeeRounds(playerDict, diceDict):
             scoreSelected = ''
             print('\n%s your turn. Your current Total Score: %s.' % (player, str(int(playerDict.get(player, {}).get('Grand total')))))
 
+            # TODO: Display scoringDict values so player aware of options
+
             # First roll
             time.sleep(1)
             diceDict = rollDice()
@@ -121,6 +162,9 @@ def yahtzeeRounds(playerDict, diceDict):
             # Third and final roll
             diceDict = rollDice()
             print('\nFINAL ROLL: %s %s %s %s %s %s\n' % (diceDict[1]['result'], diceDict[2]['result'], diceDict[3]['result'], diceDict[4]['result'], diceDict[5]['result'], diceDict[6]['result']))
+
+            # REMOVE when finished, using for testing specific dice results
+            diceDict = {1: {'keeper': True, 'result': 2}, 2: {'keeper': True, 'result': 1}, 3: {'keeper': True, 'result': 1}, 4: {'keeper': True, 'result': 6}, 5: {'keeper': True, 'result': 6}, 6: {'keeper': True, 'result': 6}}
 
             playerDict, scoreSelected, diceDict = selectScore(player, playerDict, diceDict, scoreSelected)
             playerDict = calcScore(player, playerDict, scoreSelected, diceDict)
