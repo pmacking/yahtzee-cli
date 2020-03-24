@@ -76,17 +76,19 @@ def selectScore(player, playerDict, diceDict, scoreSelected):
     Returns: playerDict, scoreSelected, diceDict
     '''
     # present and select available (False) scoring options in playerDict
-    scoreOptions = []
-    for k in playerDict[player]['scoreTop']:
-        if playerDict[player]['scoreTop'][k]['score'] is False:
-            scoreOptions.append(k)
-    for k in playerDict[player]['scoreBottom']:
-        if playerDict[player]['scoreBottom'][k] is False:
-            scoreOptions.append(k)
-    scoreSelected = pyip.inputMenu(scoreOptions, numbered=True)
-    # confirm selection
-    if pyip.inputYesNo(prompt='\n%s are you sure you want to select %s?\n' % (player, scoreSelected)) == 'no':
-        selectScore(player, playerDict, diceDict, scoreSelected)
+    doubleCheck = 0
+    while doubleCheck == 0:
+        scoreOptions = []
+        for k in playerDict[player]['scoreTop']:
+            if playerDict[player]['scoreTop'][k]['score'] is False:
+                scoreOptions.append(k)
+        for k in playerDict[player]['scoreBottom']:
+            if playerDict[player]['scoreBottom'][k] is False:
+                scoreOptions.append(k)
+        scoreSelected = pyip.inputMenu(scoreOptions, numbered=True)
+        # confirm selection
+        if pyip.inputYesNo(prompt=f"\n{player} are you sure you want to select {scoreSelected}?\n") == 'yes':
+            doubleCheck = 1
     return playerDict, scoreSelected, diceDict
 
 
