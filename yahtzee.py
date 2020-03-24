@@ -8,8 +8,7 @@ import time
 
 # global objects
 playerDict = {}
-diceDict = {1: {'keeper': False, 'result': 0}, 2: {'keeper': False, 'result': 0}, 3: {'keeper': False, 'result': 0}, 4: {'keeper': False, 'result': 0}, 5: {'keeper': False, 'result': 0},}
-hyperlink_format = '<a href="{link}">{text}</a>'
+diceDict = {1: {'keeper': False, 'result': 0}, 2: {'keeper': False, 'result': 0}, 3: {'keeper': False, 'result': 0}, 4: {'keeper': False, 'result': 0}, 5: {'keeper': False, 'result': 0}, }
 numberOfPlayers = 0
 gameComplete = False
 
@@ -54,6 +53,9 @@ def keepDice(diceDict, player):
             diceList = [diceDict[1], diceDict[2], diceDict[3], diceDict[4], diceDict[5], ]
             keepSome = input('Enter the dice you would like to keep (ex: 4, 5):')
             keepSomeSplit = keepSome.split(', ')
+            if keepSome = '':
+                for i in range(len(diceDict)):
+                    diceDict[i+1]['keeper'] = False
             keepSomeSplitInt = [int(d) for d in keepSomeSplit]
             for keep in keepSomeSplitInt:
                 for dice in diceList:
@@ -180,7 +182,8 @@ def calcScore(player, playerDict, scoreSelected, diceDict):
             playerDict[player]['scoreBottom'][scoreSelected] = 0
 
     # TODO: how to handle totalScore recalculation each round?
-    #     'totalScore': {'Sum of upper': False, 'Bonus': False, 'Total upper': False, 'Total bottom': False}, 'Grand total': False},
+    #     'totalScore': {'Sum of upper': False, 'Bonus': False, 'Total upper': False, 'Total bottom': False},
+    # 'Grand total': False},
     return playerDict
 
 
