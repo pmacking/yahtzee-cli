@@ -8,8 +8,7 @@ import time
 
 # global objects
 playerDict = {}
-diceDict = {1: {'keeper': False, 'result': 0}, 2: {'keeper': False, 'result': 0}, 3: {'keeper': False, 'result': 0}, 4: {'keeper': False, 'result': 0}, 5: {'keeper': False, 'result': 0},}
-hyperlink_format = '<a href="{link}">{text}</a>'
+diceDict = {1: {'keeper': False, 'result': 0}, 2: {'keeper': False, 'result': 0}, 3: {'keeper': False, 'result': 0}, 4: {'keeper': False, 'result': 0}, 5: {'keeper': False, 'result': 0}, }
 numberOfPlayers = 0
 gameComplete = False
 
@@ -23,7 +22,7 @@ def createPlayerDict(playerDict):
     '''
     numberOfPlayers = pyip.inputInt(prompt='\nEnter number of players (1-4):\n', min=1, max=4)
     for _ in range(numberOfPlayers):
-        playerDict[pyip.inputStr(prompt='\nEnter name of player '+str(_+1)+':\n')] = {'scoreTop': {'Ones': {'ref': 1, 'score': False}, 'Twos': {'ref': 2, 'score': False}, 'Threes': {'ref': 3, 'score': False}, 'Fours': {'ref': 4, 'score': False}, 'Fives': {'ref': 5, 'score': False}, 'Sixes': {'ref': 6, 'score': False}}, 'scoreBottom': {'Three of a kind': False, 'Four of a kind': False, 'Full house': False, 'Small straight': False, 'Large straight': False, 'Yahtzee': False, 'Chance': False, 'Yahtzee bonus': False}, 'totalScore': {'Sum of upper': False, 'Bonus': False, 'Total upper': False, 'Total bottom': False, }, 'Grand total': False}
+        playerDict[pyip.inputStr(prompt='\nEnter name of player '+str(_+1)+':\n')] = {'scoreTop': {'Ones': {'ref': 1, 'score': False}, 'Twos': {'ref': 2, 'score': False}, 'Threes': {'ref': 3, 'score': False}, 'Fours': {'ref': 4, 'score': False}, 'Fives': {'ref': 5, 'score': False}, 'Sixes': {'ref': 6, 'score': False}}, 'scoreBottom': {'Three of a kind': False, 'Four of a kind': False, 'Full house': False, 'Small straight': False, 'Large straight': False, 'Yahtzee': False, 'Chance': False, 'Yahtzee bonus': 0}, 'totalScore': {'Sum of upper': False, 'Bonus': False, 'Total upper': False, 'Total bottom': False, }, 'Grand total': 0}
     return playerDict
 
 
@@ -51,12 +50,17 @@ def keepDice(diceDict, player):
     if keepAll == 'no':
         rerollAll = pyip.inputYesNo(prompt=(f'{player} do you want to REROLL ALL of these dice?\n'))
         if rerollAll == 'no':
-            for i in range(len(diceDict)):
-                selectKeepers = pyip.inputYesNo(prompt='%s do you want to keep the %s?\n' % (player, diceDict[i+1]['result']))
-                if selectKeepers == 'no':
+            diceList = [diceDict[1], diceDict[2], diceDict[3], diceDict[4], diceDict[5], ]
+            keepSome = input('Enter the dice you would like to keep (ex: 4, 5):')
+            keepSomeSplit = keepSome.split(', ')
+            if keepSome = '':
+                for i in range(len(diceDict)):
                     diceDict[i+1]['keeper'] = False
-                else:
-                    diceDict[i+1]['keeper'] = True
+            keepSomeSplitInt = [int(d) for d in keepSomeSplit]
+            for keep in keepSomeSplitInt:
+                for dice in diceList:
+                    if keep == dice['result']:
+                        dice['keeper'] = True
         else:
             for i in range(len(diceDict)):
                 diceDict[i+1]['keeper'] = False
@@ -74,23 +78,25 @@ def selectScore(player, playerDict, diceDict, scoreSelected):
     Returns: playerDict, scoreSelected, diceDict
     '''
     # present and select available (False) scoring options in playerDict
-    scoreOptions = []
-    for k in playerDict[player]['scoreTop']:
-        if playerDict[player]['scoreTop'][k]['score'] is False:
-            scoreOptions.append(k)
-    for k in playerDict[player]['scoreBottom']:
-        if playerDict[player]['scoreBottom'][k] is False:
-            scoreOptions.append(k)
-    scoreSelected = pyip.inputMenu(scoreOptions)
-    # confirm selection
-    if pyip.inputYesNo(prompt='\n%s are you sure you want to select %s?\n' % (player, scoreSelected)) == 'no':
-        selectScore(player, playerDict, diceDict, scoreSelected)
+    doubleCheck = 0
+    while doubleCheck == 0:
+        scoreOptions = []
+        for k in playerDict[player]['scoreTop']:
+            if playerDict[player]['scoreTop'][k]['score'] is False:
+                scoreOptions.append(k)
+        for k in playerDict[player]['scoreBottom']:
+            if playerDict[player]['scoreBottom'][k] is False:
+                scoreOptions.append(k)
+        scoreSelected = pyip.inputMenu(scoreOptions, numbered=True)
+        # confirm selection
+        if pyip.inputYesNo(prompt=f"\n{player} are you sure you want to select {scoreSelected}?\n") == 'yes':
+            doubleCheck = 1
     return playerDict, scoreSelected, diceDict
 
 
 def calcScore(player, playerDict, scoreSelected, diceDict):
     """
-    Calculates score based on the score option in selectScore() and dice result
+    Calc score based on the score option in selectScore() and diceDict result
     Args: player, playerDict, scoreSelected, diceDict
     Returns: playerDict
     """
@@ -155,16 +161,18 @@ def calcScore(player, playerDict, scoreSelected, diceDict):
         if len(set(diceList)) == 1:
             print(f"\nScore for {scoreSelected}: 50")
             playerDict[player]['scoreBottom'][scoreSelected] = 50
+            # introduce 'Yahtzee bonus' as new selectScore option
+            playerDict[player]['scoreBottom']['Yahtzee bonus'] = False
         else:
             print(f"\nYou did not roll {scoreSelected}, your score for {scoreSelected}: 0")
             playerDict[player]['scoreBottom'][scoreSelected] = 0
+
     # calculate score for 'Chance'
     elif scoreSelected == 'Chance':
         print(f"\nScore for {scoreSelected}: {sum(diceList)}")
         playerDict[player]['scoreBottom'][scoreSelected] = sum(diceList)
 
-    # TODO: fix yahtzee bonus so user cannot select until after yahtzee has been selected first (and not a 0 entry for yahtzee)
-    # Yahtzee bonus
+    # Yahtzee bonus (only available when player scores a Yahtzee)
     elif scoreSelected == 'Yahtzee bonus':
         if len(set(diceList)) == 1:
             print(f"\nScore for {scoreSelected}: 100")
@@ -174,7 +182,8 @@ def calcScore(player, playerDict, scoreSelected, diceDict):
             playerDict[player]['scoreBottom'][scoreSelected] = 0
 
     # TODO: how to handle totalScore recalculation each round?
-    #     'totalScore': {'Sum of upper': False, 'Bonus': False, 'Total upper': False, 'Total bottom': False}, 'Grand total': False},
+    #     'totalScore': {'Sum of upper': False, 'Bonus': False, 'Total upper': False, 'Total bottom': False},
+    # 'Grand total': False},
     return playerDict
 
 
@@ -202,7 +211,8 @@ def yahtzeeRounds(playerDict, diceDict):
         print(f'\nHERE WE GO! ROUND {round}.')
         for player in playerDict:
             scoreSelected = ''
-            print('\n%s your turn. Your current Total Score: %s.' % (player, str(int(playerDict.get(player, {}).get('Grand total')))))
+            print(f"\n{player} your turn.")
+            print(f"Your current Total Score: {playerDict[player]['Grand total']}")
 
             # TODO: Display scoringDict values so player aware of options
 
@@ -221,11 +231,13 @@ def yahtzeeRounds(playerDict, diceDict):
             diceDict = rollDice()
             print(f"\nFINAL ROLL: {diceDict[1]['result']}, {diceDict[2]['result']}, {diceDict[3]['result']}, {diceDict[4]['result']}, {diceDict[5]['result']}")
 
-            # REMOVE WHEN FINISHED TESTING: forcing dice results for calcScore
+            # REMOVE WHEN FINISHED: forcing dice results for calcScore testing
             # diceDict = {1: {'keeper': True, 'result': 1}, 2: {'keeper': True, 'result': 1}, 3: {'keeper': True, 'result': 1}, 4: {'keeper': True, 'result': 1}, 5: {'keeper': True, 'result': 6}, }
 
             playerDict, scoreSelected, diceDict = selectScore(player, playerDict, diceDict, scoreSelected)
             playerDict = calcScore(player, playerDict, scoreSelected, diceDict)
+
+            #REMOVE WHEN FINISHED: here for testing
             print(playerDict)
             print(diceDict)
 
@@ -240,8 +252,7 @@ def yahtzeeRounds(playerDict, diceDict):
 
 # Starting the game stack
 if __name__ == "__main__":
-    yahtzeeRulesUrl = hyperlink_format.format(link='https://www.hasbro.com/common/instruct/Yahtzee.pdf', text='Yahtzee Rules')
-    print(f'WELCOME TO YAHTZEE!\n {yahtzeeRulesUrl} for first timers.')
+    print('WELCOME TO YAHTZEE!')
 
     createPlayerDict(playerDict)
     yahtzeeRounds(playerDict, diceDict)
