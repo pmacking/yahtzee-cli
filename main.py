@@ -11,88 +11,116 @@ def main():
     '''
     Main gameplay for playing yahtzee
     '''
-    # scoring dictionaries
-    _scoreDict = {
-            'ones': 0, 'twos': 0, 'threes': 0, 'fours': 0, 'fives': 0,
-            'sixes': 0, 'three of a kind': 0, 'four of a kind': 0,
-            'full house': 0, 'small straight': 0, 'large straight': 0,
-            'yahtzee': 0, 'chance': 0, 'yahtzee bonus': 0,
-            }
+
+    # reference dicts and lists for calculating scores
     _scoreDictReferenceValues = {
             'ones': 1, 'twos': 2, 'threes': 3,
-            'fours': 4, 'fives': 5, 'sixes': 6
+            'fours': 4, 'fives': 5, 'sixes': 6,
+            'full house': 25, 'small straight': 30, 'large straight': 35,
+            'yahtzee': 50, 'yahtzee bonus': 50,
             }
+    singlesOptions = [
+                'ones', 'twos', 'threes', 'fours', 'fives', 'sixes'
+                ]
+
     # create Player and Roll instances for each player (1 to 4)
     playersList = []
     rollsList = []
 
-    numberOfPlayers = pyip.inputInt(prompt='Enter number of players (1 to 4):\n', min=1, max=4)
+    numberOfPlayers = pyip.inputInt(prompt='\nEnter number of players (1 to 4):\n', min=1, max=4)
 
-    # create player and rolls instances in mirrored lists
+    # create Player and Roll instances per player in mirrored lists
     for player in range(numberOfPlayers):
         playerName = pyip.inputStr(prompt=f'\nEnter name of player{player+1}:\n')
         playersList.append(Player(playerName))
         rollsList.append(Roll(playerName))
 
     # rounds for each player based on scoreDict and number of players
-    for i, k in enumerate(_scoreDict):
+    for i, k in enumerate(playersList[0]._scoreDict):
         for j, player in enumerate(playersList):
-            print(f'\n{playersList[j].name.upper()} your turn.\n')
+
+            # printing player and scores for each round
+            print(f'\n{playersList[j].name.upper()} YOUR TURN. ROUND: {i+1}')
+
+            print('-'*21)
+            print('ROLL SCORES'.rjust(16))
+            playersList[j].printScoreDict()
+
+            print('-'*21)
+            print('TOP SCORE BONUS'.rjust(19))
+            playersList[j].printTopScore()
+            playersList[j].printTopBonusScore()
+
+            print('-'*21)
+            print('TOTAL SCORES'.rjust(19))
+            playersList[j].printTotalTopScore()
+            playersList[j].printTotalBottomScore()
+
+            print('-'*21)
+            playersList[j].printGrandTotalScore()
 
             # first roll
             rollsList[j].rollDice()
+            print(f'{playersList[j].name.upper()}', end='')
             keepFirstRoll = rollsList[j].keepDice()
 
             # second roll
             rollsList[j].reRollDice(keepFirstRoll)
+            print(f'{playersList[j].name.upper()}', end='')
             keepSecondRoll = rollsList[j].keepDice()
 
-            #third roll
-            rollsList[j].finalRollDice(keepSecondRoll)
+            # third roll
+            finalRoll = rollsList[j].finalRollDice(keepSecondRoll)
 
-            print(rollsList[j].getCurrentDice())
+            # select score from existing options to check dice against
+            scoreSelected = playersList[j].selectScore()
 
+            # this section checks TOP and BOTTOM scores based on score selected
+            # TOP SCORE options and increment scores
+            if scoreSelected in singlesOptions:
+                score = rollsList[j].checkSingles(finalRoll, _scoreDictReferenceValues[scoreSelected])
 
-    # for player in playersList:
+                # incremenet score option, top score, top total, grand total
+                playersList[j]._scoreDict[scoreSelected] += score
+                playersList[j]._topScore += score
+                playersList[j]._totalTopScore += score
+                playersList[j]._grandTotalScore += score
 
-    # # loop through the top part and start rolling some dice!
-    # for index,item in enumerate(game_list_top):
+                # check top bonus, increment top total and grand total
+                playersList[j].addTopBonusScore()
+                playersList[j]._totalTopScore += playersList[j]._topBonusScore
+                playersList[j]._grandTotalScore += playersList[j]._topBonusScore
 
-    #     #just one way to print info on the current rolling
-    #     print ('-'*40)
-    #     print (f'rolling for {item}')
-    #     print ('-'*40)
+            # BOTTOM SCORE options and increment scores
+            else:
+                if scoreSelected == 'three of a kind':
+                    score = rollsList[j].checkThreeOfAKind(finalRoll)
 
-    #     #first roll:
-    #     dice1.roll_dice()
-    #     keep1 = dice1.keep_dice()
+                elif scoreSelected == 'four of a kind':
+                    score = rollsList[j].checkFourOfAKind(finalRoll)
 
-    #     #second roll:
-    #     dice1.reroll_dice(keep1)
-    #     keep2 = dice1.keep_dice()
+                elif scoreSelected == 'full house':
+                    score = rollsList[j].checkFullHouse(finalRoll)
 
-    #     #third roll:
-    #     roll3 = dice1.reroll_dice(keep2)
-    #     dice1.forced_keep(roll3)
+                elif scoreSelected == 'small straight':
+                    score = rollsList[j].checkSmallStraight(finalRoll)
 
-    #     #the final roll collection of dice goes in for check:
-    #     final_roll_collection = dice1.get_kept_dice()
+                elif scoreSelected == 'large straight':
+                    score = rollsList[j].checkLargeStraight(finalRoll)
 
-    #     print (f'final roll collection: {final_roll_collection}')
+                elif scoreSelected == 'yahtzee':
+                    score = rollsList[j].checkYahtzee(finalRoll)
 
-    #     #check what the score is for this particular roll:
-    #     check_score = dice1.single_values(final_roll_collection,game_list_top_values[index] )
+                elif scoreSelected == 'chance':
+                    score = rollsList[j].addChance(finalRoll)
 
-    #     #create the key in the dictionary and add the score to the total top score.
-    #     #this score will later determine if we get a bonus or not.
-    #     player1.add_rolled(item , check_score)
-    #     player1.add_top_score(check_score)
+                elif scoreSelected == 'yahtzee bonus':
+                    score = rollsList[j].checkYahtzeeBonus(finalRoll)
 
-    # #let's hope we get a bonus?
-    # player1.add_top_bonus()
-
-    # #print current score:
-    # player1.print_scoreboard()
+                # increment score option, total bottom score, grand total score
+                playersList[j]._scoreDict[scoreSelected] += score
+                playersList[j]._totalBottomScore += score
+                playersList[j]._grandTotalScore += score
 
 
 if __name__ == "__main__":
