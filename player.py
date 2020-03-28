@@ -70,7 +70,10 @@ class Player:
         Prints the scoring dictionary for the player
         '''
         for key, value in self._scoreDict.items():
-            print(f'{key.rjust(15)}: {value*1}')
+            if value is False:
+                print(f'{key.rjust(15)}: -')
+            else:
+                print(f'{key.rjust(15)}: {value*1}')
 
     def printTopScore(self):
         '''

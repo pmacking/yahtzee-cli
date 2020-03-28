@@ -2,6 +2,7 @@
 
 from random import randint
 import pyinputplus as pyip
+import time
 
 
 class Roll:
@@ -35,16 +36,16 @@ class Roll:
 
         if keepAll == 'no':
             reRollAll = pyip.inputYesNo(prompt=(f'Do you want to REROLL ALL dice?\n'))
+            time.sleep(0.5)
 
             if reRollAll == 'no':
-                keepSome = input('Enter the dice you would like to keep (ex: 4, 5):\n')
+                keepSome = pyip.inputInt('Enter the dice you would like to keep (ex: 456):\n', blank=True)
                 if keepSome == '':
                     return self._currentDiceList
 
-                keepSomeSplit = keepSome.split(', ')
-                keepSomeSplitInt = [int(d) for d in keepSomeSplit]
+                keepSomeList = [int(d) for d in str(keepSome)]
 
-                for d in keepSomeSplitInt:
+                for d in keepSomeList:
                     if d in self._currentDiceList:
                         self._currentDiceList.remove(d)
                         self._keeperDiceList.append(d)
