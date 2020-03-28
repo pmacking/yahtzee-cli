@@ -66,6 +66,7 @@ def main():
 
             # second roll
             rollsList[j].reRollDice(keepFirstRoll)
+            print(f'{playersList[j].name.upper()}', end='')
             keepSecondRoll = rollsList[j].keepDice()
 
             # third roll
