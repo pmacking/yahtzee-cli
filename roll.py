@@ -30,7 +30,7 @@ class Roll:
 
     def keepDice(self):
         '''
-        Method that keeps particular dice from current rolled dice
+        Method that allows keeping all, rerolling all, or selecting dice
         '''
         keepAll = pyip.inputYesNo(prompt=(f' do you want to KEEP ALL dice?\n'))
 
@@ -83,19 +83,7 @@ class Roll:
         print(f'\nFinal roll: {self._currentDiceList}\n')
         return self._currentDiceList
 
-    def getCurrentDice(self):
-        '''
-        Returns the current dice restuls
-        '''
-        return self._currentDiceList
-
-    def getKeeperDice(self):
-        '''
-        Returns keeper dice list
-        '''
-        return self._keeperDiceList
-
-    # This section of methods checks scoring of rolled dice
+    # This section checks scoring of final roll
 
     def checkSingles(self, diceList, referenceValue):
         '''
@@ -140,7 +128,7 @@ class Roll:
         Checks for small straight (4 sequential), and adds 30 to score
         returns bool
         '''
-        if len(set(diceList)) == 4:
+        if len(set(diceList)) == 4 or len(set(diceList)) == 5:
             return 30
         return 0
 
@@ -173,7 +161,6 @@ class Roll:
         If yahtzee has been scored, adds 50 to score
         returns bool
         '''
-        # TODO: implement check for first yahtzee before bonus
         if len(set(diceList)) == 1:
             return 50
         return 0
