@@ -29,19 +29,32 @@ class Player:
 
         # build list of scoring options from player's scoring dictionary
         while doubleCheck is False:
+
             for i, option in enumerate(self._scoreDict):
                 if self._scoreDict[option] is False:
                     scoreOptions.append(option)
 
-            # remove yahtzee bonus if yahtzee hasn't been scored yet
-            if self._scoreDict['yahtzee'] is False:
-                scoreOptions.remove('yahtzee bonus')
+            checkYahtzeeBonus = False
 
-            # let player select option
-            scoreSelected = pyip.inputMenu(scoreOptions, numbered=True)
-            # confirm selection
+            while checkYahtzeeBonus is False:
+                scoreSelected = pyip.inputMenu(scoreOptions, numbered=True, blank=True)
+
+                # inputMenu outputs single list item if keyword blank=True.
+                # The below validates user doesn't input blank
+                if scoreSelected == '':
+                    print('\nPlease select a valid score option:\n')
+
+                # validates yahtzee is selected before yahtzee bonus
+                else:
+                    if scoreSelected == 'yahtzee bonus' and self._scoreDict['yahtzee'] is False:
+                        print('\nYou must score yahtzee before yahtzee bonus. Please select another option:\n')
+                    else:
+                        checkYahtzeeBonus = True
+
+            # confirm option selection
             if pyip.inputYesNo(prompt=f"\n{self.name.upper()} are you sure you want to select {scoreSelected}?\n") == 'yes':
                 doubleCheck = True
+
         return scoreSelected
 
     def addScoreDict(self, scoreSelected, score):
@@ -65,7 +78,7 @@ class Player:
         if self._topScore >= bonusThreshold and self._topBonusScore == 0:
             self._topBonusScore = 35
 
-    def printScoreDict(self):
+    def printStackedScoreDict(self):
         '''
         Prints the scoring dictionary for the player
         '''
@@ -75,32 +88,54 @@ class Player:
             else:
                 print(f'{key.rjust(15)}: {value*1}')
 
-    def printTopScore(self):
+    def getTopScore(self):
         '''
         Prints the top score (before bonus)
         '''
-        print(f'Top Score: '.rjust(20) + f'{self._topScore}')
+        return f'Top Score: '.rjust(20) + f'{self._topScore}'
 
-    def printTopBonusScore(self):
+    def getTopBonusScore(self):
         '''
         Prints the top bonus score
         '''
-        print(f'Top Bonus Score: '.rjust(20) + f'{self._topBonusScore}')
+        return f'Top Bonus Score: '.rjust(20) + f'{self._topBonusScore}'
 
-    def printTotalTopScore(self):
+    def getTotalTopScore(self):
         '''
         Prints the total top score for the player
         '''
-        print(f'Total Top Score: '.rjust(20) + f'{self._totalTopScore}')
+        return f'Total Top Score: '.rjust(20) + f'{self._totalTopScore}'
 
-    def printTotalBottomScore(self):
+    def getTotalBottomScore(self):
         '''
         Prints the total top score for the player
         '''
-        print(f'Total Bottom Score: '.rjust(20) + f'{self._totalBottomScore}')
+        return f'Total Bottom Score: '.rjust(20) + f'{self._totalBottomScore}'
 
-    def printGrandTotalScore(self):
+    def getGrandTotalScore(self):
         '''
         Prints the total top score for the player
         '''
-        print(f'GRAND TOTAL: '.rjust(20) + f'{self._grandTotalScore}\n')
+        return f'GRAND TOTAL: '.rjust(20) + f'{self._grandTotalScore}\n'
+
+    def getNameAndGrandTotalScore(self):
+        '''
+        returns player name and grand total score
+        '''
+        return f'{self.name}', f'{self._grandTotalScore}'
+
+    def resetAllScores(self):
+        '''
+        clears all scores for new round
+        '''
+
+        # resets scoreDict values to False
+        for i, k in enumerate(self._scoreDict):
+            self._scoreDict[k] = False
+
+        # resets scores to 0
+        self._topScore = 0
+        self._topBonusScore = 0
+        self._totalTopScore = 0
+        self._totalBottomScore = 0
+        self._grandTotalScore = 0
