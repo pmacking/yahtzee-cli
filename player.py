@@ -44,10 +44,15 @@ class Player:
                 if scoreSelected == '':
                     print('\nPlease select a valid score option:\n')
 
-                # validates yahtzee is selected before yahtzee bonus
+                # validating yahtzee bonus
                 else:
+                    # valid yahtzee bonus selected after yahtzee
                     if scoreSelected == 'yahtzee bonus' and self._scoreDict['yahtzee'] is False:
                         print('\nYou must score yahtzee before yahtzee bonus. Please select another option:\n')
+
+                    # validate yahtzee bonus can't be used to stash 0 score
+                    elif scoreSelected == 'yahtzee bonus' and len(scoreOptions) != 1:
+                        print('\nYou cannot select yahtzee bonus to stash a 0 score if other options are available. Please select another option:\n')
                     else:
                         checkYahtzeeBonus = True
 

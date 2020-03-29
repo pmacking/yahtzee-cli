@@ -25,7 +25,7 @@ class Roll:
 
         # rolls five dice
         self._currentDiceList = [randint(1, 6) for d in range(5)]
-        print(f'First roll: {self._currentDiceList}\n')
+        print(f'FIRST ROLL: {self._currentDiceList}\n')
         return self._currentDiceList
 
     def keepDice(self):
@@ -68,7 +68,7 @@ class Roll:
         # adds the rerolled current dice to the keepers and clears keepers
         self._currentDiceList = self._currentDiceList + self._keeperDiceList
         self._keeperDiceList.clear()
-        print(f'\nSecond roll: {self._currentDiceList}\n')
+        print(f'\nSECOND ROLL: {self._currentDiceList}\n')
         return self._currentDiceList
 
     def finalRollDice(self, diceList):
@@ -80,7 +80,7 @@ class Roll:
         # adds the rerolled current dice to the keepers and clears keepers
         self._currentDiceList = self._currentDiceList + self._keeperDiceList
         self._keeperDiceList.clear()
-        print(f'\nFinal roll: {self._currentDiceList}\n')
+        print(f'\nFINAL ROLL: {self._currentDiceList}\n')
         return self._currentDiceList
 
     # This section checks scoring of final roll
