@@ -14,6 +14,11 @@ class Roll:
         self._currentDiceList = []
         self._keeperDiceList = []
 
+    # __repr__ method for Roll class
+    def __repr__(self):
+        return (f"{self.__class__.__name__}("
+                f"{self._currentDiceList!r}, {self._keeperDiceList})")
+
     # This section outlines dice roll actions
     def rollDice(self):
         '''
