@@ -20,6 +20,12 @@ class Player:
         self._totalBottomScore = 0
         self._grandTotalScore = 0
 
+    def __repr__(self):
+        return (f"{self.__class__.__name__}("
+                f"{self._scoreDict!r}, {self._topScore!r}, "
+                f"{self._topBonusScore!r}, {self._totalBottomScore!r}, "
+                f"{self._grandTotalScore!r})")
+
     def selectScore(self):
         '''
         Allows player to select the scoring option for final dice roll
