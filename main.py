@@ -3,6 +3,9 @@
 from roll import Roll
 from player import Player
 import pyinputplus as pyip
+from pathlib import Path
+from datetime import datetime
+import os, time
 
 print('\nWELCOME TO YAHTZEE!')
 
@@ -144,17 +147,60 @@ def main():
             rankingDict[rankingName] = rankingScore
 
         # reverse sort rankingDict by grand total
-        sorted(rankingDict.items(), key=lambda x: x[1], reverse=True)
+        rankingDictSorted = sorted(rankingDict.items(), key=lambda x: x[1], reverse=True)
 
         # print rankings
         print('\nFINAL SCORES')
         print('-'*12)
-        for k, v in enumerate(rankingDict):
-            print(f"{v}: {rankingDict[v]}")
+        for k, v in enumerate(rankingDictSorted):
+            print(f"{v}: {rankingDictSorted[v]}")
 
         # END OF GAME ACTIONS
+        # output scores to text file
+        print("\nCreating score sheet in folder 'YahtzeeScores'...")
+
+        # create YahtzeeScores directory
+        os.makedirs(Path.cwd() / 'YahtzeeScores', exist_ok=True)
+        YahtzeeScoresDirStr = str(Path.cwd() / 'YahtzeeScores')
+
+        # create unique filename with datetime and game number
+        scoreFilename = datetime.today().strftime('%Y-%m-%d-%H:%M:%S') + f'Game{gameCounter+1}'
+
+        # write scores to file
+        with open(f'{YahtzeeScoresDirStr}/{scoreFilename}.txt', 'w') as f:
+            f.write(f'GAME {gameCounter+1} FINAL RANKING')
+
+            # write ranking of all players to file
+            f.write(f"\n{'-'*12}")
+            for k, v in enumerate(rankingDictSorted):
+                f.write(f"\n{v}: {rankingDictSorted[v]}")
+
+            # write each player score dict and total scores to file
+            for j, player in enumerate(playersList):
+                f.write(f"\n{'-'*21}")
+                f.write(f"\n{'-'*21}")
+                f.write(f"\n{' '*2}{playersList[j].name.upper()} FINAL SCORES")
+
+                f.write(f"\n{'ROLL SCORES'.rjust(16)}\n")
+                outputScoreDict = playersList[j].getScoreDict()
+                for i, k in enumerate(outputScoreDict):
+                    f.write(f"\n{k.rjust(15)}: {outputScoreDict[k]}")
+
+                f.write(f"\n{'-'*21}")
+                f.write(f"\n{'TOP SCORE BONUS'.rjust(19)}")
+                f.write(f"\n{playersList[j].getTopScore()}")
+                f.write(f"\n{playersList[j].getTopBonusScore()}\n")
+
+                f.write(f"\n{'TOTAL SCORES'.rjust(19)}")
+                f.write(f"\n{playersList[j].getTotalTopScore()}")
+                f.write(f"\n{playersList[j].getTotalBottomScore()}")
+
+                f.write(f"\n{'-'*21}")
+                f.write(f"\n{playersList[j].getGrandTotalScore()}")
 
         # clear each player _scoreDict and totals for next round
+        print('\nResetting dice for next round...')
+        time.sleep(1)
         for j, player in enumerate(playersList):
             playersList[j].resetAllScores()
 
