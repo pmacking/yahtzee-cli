@@ -1,5 +1,6 @@
 #! python3
 import pyinputplus as pyip
+import os
 
 
 class Player:
@@ -98,6 +99,12 @@ class Player:
                 print(f'{key.rjust(15)}: -')
             else:
                 print(f'{key.rjust(15)}: {value*1}')
+
+    def getScoreDict(self):
+        '''
+        Returns score dictionary
+        '''
+        return self._scoreDict
 
     def getTopScore(self):
         '''
