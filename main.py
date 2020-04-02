@@ -158,7 +158,6 @@ def main():
         # print rankings
         print('\nFINAL SCORES')
         print('-'*12)
-        print(rankingDictSorted)  # [('Taya', '28')]
         for k, v in enumerate(rankingDictSorted):
             print(f"{k}: {v[0]}: {v[1]}")
         print('\n')

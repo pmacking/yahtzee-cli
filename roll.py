@@ -2,7 +2,6 @@
 
 from random import randint
 import pyinputplus as pyip
-import time
 
 
 class Roll:
@@ -37,25 +36,40 @@ class Roll:
         '''
         Method that allows keeping all, rerolling all, or selecting dice
         '''
+        # ask if user wants to keep all the dice
         keepAll = pyip.inputYesNo(prompt=(f' do you want to KEEP ALL dice?\n'))
 
         if keepAll == 'no':
+
+            # ask if the user wants to reroll all the dice
             reRollAll = pyip.inputYesNo(prompt=(f'Do you want to REROLL ALL dice?\n'))
-            time.sleep(0.5)
 
             if reRollAll == 'no':
-                keepSome = pyip.inputInt('Enter the dice you would like to keep (ex: 456):\n', blank=True)
-                if keepSome == '':
-                    return self._currentDiceList
 
-                keepSomeList = [int(d) for d in str(keepSome)]
+                while True:
+                    # ask the user what dice to KEEP
+                    keepSome = pyip.inputInt('Enter the dice you would like to KEEP (ex: 456):\n', blank=True)
 
-                for d in keepSomeList:
-                    if d in self._currentDiceList:
-                        self._currentDiceList.remove(d)
-                        self._keeperDiceList.append(d)
+                    if keepSome == '':
 
-                return self._currentDiceList
+                        # validate empty string and intent to REROLL ALL
+                        keepNoneCheck = pyip.inputYesNo(prompt="Are you sure you want to REROLL ALL the dice?\n")
+
+                        if keepNoneCheck == 'yes':
+                            return self._currentDiceList
+
+                        else:
+                            continue
+
+                    else:
+                        keepSomeList = [int(d) for d in str(keepSome)]
+
+                        for d in keepSomeList:
+                            if d in self._currentDiceList:
+                                self._currentDiceList.remove(d)
+                                self._keeperDiceList.append(d)
+
+                        return self._currentDiceList
 
             else:
                 return self._currentDiceList
