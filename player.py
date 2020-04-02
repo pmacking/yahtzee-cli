@@ -110,31 +110,31 @@ class Player:
         '''
         Prints the top score (before bonus)
         '''
-        return f'Top Score: '.rjust(20) + f'{self._topScore}'
+        return f'Top Score: {self._topScore}'
 
     def getTopBonusScore(self):
         '''
         Prints the top bonus score
         '''
-        return f'Top Bonus Score: '.rjust(20) + f'{self._topBonusScore}'
+        return f'Top Bonus Score: {self._topBonusScore}'
 
     def getTotalTopScore(self):
         '''
         Prints the total top score for the player
         '''
-        return f'Total Top Score: '.rjust(20) + f'{self._totalTopScore}'
+        return f'Total Top Score: {self._totalTopScore}'
 
     def getTotalBottomScore(self):
         '''
         Prints the total top score for the player
         '''
-        return f'Total Bottom Score: '.rjust(20) + f'{self._totalBottomScore}'
+        return f'Total Bottom Score: {self._totalBottomScore}'
 
     def getGrandTotalScore(self):
         '''
         Prints the total top score for the player
         '''
-        return f'GRAND TOTAL: '.rjust(20) + f'{self._grandTotalScore}\n'
+        return f'GRAND TOTAL: {self._grandTotalScore}'
 
     def getNameAndGrandTotalScore(self):
         '''

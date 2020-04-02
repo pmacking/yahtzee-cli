@@ -5,7 +5,7 @@ from player import Player
 import pyinputplus as pyip
 from pathlib import Path
 from datetime import datetime
-import os, time
+import os, time, docx
 
 print('\nWELCOME TO YAHTZEE!')
 
@@ -41,6 +41,7 @@ def main():
     # GAME LOOP
     gameOver = False
     gameCounter = 0
+
     while gameOver is False:
 
         print(f"\nLET'S PLAY! GAME {gameCounter+1}")
@@ -55,8 +56,8 @@ def main():
                 if i == 13 and playersList[j]._scoreDict['yahtzee bonus'] == False and playersList[j]._scoreDict['yahtzee'] != 50:
                     playersList[j]._scoreDict['yahtzee bonus'] = 0
                     print("\nAutomatically score 0 for 'yahtzee bonus'...")
-                else:
 
+                else:
                     # print current scores and totals before rolling
                     print(f'\n{playersList[j].name.upper()} YOUR TURN. ROUND: {i+1}')
 
@@ -75,7 +76,7 @@ def main():
                     print(playersList[j].getTotalBottomScore())
 
                     print('-'*21)
-                    print(playersList[j].getGrandTotalScore())
+                    print(f"{playersList[j].getGrandTotalScore()}\n")
 
                     # first roll
                     rollsList[j].rollDice()
@@ -155,7 +156,7 @@ def main():
         # reverse sort rankingDict by grand total
         rankingDictSorted = sorted(rankingDict.items(), key=lambda x: x[1], reverse=True)
 
-        # print rankings
+        # print rankings to CLI
         print('\nFINAL SCORES')
         print('-'*12)
         for k, v in enumerate(rankingDictSorted):
@@ -163,19 +164,28 @@ def main():
         print('\n')
 
         # END OF GAME ACTIONS
-        # output scores to text file
-        print("\nCreating score sheet in folder 'YahtzeeScores'...")
+
+        # OUTPUT SCORES
+        print("\nSaving .txt scores file in: 'YahtzeeScores/TextFiles/'...")
+        print("\nSaving .docx scores file in: 'YahtzeeScores/DocxFiles/'...")
 
         # create YahtzeeScores directory
         os.makedirs(Path.cwd() / 'YahtzeeScores', exist_ok=True)
-        YahtzeeScoresDirStr = str(Path.cwd() / 'YahtzeeScores')
 
-        # create unique filename with datetime and game number
-        scoreFilename = datetime.today().strftime('%Y-%m-%d-%H:%M:%S') + f'Game{gameCounter+1}'
+        # CREATE TEXT FILE
 
-        # write scores to file
-        with open(f'{YahtzeeScoresDirStr}/{scoreFilename}.txt', 'w') as f:
-            f.write(f'GAME {gameCounter+1} FINAL RANKING')
+        # create TextFiles Directory
+        os.makedirs(Path.cwd() / 'YahtzeeScores/TextFiles', exist_ok=True)
+        textFileDirStr = str(Path.cwd() / 'YahtzeeScores/TextFiles')
+
+        # create text file filename with datetime and game number
+        dateToday = datetime.today().strftime('%Y-%m-%d-%H:%M:%S')
+        textFilename = f"{dateToday}Game{gameCounter+1}.txt"
+
+        # write scores to text file
+        with open(f'{textFileDirStr}/{textFilename}', 'w') as f:
+            f.write(f'YAHTZEE GAME {gameCounter+1}\n')
+            f.write('FINAL RANKINGS\n')
 
             # write ranking of all players to file
             f.write(f"\n{'-'*21}")
@@ -186,24 +196,81 @@ def main():
             for j, player in enumerate(playersList):
                 f.write(f"\n{'-'*21}")
                 f.write(f"\n{'-'*21}")
-                f.write(f"\n{' '*2}{playersList[j].name.upper()} FINAL SCORES")
+                f.write(f"\n{' '*2}{playersList[j].name.upper()} FINAL SCORES\n")
 
-                f.write(f"\n{'ROLL SCORES'.rjust(16)}\n")
+                f.write(f"\n{'ROLL SCORES'.rjust(16)}")
                 outputScoreDict = playersList[j].getScoreDict()
                 for i, k in enumerate(outputScoreDict):
                     f.write(f"\n{k.rjust(15)}: {outputScoreDict[k]}")
 
                 f.write(f"\n{'-'*21}")
                 f.write(f"\n{'TOP SCORE BONUS'.rjust(19)}")
-                f.write(f"\n{playersList[j].getTopScore()}")
-                f.write(f"\n{playersList[j].getTopBonusScore()}\n")
+                f.write(f"\n{playersList[j].getTopScore()}".rjust(20))
+                f.write(f"\n{playersList[j].getTopBonusScore()}\n".rjust(20))
 
                 f.write(f"\n{'TOTAL SCORES'.rjust(19)}")
-                f.write(f"\n{playersList[j].getTotalTopScore()}")
-                f.write(f"\n{playersList[j].getTotalBottomScore()}")
+                f.write(f"\n{playersList[j].getTotalTopScore()}".rjust(20))
+                f.write(f"\n{playersList[j].getTotalBottomScore()}".rjust(20))
 
                 f.write(f"\n{'-'*21}")
-                f.write(f"\n{playersList[j].getGrandTotalScore()}")
+                f.write(f"\n{playersList[j].getGrandTotalScore()}".rjust(20))
+                f.write('\n')
+
+        # CREATE WORD FILE
+
+        # create Docx Directory
+        os.makedirs(Path.cwd() / 'YahtzeeScores/DocxFiles', exist_ok=True)
+        docxFileDirStr = str(Path.cwd() / 'YahtzeeScores/DocxFiles')
+
+        # create docx file filename with datetime and game number
+        docxFilename = f"{dateToday}Game{gameCounter+1}.docx"
+
+        # change cwd to ./YahtzeeScores/DocxFiles/ for writing docx files
+        os.chdir(docxFileDirStr)
+
+        # open blank Document object
+        doc = docx.Document()
+        doc.add_paragraph(f'YAHTZEE GAME {gameCounter+1}', 'Title')
+        doc.paragraphs[0].runs[0].add_break()
+
+        doc.add_heading('FINAL RANKINGS', 1)
+        for k, v in enumerate(rankingDictSorted):
+            doc.add_paragraph(f"{v[0]}: {v[1]}")
+
+        # add page break after rankings
+        paraObjRankings = doc.add_paragraph('   ')
+        paraObjRankings.runs[0].add_break(docx.enum.text.WD_BREAK.PAGE)
+
+        # write each player score dict and total scores to file
+        doc.add_heading('PLAYER SCORES AND TOTALS', 1)
+        for j, player in enumerate(playersList):
+
+            # write player name as header
+            doc.add_heading(f"{playersList[j].name.upper()}", 2)
+
+            # write player roll scores for each scoring option
+            doc.add_heading('ROLL SCORES', 3)
+            outputScoreDict = playersList[j].getScoreDict()
+            for i, k in enumerate(outputScoreDict):
+                doc.add_paragraph(f"{k}: {outputScoreDict[k]}")
+
+            # write top score and bonus
+            doc.add_heading('TOP SCORE BONUS', 3)
+            doc.add_paragraph(f"{playersList[j].getTopScore()}")
+            doc.add_paragraph(f"{playersList[j].getTopBonusScore()}")
+
+            # write total scores and grand total
+            doc.add_heading('TOTAL SCORES', 3)
+            doc.add_paragraph(f"{playersList[j].getTotalTopScore()}")
+            doc.add_paragraph(f"{playersList[j].getTotalBottomScore()}")
+            paraObjGT = doc.add_paragraph(f"{playersList[j].getGrandTotalScore()}")
+
+            # add pagebreak before writing next player scores to docx
+            if j != (len(playersList)-1):
+                paraObjGT.runs[0].add_break(docx.enum.text.WD_BREAK.PAGE)
+
+        # save Document object as docxFilename
+        doc.save(docxFilename)
 
         # clear each player _scoreDict and totals for next round
         print('\nResetting dice for next round...')
