@@ -92,7 +92,7 @@ def main():
                     finalRoll = rollsList[j].finalRollDice(keepSecondRoll)
 
                     # select score to check final roll against
-                    scoreSelected = playersList[j].selectScore()
+                    scoreSelected = playersList[j].selectScore(finalRoll)
 
                     # This section checks either TOP or BOTTOM score per selection
                     # TOP SCORE options and increment scores

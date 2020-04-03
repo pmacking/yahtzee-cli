@@ -27,7 +27,7 @@ class Player:
                 f"{self._topBonusScore!r}, {self._totalBottomScore!r}, "
                 f"{self._grandTotalScore!r})")
 
-    def selectScore(self):
+    def selectScore(self, finalRoll):
         '''
         Allows player to select the scoring option for final dice roll
         '''
@@ -58,7 +58,8 @@ class Player:
                         print('\nYou must score yahtzee before yahtzee bonus. Please select another option:\n')
 
                     # validate yahtzee bonus can't be used to stash 0 score
-                    elif scoreSelected == 'yahtzee bonus' and len(scoreOptions) != 1:
+                    elif scoreSelected == 'yahtzee bonus' and len(scoreOptions) != 1 and len(set(finalRoll)) != 1:
+
                         print('\nYou cannot select yahtzee bonus to stash a 0 score if other options are available. Please select another option:\n')
                     else:
                         checkYahtzeeBonus = True
