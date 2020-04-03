@@ -107,7 +107,6 @@ class Roll:
     def checkSingles(self, diceList, referenceValue):
         '''
         Checks the value of selected singles and updates scoring dictionary
-        returns bool
         '''
         checkSinglesScore = 0
         for d in diceList:
@@ -118,7 +117,6 @@ class Roll:
     def checkThreeOfAKind(self, diceList):
         '''
         Checks if there are three of a kind, and adds all dice total to score
-        returns bool
         '''
         if len(set(diceList)) <= (len(diceList)-2):
             return sum(diceList)
@@ -147,18 +145,49 @@ class Roll:
         Checks for small straight (4 sequential), and adds 30 to score
         returns bool
         '''
-        if len(set(diceList)) == 4 or len(set(diceList)) == 5:
-            return 30
-        return 0
+        diceList.sort()
+
+        # checks that 5 unique dice have at least four dice in a row
+        if len(set(diceList)) == 5:
+
+            lStraightChecker = 0
+            for i, d in enumerate(diceList[:-1]):
+                if diceList[i+1] == diceList[i] + 1:
+                    lStraightChecker += 1
+
+            if lStraightChecker >= 4:
+                return 30
+
+            else:
+                return 0
+
+        # checks that if only four unique dice, they are sequential
+        elif len(set(diceList)) == 4:
+
+            sStraightChecker = 0
+            for i, d in enumerate(diceList[:-1]):
+                if diceList[i+1] == diceList[i] + 1:
+                    sStraightChecker += 1
+
+            if sStraightChecker == 4:
+                return 30
+
+            else:
+                return 0
+
+        else:
+            return 0
 
     def checkLargeStraight(self, diceList):
         '''
         Checks for large straight (5 sequential), and adds 35 to score
-        returns bool
         '''
-        if len(set(diceList)) == 5:
+        if len(set(diceList)) == 5 and diceList[0] == 2 and diceList[4] == 6:
             return 35
-        return 0
+        elif len(set(diceList)) == 5 and diceList[0] == 1 and diceList[4] == 5:
+            return 35
+        else:
+            return 0
 
     def checkYahtzee(self, diceList):
         '''
@@ -171,7 +200,6 @@ class Roll:
     def addChance(self, diceList):
         '''
         Adds the total dice score to scoring Dict
-        returns bool
         '''
         return sum(diceList)
 
