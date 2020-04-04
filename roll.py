@@ -146,6 +146,7 @@ class Roll:
         returns bool
         '''
         diceList.sort()
+        diceListSet = list(set(diceList))
 
         # checks that 5 unique dice have at least four dice in a row
         if len(set(diceList)) == 5:
@@ -165,11 +166,11 @@ class Roll:
         elif len(set(diceList)) == 4:
 
             sStraightChecker = 0
-            for i, d in enumerate(diceList[:-1]):
-                if diceList[i+1] == diceList[i] + 1:
+            for i, d in enumerate(diceListSet[:-1]):
+                if diceListSet[i+1] == diceListSet[i] + 1:
                     sStraightChecker += 1
 
-            if sStraightChecker == 4:
+            if sStraightChecker == 3:
                 return 30
 
             else:

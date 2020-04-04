@@ -5,6 +5,7 @@ from player import Player
 import pyinputplus as pyip
 from pathlib import Path
 from datetime import datetime
+from docx2pdf import convert
 import os, time, docx
 
 print('\nWELCOME TO YAHTZEE!')
@@ -221,13 +222,10 @@ def main():
 
         # create Docx Directory
         os.makedirs(Path.cwd() / 'YahtzeeScores/DocxFiles', exist_ok=True)
-        docxFileDirStr = str(Path.cwd() / 'YahtzeeScores/DocxFiles')
+        docxFileDirStr = str(Path.cwd() / 'YahtzeeScores/DocxFiles/')
 
         # create docx file filename with datetime and game number
         docxFilename = f"{dateToday}Game{gameCounter+1}.docx"
-
-        # change cwd to ./YahtzeeScores/DocxFiles/ for writing docx files
-        os.chdir(docxFileDirStr)
 
         # open blank Document object
         doc = docx.Document()
@@ -274,7 +272,13 @@ def main():
                 paraObjGT.runs[0].add_break(docx.enum.text.WD_BREAK.PAGE)
 
         # save Document object as docxFilename
-        doc.save(docxFilename)
+        print(docxFileDirStr + docxFilename)  # REMOVE
+        doc.save(docxFilename)  # REMOVE (after adding: 'docxFileDirStr + ')
+
+        # # CONVERT DOCX TO PDF
+        # os.makedirs(Path.cwd() / 'YahtzeeScores/pdfFiles/', exist_ok=True)
+        # pdfFileDirStr = str(Path.cwd() + '/YahtzeeScores/pdfFiles/')
+        # convert(docxFileDirStr + docxFilename, pdfFileDirStr + docxFilename[:-5] + '.pdf')
 
         # clear each player _scoreDict and totals for next round
         print('\nResetting dice for next round...')
