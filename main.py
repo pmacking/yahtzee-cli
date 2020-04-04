@@ -188,9 +188,10 @@ def main():
             f.write('FINAL RANKINGS\n')
 
             # write ranking of all players to file
-            f.write(f"\n{'-'*21}")
+            f.write(f"{'-'*21}")
             for k, v in enumerate(rankingDictSorted):
                 f.write(f"\n{v[0]}: {v[1]}")
+            f.write(f"\n{'-'*21}\n")
 
             # write each player score dict and total scores to file
             for j, player in enumerate(playersList):
@@ -203,17 +204,17 @@ def main():
                 for i, k in enumerate(outputScoreDict):
                     f.write(f"\n{k.rjust(15)}: {outputScoreDict[k]}")
 
-                f.write(f"\n{'-'*21}")
-                f.write(f"\n{'TOP SCORE BONUS'.rjust(19)}")
-                f.write(f"\n{playersList[j].getTopScore()}".rjust(20))
-                f.write(f"\n{playersList[j].getTopBonusScore()}\n".rjust(20))
+                f.write(f"\n{'-'*21}\n")
+                f.write(f"{'TOP SCORE BONUS'.rjust(19)}\n")
+                f.write(f"{playersList[j].getTopScore()}\n".rjust(20))
+                f.write(f"{playersList[j].getTopBonusScore()}\n".rjust(20))
 
-                f.write(f"\n{'TOTAL SCORES'.rjust(19)}")
-                f.write(f"\n{playersList[j].getTotalTopScore()}".rjust(20))
-                f.write(f"\n{playersList[j].getTotalBottomScore()}".rjust(20))
+                f.write(f"\n{'TOTAL SCORES'.rjust(19)}\n")
+                f.write(f"{playersList[j].getTotalTopScore()}\n".rjust(20))
+                f.write(f"{playersList[j].getTotalBottomScore()}\n".rjust(20))
 
-                f.write(f"\n{'-'*21}")
-                f.write(f"\n{playersList[j].getGrandTotalScore()}".rjust(20))
+                f.write(f"\n{'-'*21}\n")
+                f.write(f"{playersList[j].getGrandTotalScore()}\n".rjust(20))
                 f.write('\n')
 
         # CREATE WORD FILE
@@ -232,6 +233,9 @@ def main():
         doc = docx.Document()
         doc.add_paragraph(f'YAHTZEE GAME {gameCounter+1}', 'Title')
         doc.paragraphs[0].runs[0].add_break()
+
+        # add picture of yahtzee game to document
+        doc.add_picture('/Users/taya/Repos/MyProjects/Yahtzee/yahtzeePicture.jpg')
 
         doc.add_heading('FINAL RANKINGS', 1)
         for k, v in enumerate(rankingDictSorted):
