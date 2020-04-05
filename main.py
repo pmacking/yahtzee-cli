@@ -5,6 +5,7 @@ from player import Player
 import pyinputplus as pyip
 from pathlib import Path
 from datetime import datetime
+from docx2pdf import convert
 import os, time, docx
 
 print('\nWELCOME TO YAHTZEE!')
@@ -94,7 +95,7 @@ def main():
                     # select score to check final roll against
                     scoreSelected = playersList[j].selectScore(finalRoll)
 
-                    # This section checks either TOP or BOTTOM score per selection
+                    # Check TOP SCORE or BOTTOM SCORE per score option selected
                     # TOP SCORE options and increment scores
                     if scoreSelected in singlesOptions:
                         score = rollsList[j].checkSingles(finalRoll, _scoreDictReferenceValues[scoreSelected])
@@ -220,14 +221,11 @@ def main():
         # CREATE WORD FILE
 
         # create Docx Directory
-        os.makedirs(Path.cwd() / 'YahtzeeScores/DocxFiles', exist_ok=True)
-        docxFileDirStr = str(Path.cwd() / 'YahtzeeScores/DocxFiles')
+        os.makedirs(Path.cwd() / 'YahtzeeScores/DocxFiles/', exist_ok=True)
+        docxFileDirStr = str(Path.cwd() / 'YahtzeeScores/DocxFiles/')
 
         # create docx file filename with datetime and game number
         docxFilename = f"{dateToday}Game{gameCounter+1}.docx"
-
-        # change cwd to ./YahtzeeScores/DocxFiles/ for writing docx files
-        os.chdir(docxFileDirStr)
 
         # open blank Document object
         doc = docx.Document()
@@ -235,7 +233,7 @@ def main():
         doc.paragraphs[0].runs[0].add_break()
 
         # add picture of yahtzee game to document
-        doc.add_picture('/Users/taya/Repos/MyProjects/Yahtzee/yahtzeePicture.jpg')
+        doc.add_picture(str(Path.cwd() / 'yahtzeePicture.jpg'))
 
         doc.add_heading('FINAL RANKINGS', 1)
         for k, v in enumerate(rankingDictSorted):
@@ -274,7 +272,16 @@ def main():
                 paraObjGT.runs[0].add_break(docx.enum.text.WD_BREAK.PAGE)
 
         # save Document object as docxFilename
-        doc.save(docxFilename)
+        doc.save(f"{docxFileDirStr}/{docxFilename}")
+
+        # CONVERT TO PDF
+
+        # create PDF Directory
+        os.makedirs(Path.cwd() / 'YahtzeeScores/pdfFiles/', exist_ok=True)
+        pdfFileDirStr = str(Path.cwd() / 'YahtzeeScores/pdfFiles/')
+
+        # convert docx to pdf
+        convert(f"{docxFileDirStr}/{docxFilename}", f"{pdfFileDirStr}/{docxFilename[:-5]}.pdf")
 
         # clear each player _scoreDict and totals for next round
         print('\nResetting dice for next round...')
