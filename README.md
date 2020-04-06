@@ -4,7 +4,7 @@
 
 <p>This is a personal project to learn python and supporting toolsets via scripting a multiplayer yahtzee game.
 
-<p>Ouputs a YahtzeeScores/ directory containing directories and score files in .txt .docx and .pdf format.
+<p>Ouputs a YahtzeeScores/ directory containing sub-directories and score files in .txt .docx and .pdf format.
 
 <h2>How to Play</h2>
 

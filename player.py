@@ -1,6 +1,6 @@
 #! python3
+
 import pyinputplus as pyip
-import os
 
 
 class Player:
