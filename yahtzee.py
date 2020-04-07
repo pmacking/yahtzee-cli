@@ -3,7 +3,7 @@
 from roll import Roll
 from player import Player
 import fileio
-from fileio import TextFile
+from fileio import TextFile, DocxFile
 import pyinputplus as pyip
 from datetime import datetime
 import time, sys
@@ -245,6 +245,18 @@ class Yahtzee:
 
             # write textfile
             txtfile.writeTextFile(self._gameCounter, self._playersList, self._rankingDict)
+
+            # DOCX FILE instance in fileio.py
+            docxfile = DocxFile()
+
+            # create textfile directory
+            docxfile.createDocxFileDir()
+
+            # create textfile basename
+            docxfile.createDocxFilename(self._gameCounter, self._dateTimeToday)
+
+            # write textfile
+            docxfile.writeDocxFile(self._gameCounter, self._playersList, self._rankingDict)
 
             # END OF GAME ACTIONS
             # reset each Player class instance scoring dict and total scores

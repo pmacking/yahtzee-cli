@@ -1,7 +1,7 @@
 #!python3
 
 from pathlib import Path
-import os
+import docx, os
 
 
 def createFileioDirectory():
@@ -94,69 +94,100 @@ class TextFile:
             # print file creation confirmation
             printFileioConfirmation(self._textFileDirStr, self._textFilename)
 
-# # CREATE WORD FILE
 
-# # create Docx Directory
-# os.makedirs(Path.cwd() / 'YahtzeeScores/DocxFiles/', exist_ok=True)
-# docxFileDirStr = str(Path.cwd() / 'YahtzeeScores/DocxFiles/')
+class DocxFile:
+    '''
+    Objects instantiated by the :class:`DocxFile <DocxFile>` can be called to create a docx file of players and scores.
+    '''
+    def __init__(self):
+        # instance objects
+        self._docxFileDirStr = ''
+        self._docxFilename = ''
 
-# # create docx file filename with datetime and game number
-# docxFilename = f"{dateToday}Game{self._gameCounter+1}.docx"
+    def __repr__(self):
+        return (f"{self.__class__.__name__}()")
 
-# # open blank Document object
-# doc = docx.Document()
-# doc.add_paragraph(f'YAHTZEE GAME {self._gameCounter+1}', 'Title')
-# doc.paragraphs[0].runs[0].add_break()
+    def createDocxFileDir(self):
+        '''
+        Create DocxFiles folder.
+        '''
+        os.makedirs(Path.cwd() / 'YahtzeeScores/DocxFiles', exist_ok=True)
+        self._docxFileDirStr = str(Path.cwd() / 'YahtzeeScores/DocxFiles')
 
-# # add picture of yahtzee game to document
-# doc.add_picture(str(Path.cwd() / 'yahtzeePicture.jpg'))
+    def createDocxFilename(self, gameCounter, dateTimeToday):
+        '''
+        Create docx file filename with datetime and game number.
 
-# doc.add_heading('FINAL RANKINGS', 1)
-# for k, v in enumerate(self._rankingDict):
-#     doc.add_paragraph(f"{v[0]}: {v[1]}")
+        :param gameCounter: integer count of games played.
+        :param dateTimeToday: date str to standardize output file basename.
+        '''
+        self._docxFilename = f"{dateTimeToday}Game{gameCounter+1}.docx"
 
-# # add page break after rankings
-# paraObjRankings = doc.add_paragraph('   ')
-# paraObjRankings.runs[0].add_break(docx.enum.text.WD_BREAK.PAGE)
+    def writeDocxFile(self, gameCounter, playersList, rankingDict):
+        '''
+        Writes players scores to docx file.
 
-# # write each player score dict and total scores to file
-# doc.add_heading('PLAYER SCORES AND TOTALS', 1)
-# for j, player in enumerate(self._playersList):
+        :param gameCounter: integer count of games played.
+        :param playersList: list of Player class instances.
+        :param rankingDict: ranking of players and grand total scores.
+        '''
+        # open blank Document object
+        doc = docx.Document()
+        doc.add_paragraph(f'YAHTZEE GAME {gameCounter+1}', 'Title')
+        doc.paragraphs[0].runs[0].add_break()
 
-#     # write player name as header
-#     doc.add_heading(f"{self._playersList[j].name.upper()}", 2)
+        # add picture of yahtzee game to document
+        doc.add_picture(str(Path.cwd() / 'yahtzeePicture.jpg'))
 
-#     # write player roll scores for each scoring option
-#     doc.add_heading('ROLL SCORES', 3)
-#     outputScoreDict = self._playersList[j].getScoreDict()
-#     for i, k in enumerate(outputScoreDict):
-#         doc.add_paragraph(f"{k}: {outputScoreDict[k]}")
+        doc.add_heading('FINAL RANKINGS', 1)
+        for k, v in enumerate(rankingDict):
+            doc.add_paragraph(f"{v[0]}: {v[1]}")
 
-#     # write top score and bonus
-#     doc.add_heading('TOP SCORE BONUS', 3)
-#     doc.add_paragraph(f"{self._playersList[j].getTopScore()}")
-#     doc.add_paragraph(f"{self._playersList[j].getTopBonusScore()}")
+        # add page break after rankings
+        paraObjRankings = doc.add_paragraph('   ')
+        paraObjRankings.runs[0].add_break(docx.enum.text.WD_BREAK.PAGE)
 
-#     # write total scores and grand total
-#     doc.add_heading('TOTAL SCORES', 3)
-#     doc.add_paragraph(f"{self._playersList[j].getTotalTopScore()}")
-#     doc.add_paragraph(f"{self._playersList[j].getTotalBottomScore()}")
-#     paraObjGT = doc.add_paragraph(f"{self._playersList[j].getGrandTotalScore()}")
+        # write each player score dict and total scores to file
+        doc.add_heading('PLAYER SCORES AND TOTALS', 1)
+        for j, player in enumerate(playersList):
 
-#     # add pagebreak before writing next player scores to docx
-#     if j != (len(self._playersList)-1):
-#         paraObjGT.runs[0].add_break(docx.enum.text.WD_BREAK.PAGE)
+            # write player name as header
+            doc.add_heading(f"{playersList[j].name.upper()}", 2)
 
-# # save Document object as docxFilename
-# doc.save(f"{docxFileDirStr}/{docxFilename}")
-# print("\nSaved .docx scores file in: 'YahtzeeScores/DocxFiles/'...")
+            # write player roll scores for each scoring option
+            doc.add_heading('ROLL SCORES', 3)
+            outputScoreDict = playersList[j].getScoreDict()
+            for i, k in enumerate(outputScoreDict):
+                doc.add_paragraph(f"{k}: {outputScoreDict[k]}")
 
-# # CONVERT TO PDF
+            # write top score and bonus
+            doc.add_heading('TOP SCORE BONUS', 3)
+            doc.add_paragraph(f"{playersList[j].getTopScore()}")
+            doc.add_paragraph(f"{playersList[j].getTopBonusScore()}")
 
-# # create PDF Directory
-# os.makedirs(Path.cwd() / 'YahtzeeScores/pdfFiles/', exist_ok=True)
-# pdfFileDirStr = str(Path.cwd() / 'YahtzeeScores/pdfFiles/')
+            # write total scores and grand total
+            doc.add_heading('TOTAL SCORES', 3)
+            doc.add_paragraph(f"{playersList[j].getTotalTopScore()}")
+            doc.add_paragraph(f"{playersList[j].getTotalBottomScore()}")
+            paraObjGT = doc.add_paragraph(f"{playersList[j].getGrandTotalScore()}")
 
-# # convert docx to pdf
-# convert(f"{docxFileDirStr}/{docxFilename}", f"{pdfFileDirStr}/{docxFilename[:-5]}.pdf")
-# print("\nSaved pdf scores file in: 'YahtzeeScores/pdfFiles/'...")
+            # add pagebreak before writing next player scores to docx
+            if j != (len(playersList)-1):
+                paraObjGT.runs[0].add_break(docx.enum.text.WD_BREAK.PAGE)
+
+        # save Document object as docxFilename
+        doc.save(f"{self._docxFileDirStr}/{self._docxFilename}")
+
+        # print file creation confirmation
+        printFileioConfirmation(self._docxFileDirStr, self._docxFilename)
+
+# class Pdf:
+#     # CONVERT TO PDF
+
+#     # create PDF Directory
+#     os.makedirs(Path.cwd() / 'YahtzeeScores/pdfFiles/', exist_ok=True)
+#     pdfFileDirStr = str(Path.cwd() / 'YahtzeeScores/pdfFiles/')
+
+#     # convert docx to pdf
+#     convert(f"{docxFileDirStr}/{docxFilename}", f"{pdfFileDirStr}/{docxFilename[:-5]}.pdf")
+#     print("\nSaved pdf scores file in: 'YahtzeeScores/pdfFiles/'...")
