@@ -6,7 +6,7 @@ from player import Player
 from pathlib import Path
 from datetime import datetime
 from docx2pdf import convert
-import docx, os, time
+import docx, os, time, sys
 
 
 class Yahtzee:
@@ -64,6 +64,24 @@ class Yahtzee:
         '''
         for playerName in self._playersNames:
             self._rollsList.append(Roll(playerName))
+
+    def sortRankingDict(self):
+        '''
+        Gets ranking dict of player and grand total score
+        '''
+        for j, player in enumerate(self._playersList):
+            rankingName, rankingScore = self._playersList[j].getNameAndGrandTotalScore()
+            self._rankingDict[rankingName] = rankingScore
+
+        # reverse sort ranking dict by grand total
+        self._rankingDict = sorted(self._rankingDict.items(), key=lambda x: x[1], reverse=True)
+
+    def resetPlayerScores(self):
+        '''
+        Resets scores in all Player class instances for next game
+        '''
+        for j, player in enumerate(self._playersList):
+            self._playersList[j].resetAllScores()
 
     def play(self):
         '''
@@ -185,26 +203,19 @@ class Yahtzee:
                         print(f"\n{self._playersList[j].name.upper()} GRAND TOTAL: {self._playersList[j]._grandTotalScore}")
                         print("-"*21)
 
-            # END OF ROUND ACTIONS
+            # END OF ROUND PRINT ACTIONS
 
-            # create rankingDict of player and grand total score
-            for j, player in enumerate(self._playersList):
-                rankingName, rankingScore = self._playersList[j].getNameAndGrandTotalScore()
-                self._rankingDict[rankingName] = rankingScore
+            # create ranking dict for the round
+            self.sortRankingDict()
 
-            # reverse sort rankingDict by grand total
-            rankingDictSorted = sorted(self._rankingDict.items(), key=lambda x: x[1], reverse=True)
-
-            # print rankings to CLI
+            # print rankings for the round
             print('\nFINAL SCORES')
             print('-'*12)
-            for k, v in enumerate(rankingDictSorted):
-                print(f"{k}: {v[0]}: {v[1]}")
+            for k, v in enumerate(self._rankingDict):
+                print(f"{k+1} {v[0]}: {v[1]}")
             print('\n')
 
-            # END OF GAME ACTIONS
-
-            # OUTPUT SCORES
+            # END OF ROUND FILE I/O
 
             # create YahtzeeScores directory
             os.makedirs(Path.cwd() / 'YahtzeeScores', exist_ok=True)
@@ -226,7 +237,7 @@ class Yahtzee:
 
                 # write ranking of all players to file
                 f.write(f"{'-'*21}")
-                for k, v in enumerate(rankingDictSorted):
+                for k, v in enumerate(self._rankingDict):
                     f.write(f"\n{v[0]}: {v[1]}")
                 f.write(f"\n{'-'*21}\n")
 
@@ -273,7 +284,7 @@ class Yahtzee:
             doc.add_picture(str(Path.cwd() / 'yahtzeePicture.jpg'))
 
             doc.add_heading('FINAL RANKINGS', 1)
-            for k, v in enumerate(rankingDictSorted):
+            for k, v in enumerate(self._rankingDict):
                 doc.add_paragraph(f"{v[0]}: {v[1]}")
 
             # add page break after rankings
@@ -322,14 +333,19 @@ class Yahtzee:
             convert(f"{docxFileDirStr}/{docxFilename}", f"{pdfFileDirStr}/{docxFilename[:-5]}.pdf")
             print("\nSaved pdf scores file in: 'YahtzeeScores/pdfFiles/'...")
 
-            # clear each player _scoreDict and totals for next round
+            # END OF GAME ACTIONS
+
+            # reset each Player class instance scoring dict and total scores
             print('\nResetting dice for next round...')
             time.sleep(1)
-            for j, player in enumerate(self._playersList):
-                self._playersList[j].resetAllScores()
+            self.resetPlayerScores()
 
             # increment game counter, if three games end match
             self._gameCounter += 1
+
             if self._gameCounter == 3:
                 print('GAME OVER')
                 self._gameOver = True
+
+        # exit game
+        sys.exit()
