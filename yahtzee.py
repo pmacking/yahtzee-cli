@@ -70,11 +70,15 @@ class Yahtzee:
         '''
         Gets ranking dict of player and grand total score
         '''
+        # reset self._rankingDict to empty dict
+        self._rankingDict = {}
+
+        # create ranking dict with player and grand total score
         for j, player in enumerate(self._playersList):
             rankingName, rankingScore = self._playersList[j].getNameAndGrandTotalScore()
             self._rankingDict[rankingName] = rankingScore
 
-        # reverse sort ranking dict by grand total
+        # reverse sort ranking dict by grand total (returns list)
         self._rankingDict = sorted(self._rankingDict.items(), key=lambda x: x[1], reverse=True)
 
     def setDateTimeToday(self):
