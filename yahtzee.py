@@ -25,37 +25,67 @@ class Yahtzee:
                 'ones', 'twos', 'threes',
                 'fours', 'fives', 'sixes'
                 ]
+        # player name strings
+        self._playersNames = []
+
+        # lists of class instances
         self._playersList = []
         self._rollsList = []
+
+        # other objects
         self._numberOfPlayers = 0
         self._gameOver = False
         self._gameCounter = 0
         self._rankingDict = {}
 
+    def getNumberOfPlayers(self):
+        '''
+        Gets the number of players (1 to 4).
+        '''
+        self._numberOfPlayers = pyip.inputInt(prompt='\nEnter number of players (1 to 4):\n', min=1, max=4)
+
+    def getPlayerNames(self):
+        '''
+        Gets player names for number of players.
+        '''
+        for i in range(self._numberOfPlayers):
+            self._playersNames.append(pyip.inputStr(prompt=f'\nEnter name of player {i+1}:\n'))
+
+    def createPlayersList(self):
+        '''
+        Creates playersList of player instances (1 to 4)
+        '''
+        for playerName in self._playersNames:
+            self._playersList.append(Player(playerName))
+
+    def createRollsList(self):
+        '''
+        Creates playersList of player instances (1 to 4)
+        '''
+        for playerName in self._playersNames:
+            self._rollsList.append(Roll(playerName))
+
     def play(self):
         '''
         Main gameplay for yahtzee
         '''
+
+        # get players count, player names, create instances of Player and Roll
         print('\nWELCOME TO YAHTZEE!')
-
-        # create Player and Roll instances for each player (1 to 4)
-        self._numberOfPlayers = pyip.inputInt(prompt='\nEnter number of players (1 to 4):\n', min=1, max=4)
-
-        # create Player and Roll instances per player in mirrored lists
-        for player in range(self._numberOfPlayers):
-            playerName = pyip.inputStr(prompt=f'\nEnter name of player{player+1}:\n')
-            self._playersList.append(Player(playerName))
-            self._rollsList.append(Roll(playerName))
+        self.getNumberOfPlayers()
+        self.getPlayerNames()
+        self.createPlayersList()
+        self.createRollsList()
 
         # GAME LOOP
         while self._gameOver is False:
 
             print(f"\nLET'S PLAY! GAME {self._gameCounter+1}")
 
-            # ROUND LOOP
+            # ROUND LOOP (arbitrarily refs len of first instance of Player)
             for i, k in enumerate(self._playersList[0]._scoreDict):
 
-                # PLAYER LOOP
+                # PLAYER TURN
                 for j, player in enumerate(self._playersList):
 
                     # skip final round if only yahtzee bonus and yahtzee != 50
@@ -150,6 +180,10 @@ class Yahtzee:
                             self._playersList[j]._scoreDict[scoreSelected] += score
                             self._playersList[j]._totalBottomScore += score
                             self._playersList[j]._grandTotalScore += score
+
+                        # print grand total score for end of player turn
+                        print(f"\n{self._playersList[j].name.upper()} GRAND TOTAL: {self._playersList[j]._grandTotalScore}")
+                        print("-"*21)
 
             # END OF ROUND ACTIONS
 
