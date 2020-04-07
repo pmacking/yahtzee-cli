@@ -6,7 +6,7 @@ from player import Player
 from pathlib import Path
 from datetime import datetime
 from docx2pdf import convert
-import docx, os, time
+import docx, os, time, sys
 
 
 class Yahtzee:
@@ -25,37 +25,85 @@ class Yahtzee:
                 'ones', 'twos', 'threes',
                 'fours', 'fives', 'sixes'
                 ]
+        # player name strings
+        self._playersNames = []
+
+        # lists of class instances
         self._playersList = []
         self._rollsList = []
+
+        # other objects
         self._numberOfPlayers = 0
         self._gameOver = False
         self._gameCounter = 0
         self._rankingDict = {}
 
+    def getNumberOfPlayers(self):
+        '''
+        Gets the number of players (1 to 4).
+        '''
+        self._numberOfPlayers = pyip.inputInt(prompt='\nEnter number of players (1 to 4):\n', min=1, max=4)
+
+    def getPlayerNames(self):
+        '''
+        Gets player names for number of players.
+        '''
+        for i in range(self._numberOfPlayers):
+            self._playersNames.append(pyip.inputStr(prompt=f'\nEnter name of player {i+1}:\n'))
+
+    def createPlayersList(self):
+        '''
+        Creates playersList of player instances (1 to 4)
+        '''
+        for playerName in self._playersNames:
+            self._playersList.append(Player(playerName))
+
+    def createRollsList(self):
+        '''
+        Creates playersList of player instances (1 to 4)
+        '''
+        for playerName in self._playersNames:
+            self._rollsList.append(Roll(playerName))
+
+    def sortRankingDict(self):
+        '''
+        Gets ranking dict of player and grand total score
+        '''
+        for j, player in enumerate(self._playersList):
+            rankingName, rankingScore = self._playersList[j].getNameAndGrandTotalScore()
+            self._rankingDict[rankingName] = rankingScore
+
+        # reverse sort ranking dict by grand total
+        self._rankingDict = sorted(self._rankingDict.items(), key=lambda x: x[1], reverse=True)
+
+    def resetPlayerScores(self):
+        '''
+        Resets scores in all Player class instances for next game
+        '''
+        for j, player in enumerate(self._playersList):
+            self._playersList[j].resetAllScores()
+
     def play(self):
         '''
         Main gameplay for yahtzee
         '''
+
+        # get players count, player names, create instances of Player and Roll
         print('\nWELCOME TO YAHTZEE!')
-
-        # create Player and Roll instances for each player (1 to 4)
-        self._numberOfPlayers = pyip.inputInt(prompt='\nEnter number of players (1 to 4):\n', min=1, max=4)
-
-        # create Player and Roll instances per player in mirrored lists
-        for player in range(self._numberOfPlayers):
-            playerName = pyip.inputStr(prompt=f'\nEnter name of player{player+1}:\n')
-            self._playersList.append(Player(playerName))
-            self._rollsList.append(Roll(playerName))
+        self.getNumberOfPlayers()
+        self.getPlayerNames()
+        self.createPlayersList()
+        self.createRollsList()
 
         # GAME LOOP
         while self._gameOver is False:
 
             print(f"\nLET'S PLAY! GAME {self._gameCounter+1}")
 
-            # ROUND LOOP
+            # ROUND LOOP (arbitrarily refs len of first instance of Player)
             for i, k in enumerate(self._playersList[0]._scoreDict):
 
-                # PLAYER LOOP
+                # PLAYER TURN
                 for j, player in enumerate(self._playersList):
 
                     # skip final round if only yahtzee bonus and yahtzee != 50
@@ -151,26 +199,23 @@ class Yahtzee:
                             self._playersList[j]._totalBottomScore += score
                             self._playersList[j]._grandTotalScore += score
 
-            # END OF ROUND ACTIONS
+                        # print grand total score for end of player turn
+                        print(f"\n{self._playersList[j].name.upper()} GRAND TOTAL: {self._playersList[j]._grandTotalScore}")
+                        print("-"*21)
 
-            # create rankingDict of player and grand total score
-            for j, player in enumerate(self._playersList):
-                rankingName, rankingScore = self._playersList[j].getNameAndGrandTotalScore()
-                self._rankingDict[rankingName] = rankingScore
+            # END OF ROUND PRINT ACTIONS
 
-            # reverse sort rankingDict by grand total
-            rankingDictSorted = sorted(self._rankingDict.items(), key=lambda x: x[1], reverse=True)
+            # create ranking dict for the round
+            self.sortRankingDict()
 
-            # print rankings to CLI
+            # print rankings for the round
             print('\nFINAL SCORES')
             print('-'*12)
-            for k, v in enumerate(rankingDictSorted):
-                print(f"{k}: {v[0]}: {v[1]}")
+            for k, v in enumerate(self._rankingDict):
+                print(f"{k+1} {v[0]}: {v[1]}")
             print('\n')
 
-            # END OF GAME ACTIONS
-
-            # OUTPUT SCORES
+            # END OF ROUND FILE I/O
 
             # create YahtzeeScores directory
             os.makedirs(Path.cwd() / 'YahtzeeScores', exist_ok=True)
@@ -192,7 +237,7 @@ class Yahtzee:
 
                 # write ranking of all players to file
                 f.write(f"{'-'*21}")
-                for k, v in enumerate(rankingDictSorted):
+                for k, v in enumerate(self._rankingDict):
                     f.write(f"\n{v[0]}: {v[1]}")
                 f.write(f"\n{'-'*21}\n")
 
@@ -239,7 +284,7 @@ class Yahtzee:
             doc.add_picture(str(Path.cwd() / 'yahtzeePicture.jpg'))
 
             doc.add_heading('FINAL RANKINGS', 1)
-            for k, v in enumerate(rankingDictSorted):
+            for k, v in enumerate(self._rankingDict):
                 doc.add_paragraph(f"{v[0]}: {v[1]}")
 
             # add page break after rankings
@@ -288,14 +333,19 @@ class Yahtzee:
             convert(f"{docxFileDirStr}/{docxFilename}", f"{pdfFileDirStr}/{docxFilename[:-5]}.pdf")
             print("\nSaved pdf scores file in: 'YahtzeeScores/pdfFiles/'...")
 
-            # clear each player _scoreDict and totals for next round
+            # END OF GAME ACTIONS
+
+            # reset each Player class instance scoring dict and total scores
             print('\nResetting dice for next round...')
             time.sleep(1)
-            for j, player in enumerate(self._playersList):
-                self._playersList[j].resetAllScores()
+            self.resetPlayerScores()
 
             # increment game counter, if three games end match
             self._gameCounter += 1
+
             if self._gameCounter == 3:
                 print('GAME OVER')
                 self._gameOver = True
+
+        # exit game
+        sys.exit()
