@@ -1,6 +1,7 @@
 #!python3
 
 from pathlib import Path
+from docx2pdf import convert
 import docx, os
 
 
@@ -18,7 +19,7 @@ def printFileioConfirmation(fileDirStr, fileName):
     :param fileDirStr: textfile directory as string
     :param fileName: textfile basename
     '''
-    print(f"\nSaved scores file: '{fileDirStr}/{fileName}'")
+    print(f"\nSaved file: '{fileDirStr}/{fileName}'")
 
 
 class TextFile:
@@ -181,13 +182,36 @@ class DocxFile:
         # print file creation confirmation
         printFileioConfirmation(self._docxFileDirStr, self._docxFilename)
 
-# class Pdf:
-#     # CONVERT TO PDF
 
-#     # create PDF Directory
-#     os.makedirs(Path.cwd() / 'YahtzeeScores/pdfFiles/', exist_ok=True)
-#     pdfFileDirStr = str(Path.cwd() / 'YahtzeeScores/pdfFiles/')
+class PdfFile:
+    '''
+    Objects instantiated by the :class:`DocxFile <DocxFile>` can be called to convert a docx file to a pdf file
+    '''
+    def __init__(self):
+        self._pdfFileDirStr = ''
+        self._pdfFilename = ''
 
-#     # convert docx to pdf
-#     convert(f"{docxFileDirStr}/{docxFilename}", f"{pdfFileDirStr}/{docxFilename[:-5]}.pdf")
-#     print("\nSaved pdf scores file in: 'YahtzeeScores/pdfFiles/'...")
+    def createPdfFileDir(self):
+        '''
+        Create PDF files folder.
+        '''
+        os.makedirs(Path.cwd() / 'YahtzeeScores/pdfFiles/', exist_ok=True)
+        self._pdfFileDirStr = str(Path.cwd() / 'YahtzeeScores/pdfFiles/')
+
+    def createPdfFilename(self, gameCounter, dateTimeToday):
+        '''
+        Create pdf file filename with datetime and game number.
+
+        :param gameCounter: integer count of games played.
+        :param dateTimeToday: date str to standardize output file basename.
+        '''
+        self._pdfFilename = f"{dateTimeToday}Game{gameCounter+1}.pdf"
+
+    def convertDocxToPdf(self, docxFileDirStr, docxFilename):
+        '''
+        Converts Docx file to Pdf file
+        '''
+        convert(f"{docxFileDirStr}/{docxFilename}", f"{self._pdfFileDirStr}/{self._pdfFilename}")
+
+        # print file convert confirmation
+        printFileioConfirmation(self._pdfFileDirStr, self._pdfFilename)
