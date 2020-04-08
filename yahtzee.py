@@ -143,20 +143,18 @@ class Yahtzee:
                         print('-'*21)
                         print(f"{self._playersList[j].getGrandTotalScore()}\n")
 
-                        # ADD AFTER TESTING
-                        # # first roll
-                        # self._rollsList[j].rollDice()
-                        # print(f'{self._playersList[j].name.upper()}', end='')
-                        # keepFirstRoll = self._rollsList[j].keepDice()
+                        # first roll
+                        self._rollsList[j].rollDice()
+                        print(f'{self._playersList[j].name.upper()}', end='')
+                        keepFirstRoll = self._rollsList[j].keepDice()
 
-                        # # second roll
-                        # self._rollsList[j].reRollDice(keepFirstRoll)
-                        # print(f'{self._playersList[j].name.upper()}', end='')
-                        # keepSecondRoll = self._rollsList[j].keepDice()
+                        # second roll
+                        self._rollsList[j].reRollDice(keepFirstRoll)
+                        print(f'{self._playersList[j].name.upper()}', end='')
+                        keepSecondRoll = self._rollsList[j].keepDice()
 
-                        # # third roll
-                        # finalRoll = self._rollsList[j].finalRollDice(keepSecondRoll)
-                        finalRoll = [6, 6, 6, 6, 6]  # REMOVE AFTER TESTING
+                        # third roll
+                        finalRoll = self._rollsList[j].finalRollDice(keepSecondRoll)
 
                         # select score to check final roll against
                         scoreSelected = self._playersList[j].selectScore(finalRoll)
