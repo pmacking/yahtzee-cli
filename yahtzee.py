@@ -3,7 +3,7 @@
 from roll import Roll
 from player import Player
 import fileio
-from fileio import TextFile, DocxFile
+from fileio import TextFile, DocxFile, PdfFile
 import pyinputplus as pyip
 from datetime import datetime
 import time, sys
@@ -258,6 +258,22 @@ class Yahtzee:
             # write textfile
             docxfile.writeDocxFile(self._gameCounter, self._playersList, self._rankingDict)
 
+            # PDF instance in fileio.py
+            pdffile =PdfFile()
+
+            # create pdf file directory
+            pdffile.createPdfFileDir()
+
+            # create pdf file basename
+            pdffile.createPdfFilename(self._gameCounter, self._dateTimeToday)
+
+            # retrieve docx file Path to pass to convertDocxToPdf
+            docxFileDirStr = docxfile._docxFileDirStr
+            docxFilename = docxfile._docxFilename
+
+            # convert docx to pdf
+            pdffile.convertDocxToPdf(docxFileDirStr, docxFilename)
+
             # END OF GAME ACTIONS
             # reset each Player class instance scoring dict and total scores
             print('\nResetting dice for next round...')
@@ -268,7 +284,7 @@ class Yahtzee:
             self._gameCounter += 1
 
             if self._gameCounter == 3:
-                print('GAME OVER')
+                print('\nGAME OVER')
                 self._gameOver = True
 
         # exit game
