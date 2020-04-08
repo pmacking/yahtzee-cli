@@ -3,7 +3,7 @@
 from roll import Roll
 from player import Player
 import fileio
-from fileio import TextFile
+from fileio import TextFile, DocxFile
 import pyinputplus as pyip
 from datetime import datetime
 import time, sys
@@ -70,11 +70,15 @@ class Yahtzee:
         '''
         Gets ranking dict of player and grand total score
         '''
+        # reset self._rankingDict to empty dict
+        self._rankingDict = {}
+
+        # create ranking dict with player and grand total score
         for j, player in enumerate(self._playersList):
             rankingName, rankingScore = self._playersList[j].getNameAndGrandTotalScore()
             self._rankingDict[rankingName] = rankingScore
 
-        # reverse sort ranking dict by grand total
+        # reverse sort ranking dict by grand total (returns list)
         self._rankingDict = sorted(self._rankingDict.items(), key=lambda x: x[1], reverse=True)
 
     def setDateTimeToday(self):
@@ -139,18 +143,20 @@ class Yahtzee:
                         print('-'*21)
                         print(f"{self._playersList[j].getGrandTotalScore()}\n")
 
-                        # first roll
-                        self._rollsList[j].rollDice()
-                        print(f'{self._playersList[j].name.upper()}', end='')
-                        keepFirstRoll = self._rollsList[j].keepDice()
+                        # ADD AFTER TESTING
+                        # # first roll
+                        # self._rollsList[j].rollDice()
+                        # print(f'{self._playersList[j].name.upper()}', end='')
+                        # keepFirstRoll = self._rollsList[j].keepDice()
 
-                        # second roll
-                        self._rollsList[j].reRollDice(keepFirstRoll)
-                        print(f'{self._playersList[j].name.upper()}', end='')
-                        keepSecondRoll = self._rollsList[j].keepDice()
+                        # # second roll
+                        # self._rollsList[j].reRollDice(keepFirstRoll)
+                        # print(f'{self._playersList[j].name.upper()}', end='')
+                        # keepSecondRoll = self._rollsList[j].keepDice()
 
-                        # third roll
-                        finalRoll = self._rollsList[j].finalRollDice(keepSecondRoll)
+                        # # third roll
+                        # finalRoll = self._rollsList[j].finalRollDice(keepSecondRoll)
+                        finalRoll = [6, 6, 6, 6, 6]  # REMOVE AFTER TESTING
 
                         # select score to check final roll against
                         scoreSelected = self._playersList[j].selectScore(finalRoll)
@@ -224,14 +230,33 @@ class Yahtzee:
             # END OF ROUND FILE I/O
             # create directory for storing output files
             fileio.createFileioDirectory()
+
             # set date object for standardizing file basenames
             self.setDateTimeToday()
 
-            # Create textfile
-            txtfile = TextFile(self._gameCounter, self._playersList, self._rankingDict, self._dateTimeToday)
+            # TEXTFILE instance in fileio.py
+            txtfile = TextFile()
+
+            # create textfile directory
             txtfile.createTextFileDir()
-            txtfile.createTextFilename()
-            txtfile.writeTextFile()
+
+            # create textfile basename
+            txtfile.createTextFilename(self._gameCounter, self._dateTimeToday)
+
+            # write textfile
+            txtfile.writeTextFile(self._gameCounter, self._playersList, self._rankingDict)
+
+            # DOCX FILE instance in fileio.py
+            docxfile = DocxFile()
+
+            # create textfile directory
+            docxfile.createDocxFileDir()
+
+            # create textfile basename
+            docxfile.createDocxFilename(self._gameCounter, self._dateTimeToday)
+
+            # write textfile
+            docxfile.writeDocxFile(self._gameCounter, self._playersList, self._rankingDict)
 
             # END OF GAME ACTIONS
             # reset each Player class instance scoring dict and total scores
