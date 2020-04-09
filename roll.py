@@ -230,6 +230,8 @@ class Roll:
         :param diceList: The final roll.
         :return: Score for large straight.
         """
+        diceList.sort()
+
         # checks for large straight 2 to 6
         if len(set(diceList)) == 5 and diceList[0] == 2 and diceList[4] == 6:
             return 35
