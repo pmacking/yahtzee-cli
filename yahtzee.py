@@ -195,11 +195,11 @@ class Yahtzee:
         # check top bonus
         self._playersList[playerIndex].addTopBonusScore()
 
-        # increment top total and grand total with result of check top bonus
+        # increment top total and grand total with delta bonus
         self._playersList[playerIndex]._totalTopScore += self._playersList[
-            playerIndex]._topBonusScore
+            playerIndex].topBonusScoreDelta
         self._playersList[playerIndex]._grandTotalScore += self._playersList[
-            playerIndex]._topBonusScore
+            playerIndex].topBonusScoreDelta
 
     def checkBottomScore(self, playerIndex):
         """

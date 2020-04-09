@@ -17,6 +17,7 @@ class Player:
 
         self._topScore = 0
         self._topBonusScore = 0
+        self.topBonusScoreDelta = 0
         self._totalTopScore = 0
         self._totalBottomScore = 0
         self._grandTotalScore = 0
@@ -88,8 +89,15 @@ class Player:
         '''
         bonusThreshold = 63
 
+        # checks top score and threshold to apply top bonus
         if self._topScore >= bonusThreshold and self._topBonusScore == 0:
             self._topBonusScore = 35
+
+            # used to increment total bottom and grand total by delta only once
+            self.topBonusScoreDelta = 35
+
+        else:
+            self.topBonusScoreDelta = 0
 
     def printStackedScoreDict(self):
         '''
