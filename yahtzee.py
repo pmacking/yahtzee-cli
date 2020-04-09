@@ -187,18 +187,18 @@ class Yahtzee:
                             self._scoreDictReferenceValues[self.scoreSelected])
 
         # incremenet option, top score, top total, grand total
-        self._playersList[playerIndex]._scoreDict[self.scoreSelected] += score
-        self._playersList[playerIndex]._topScore += score
-        self._playersList[playerIndex]._totalTopScore += score
-        self._playersList[playerIndex]._grandTotalScore += score
+        self._playersList[playerIndex].scoreDict[self.scoreSelected] += score
+        self._playersList[playerIndex].topScore += score
+        self._playersList[playerIndex].totalTopScore += score
+        self._playersList[playerIndex].grandTotalScore += score
 
         # check top bonus
         self._playersList[playerIndex].addTopBonusScore()
 
         # increment top total and grand total with delta bonus
-        self._playersList[playerIndex]._totalTopScore += self._playersList[
+        self._playersList[playerIndex].totalTopScore += self._playersList[
             playerIndex].topBonusScoreDelta
-        self._playersList[playerIndex]._grandTotalScore += self._playersList[
+        self._playersList[playerIndex].grandTotalScore += self._playersList[
             playerIndex].topBonusScoreDelta
 
     def checkBottomScore(self, playerIndex):
@@ -240,13 +240,13 @@ class Yahtzee:
                     self.finalRoll)
 
             # cannot score 50 for yahztee bonus if did not score 50 yahtzee
-            if self._playersList[playerIndex]._scoreDict['yahtzee'] != 50:
+            if self._playersList[playerIndex].scoreDict['yahtzee'] != 50:
                 score = 0
 
         # increment round, total bottom, and grand total scores
-        self._playersList[playerIndex]._scoreDict[self.scoreSelected] += score
-        self._playersList[playerIndex]._totalBottomScore += score
-        self._playersList[playerIndex]._grandTotalScore += score
+        self._playersList[playerIndex].scoreDict[self.scoreSelected] += score
+        self._playersList[playerIndex].totalBottomScore += score
+        self._playersList[playerIndex].grandTotalScore += score
 
     def printEndOfTurnGrandTotal(self, playerIndex):
         """
@@ -256,7 +256,7 @@ class Yahtzee:
         """
         print(f"\n{self._playersList[playerIndex].name.upper()} "
               f"GRAND TOTAL: "
-              f"{self._playersList[playerIndex]._grandTotalScore}")
+              f"{self._playersList[playerIndex].grandTotalScore}")
         print("-"*21)
 
     def printEndOfRoundRankings(self):
@@ -283,17 +283,17 @@ class Yahtzee:
         """Round logic taken by each players within a game."""
 
         # round loop (arbitrarily refs len of first instance of Player)
-        for i, k in enumerate(self._playersList[0]._scoreDict):
+        for i, k in enumerate(self._playersList[0].scoreDict):
 
             # player turn loop (turn per player per round)
             for j, player in enumerate(self._playersList):
 
                 # skip the final round if only yahtzee bonus and yahtzee != 50
                 if (i == 13 and
-                    self._playersList[j]._scoreDict['yahtzee bonus'] is False
-                    and self._playersList[j]._scoreDict['yahtzee'] != 50):
+                    self._playersList[j].scoreDict['yahtzee bonus'] is False
+                    and self._playersList[j].scoreDict['yahtzee'] != 50):
                     # Since all conditions are true, we can frobnicate.
-                    self._playersList[j]._scoreDict['yahtzee bonus'] = 0
+                    self._playersList[j].scoreDict['yahtzee bonus'] = 0
                     print("\nAutomatically score 0 for 'yahtzee bonus'...")
 
                 else:
