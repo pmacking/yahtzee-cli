@@ -1,5 +1,11 @@
 #!python3
 
+"""
+This module initiates a yahtzee game.
+
+github.com/pmacking/main.py
+"""
+
 from yahtzee import Yahtzee
 
 

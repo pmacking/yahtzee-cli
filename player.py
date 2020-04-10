@@ -1,9 +1,18 @@
 #! python3
 
+"""
+This module controls player instantiation and score keeping.
+
+github.com/pmacking/player.py
+"""
+
 import pyinputplus as pyip
 
 
 class Player:
+    """
+    Objects instantiated by the :class:`Player <Player>` can be called to create players and influence scores.
+    """
     def __init__(self, name):
         self.name = name
         self.scoreDict = {

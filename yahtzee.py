@@ -42,6 +42,7 @@ class Yahtzee:
             ]
 
         # player name strings
+        self.numberOfPlayers = 0
         self.playersNames = []
 
         # lists of class instances
@@ -49,13 +50,17 @@ class Yahtzee:
         self._rollsList = []
 
         # other objects
-        self.numberOfPlayers = 0
         self.gameOver = False
         self.gameCounter = 0
         self.rankingDict = {}
         self.dateTimeToday = ''
         self.scoreSelected = ''
         self.finalRoll = []
+
+    def __repr__(self):
+        return (f"{self.__class__.__name__}("
+                f"{self.numberOfPlayers}, {self.playersNames}, "
+                f"{self._playersList}, {self._rollsList})")
 
     def getNumberOfPlayers(self):
         """
@@ -365,8 +370,8 @@ class Yahtzee:
         pdffile.createPdfFilename(self.gameCounter, self.dateTimeToday)
 
         # retrieve docx file Path to pass to convertDocxToPdf
-        docxFileDirStr = docxfile._docxFileDirStr
-        docxFilename = docxfile._docxFilename
+        docxFileDirStr = docxfile.docxFileDirStr
+        docxFilename = docxfile.docxFilename
 
         # convert docx to pdf
         pdffile.convertDocxToPdf(docxFileDirStr, docxFilename)
