@@ -1,10 +1,20 @@
 #! python3
 
+"""
+This module controls rolling and checking of scores.
+
+github.com/pmacking/roll.py
+"""
+
 from random import randint
 import pyinputplus as pyip
 
 
 class Roll:
+    """
+    Objects instantiated by the :class:`Roll <Roll>` can be called to roll
+    dice and check scores.
+    """
     def __init__(self, name):
         """
         Class containing diceDict, and methods for rolling/keeping dice
