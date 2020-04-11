@@ -199,32 +199,33 @@ class Roll:
         :param diceList: The final roll.
         :return: Score for small straight.
         """
+
         diceList.sort()
         diceListSet = list(set(diceList))
 
-        # if 5 unique dice, checks there are at least four sequential
-        if len(set(diceList)) == 5:
+        # if 5 unique dice, valids against valid options
+        if len(set(diceListSet)) == 5:
 
-            lStraightChecker = 0
-            for i, d in enumerate(diceList[:-1]):
-                if diceList[i+1] == diceList[i] + 1:
-                    lStraightChecker += 1
-
-            if lStraightChecker >= 4:
+            validOptions = [[1, 2, 3, 4, 5],
+                            [1, 2, 3, 4, 6],
+                            [1, 3, 4, 5, 6],
+                            [2, 3, 4, 5, 6],
+                            ]
+            if diceListSet in validOptions:
                 return 30
 
             else:
                 return 0
 
         # if four unique dice, checks they are sequential
-        elif len(set(diceList)) == 4:
+        elif len(set(diceListSet)) == 4:
 
-            sStraightChecker = 0
+            sequential = 0
             for i, d in enumerate(diceListSet[:-1]):
                 if diceListSet[i+1] == diceListSet[i] + 1:
-                    sStraightChecker += 1
+                    sequential += 1
 
-            if sStraightChecker == 3:
+            if sequential == 3:
                 return 30
 
             else:
