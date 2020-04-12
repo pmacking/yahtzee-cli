@@ -40,16 +40,18 @@ class Roll:
         self._currentDiceList = [randint(1, 6) for d in range(5)]
         print(f'FIRST ROLL: {self._currentDiceList}\n')
 
-    def keepDice(self):
+    def keepDice(self, playerNameCaps):
         """
         Method that allows keeping all, rerolling all, or selecting dice
 
         :return: Current dice list.
+        :param playerNameCaps: Capitalized player name.
         """
 
         # ask if user wants to KEEP ALL the dice
         if pyip.inputYesNo(
-                prompt=(f' do you want to KEEP ALL dice?\n')) == 'no':
+                prompt=(f"{playerNameCaps} do you want to "
+                        f"KEEP ALL dice?\n")) == 'no':
 
             # ask if the user wants to REROLL ALL the dice
             if pyip.inputYesNo(
