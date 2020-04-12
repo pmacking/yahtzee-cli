@@ -169,13 +169,15 @@ class Yahtzee:
 
         # first roll
         self._rollsList[playerIndex].rollDice()
-        print(f'{self._playersList[playerIndex].name.upper()}', end='')
-        keepFirstRoll = self._rollsList[playerIndex].keepDice()
+        # print(f'{self._playersList[playerIndex].name.upper()}', end='')
+        keepFirstRoll = self._rollsList[playerIndex].keepDice(
+            self._playersList[playerIndex].name.upper())
 
         # second roll
         self._rollsList[playerIndex].reRollDice(keepFirstRoll)
-        print(f'{self._playersList[playerIndex].name.upper()}', end='')
-        keepSecondRoll = self._rollsList[playerIndex].keepDice()
+        # print(f'{self._playersList[playerIndex].name.upper()}', end='')
+        keepSecondRoll = self._rollsList[playerIndex].keepDice(
+            self._playersList[playerIndex].name.upper())
 
         # third roll
         self.finalRoll = self._rollsList[playerIndex].finalRollDice(
@@ -185,7 +187,7 @@ class Yahtzee:
         """
         Checks and sets score final roll score in top scores sec of scoringDict
 
-        :param playerIndex: player index in playersList and rollsList.
+        :param playerIndex: Player index in playersList and rollsList.
         """
         score = self._rollsList[playerIndex].checkSingles(
                             self.finalRoll,
@@ -210,7 +212,7 @@ class Yahtzee:
         """
         Checks and sets score final roll score in top scores sec of scoringDict
 
-        :param playerIndex: player index in playersList and rollsList.
+        :param playerIndex: Player index in playersList and rollsList.
         """
         if self.scoreSelected == 'three of a kind':
             score = self._rollsList[playerIndex].checkThreeOfAKind(
@@ -262,7 +264,6 @@ class Yahtzee:
         print(f"\n{self._playersList[playerIndex].name.upper()} "
               f"GRAND TOTAL: "
               f"{self._playersList[playerIndex].grandTotalScore}")
-        print("-"*21)
 
     def printEndOfRoundRankings(self):
         """
@@ -285,7 +286,7 @@ class Yahtzee:
             self.gameOver = True
 
     def yahtzeeRounds(self):
-        """Round logic taken by each players within a game."""
+        """Round logic taken by each player within a game."""
 
         # round loop (arbitrarily refs len of first instance of Player)
         for i, k in enumerate(self._playersList[0].scoreDict):
@@ -303,8 +304,10 @@ class Yahtzee:
 
                 else:
                     self.printCurrentScores(i, j)  # print scores b4 rolling
+                    print("-"*48)
 
                     self.rollTheDice(j)  # roll the dice
+                    print("-"*48)
 
                     # select score to check final roll against
                     self.scoreSelected = self._playersList[j].selectScore(
@@ -320,6 +323,8 @@ class Yahtzee:
 
                     # print grand total score at end of player turn
                     self.printEndOfTurnGrandTotal(j)
+                    print("-"*48)
+                    print("-"*48)
 
         # create ranking dict for the round
         self.sortRankingDict()
@@ -395,6 +400,8 @@ class Yahtzee:
         self.getPlayerNames()
         self.createPlayersList()
         self.createRollsList()
+
+        print("-"*48)
 
         # starts games of rounds of player turns
         self.yahtzeeGames()

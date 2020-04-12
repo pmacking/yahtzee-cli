@@ -11,7 +11,8 @@ import pyinputplus as pyip
 
 class Player:
     """
-    Objects instantiated by the :class:`Player <Player>` can be called to create players and influence scores.
+    Objects instantiated by the :class:`Player <Player>` can be called to
+    create players and influence scores.
     """
     def __init__(self, name):
         self.name = name
@@ -69,8 +70,10 @@ class Player:
             while checkYahtzeeBonus is False:
 
                 # inputMenu offers single list item if keyword blank=True
-                scoreSelected = pyip.inputMenu(self.scoreOptions,
-                                               numbered=True, blank=True)
+                scoreSelected = pyip.inputMenu(
+                    self.scoreOptions,
+                    numbered=True,
+                    blank=True)
 
                 # validates user doesn't input blank
                 if scoreSelected == '':
@@ -97,7 +100,7 @@ class Player:
             # confirm option selection
             if (pyip.inputYesNo(
                     prompt=f"\n{self.name.upper()} are you sure you want to "
-                           f"select {scoreSelected}?\n") == 'yes'):
+                           f"select {scoreSelected.upper()}?\n") == 'yes'):
                 doubleCheck = True
 
         return scoreSelected
