@@ -29,6 +29,71 @@ def printFileioConfirmation(fileDirStr, fileName):
     print(f"\nSaved file: '{fileDirStr}/{fileName}'")
 
 
+class FileWriter:
+    """
+    Objects instantiated by :class: `FileWriter <FileWriter>` can be called as a factory to write file as output per file formats.
+    """
+    def __init__(self):
+        self.docxFileDirStr = ''
+        self.docxFilename = ''
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}()"
+
+    def writeFile(self, dateTimeToday, gameCounter, playersList,
+                  rankingDict, fileFormats):
+        """
+        The writeFile method creates instances of each fileFormat, including creating Path, filename, and writing or converting files.
+
+        :param dateTimeToday: The datetime today as string.
+        :param gameCounter: The count of the game as int.
+        :param playersList: The list of player instances.
+        :param rankingDict: The ranking dictionary for the current round.
+        :param fileFormats: The file formats to write as list.
+        """
+
+        # create class and write file for each format in fileFormats
+        for fileFormat in fileFormats:
+            if fileFormat == 'txt':
+                textfile = TextFile()
+
+                # create textfile directory
+                textfile.createTextFileDir()
+
+                # create textfile basename
+                textfile.createTextFilename(gameCounter, dateTimeToday)
+
+                # write textfile
+                textfile.writeTextFile(gameCounter, playersList, rankingDict)
+
+            elif fileFormat == 'docx':
+                docxfile = DocxFile()
+
+                # create docx directory and set locally for pdf convert
+                self.docxFileDirStr = docxfile.createDocxFileDir()
+
+                # create docx basename and set locally for pdf convert
+                self.docxFilename = docxfile.createDocxFilename(
+                                        gameCounter, dateTimeToday)
+
+                # write docxfile
+                docxfile.writeDocxFile(gameCounter, playersList, rankingDict)
+
+            elif fileFormat == 'pdf':
+                # PDF instance in fileio.py
+                pdffile = PdfFile()
+
+                # create pdf file directory
+                pdffile.createPdfFileDir()
+
+                # create pdf file basename
+                pdffile.createPdfFilename(gameCounter, dateTimeToday)
+
+                # convert docx to pdf
+                pdffile.convertDocxToPdf(self.docxFileDirStr,
+                                         self.docxFilename)
+
+
 class TextFile:
     """
     Objects instantiated by the :class:`TextFile <Textfile>` can be called to
@@ -124,9 +189,14 @@ class DocxFile:
     def createDocxFileDir(self):
         """
         Create DocxFiles folder.
+
+        :rtype: string
+        :return: The docx directory Path.
         """
         os.makedirs(Path.cwd() / 'YahtzeeScores/DocxFiles', exist_ok=True)
         self.docxFileDirStr = str(Path.cwd() / 'YahtzeeScores/DocxFiles')
+
+        return self.docxFileDirStr
 
     def createDocxFilename(self, gameCounter, dateTimeToday):
         """
@@ -134,8 +204,13 @@ class DocxFile:
 
         :param gameCounter: integer count of games played.
         :param dateTimeToday: date str to standardize output file basename.
+
+        :rtype: string
+        :return: The docx filename.
         """
         self.docxFilename = f"{dateTimeToday}Game{gameCounter+1}.docx"
+
+        return self.docxFilename
 
     def writeDocxFile(self, gameCounter, playersList, rankingDict):
         """
