@@ -19,8 +19,7 @@ from datetime import datetime
 
 from roll import Roll
 from player import Player
-import fileio
-from fileio import TextFile, DocxFile, PdfFile
+from fileio import FileWriter
 
 
 class Yahtzee:
@@ -53,14 +52,16 @@ class Yahtzee:
         self.gameOver = False
         self.gameCounter = 0
         self.rankingDict = {}
-        self.dateTimeToday = ''
         self.scoreSelected = ''
         self.finalRoll = []
+        self.dateTimeToday = ''
+        self.outputFileFormats = ['txt', 'docx', 'pdf']
 
     def __repr__(self):
         return (f"{self.__class__.__name__}("
                 f"{self.numberOfPlayers}, {self.playersNames}, "
-                f"{self._playersList}, {self._rollsList})")
+                f"{self._playersList}, {self._rollsList}, "
+                f"{self.outputFileFormats})")
 
     def getNumberOfPlayers(self):
         """
@@ -306,7 +307,8 @@ class Yahtzee:
                     self.printCurrentScores(i, j)  # print scores b4 rolling
                     print("-"*48)
 
-                    self.rollTheDice(j)  # roll the dice
+                    # roll the dice
+                    self.rollTheDice(j)
                     print("-"*48)
 
                     # select score to check final roll against
@@ -326,6 +328,8 @@ class Yahtzee:
                     print("-"*48)
                     print("-"*48)
 
+        # END OF ROUND RANKING
+
         # create ranking dict for the round
         self.sortRankingDict()
 
@@ -333,55 +337,19 @@ class Yahtzee:
         self.printEndOfRoundRankings()
 
         # END OF ROUND FILE I/O
-        # create directory for storing output files
-        fileio.createFileioDirectory()
 
         # set date object for standardizing file basenames
         self.setDateTimeToday()
 
-        # TEXTFILE instance in fileio.py
-        txtfile = TextFile()
+        fileWrite = FileWriter()
+        fileWrite.writeFile(self.dateTimeToday,
+                            self.gameCounter,
+                            self._playersList,
+                            self.rankingDict,
+                            self.outputFileFormats)
 
-        # create textfile directory
-        txtfile.createTextFileDir()
+        # END OF ROUND CLEANUP
 
-        # create textfile basename
-        txtfile.createTextFilename(self.gameCounter, self.dateTimeToday)
-
-        # write textfile
-        txtfile.writeTextFile(self.gameCounter, self._playersList,
-                              self.rankingDict)
-
-        # DOCX FILE instance in fileio.py
-        docxfile = DocxFile()
-
-        # create textfile directory
-        docxfile.createDocxFileDir()
-
-        # create textfile basename
-        docxfile.createDocxFilename(self.gameCounter, self.dateTimeToday)
-
-        # write textfile
-        docxfile.writeDocxFile(self.gameCounter, self._playersList,
-                               self.rankingDict)
-
-        # PDF instance in fileio.py
-        pdffile = PdfFile()
-
-        # create pdf file directory
-        pdffile.createPdfFileDir()
-
-        # create pdf file basename
-        pdffile.createPdfFilename(self.gameCounter, self.dateTimeToday)
-
-        # retrieve docx file Path to pass to convertDocxToPdf
-        docxFileDirStr = docxfile.docxFileDirStr
-        docxFilename = docxfile.docxFilename
-
-        # convert docx to pdf
-        pdffile.convertDocxToPdf(docxFileDirStr, docxFilename)
-
-        # END OF ROUND ACTIONS
         # reset each Player class instance scoring dict and total scores
         print('\nResetting dice for next round...')
         time.sleep(1)
