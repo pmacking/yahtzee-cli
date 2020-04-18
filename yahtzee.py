@@ -159,26 +159,31 @@ class Yahtzee:
 
     def rollTheDice(self, playerIndex):
         """
-        Roll dice during a player's turn.
+        Roll dice during a player's turn and print results.
 
         :param playerIndex: player index in playersList
         """
-
         # first roll
-        self._rollsList[playerIndex].rollDice()
-        # print(f'{self._playersList[playerIndex].name.upper()}', end='')
+        firstRollResult = self._rollsList[playerIndex].rollDice()
+        print(f'FIRST ROLL: {firstRollResult}\n')
+
+        # first roll: prompt player to keep, reroll, or select dice
         keepFirstRoll = self._rollsList[playerIndex].keepDice(
             self._playersList[playerIndex].name.upper())
 
         # second roll
-        self._rollsList[playerIndex].reRollDice(keepFirstRoll)
-        # print(f'{self._playersList[playerIndex].name.upper()}', end='')
+        secondRollResult = self._rollsList[playerIndex].reRollDice(
+                                                        keepFirstRoll)
+        print(f'\nSECOND ROLL: {secondRollResult}\n')
+
+        # second roll: prompt player to keep, reroll, or select dice
         keepSecondRoll = self._rollsList[playerIndex].keepDice(
             self._playersList[playerIndex].name.upper())
 
         # third roll
         self.finalRoll = self._rollsList[playerIndex].finalRollDice(
                                                     keepSecondRoll)
+        print(f'\nFINAL ROLL: {self.finalRoll}\n')
 
     def checkTopScore(self, playerIndex):
         """

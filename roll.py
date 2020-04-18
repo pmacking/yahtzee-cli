@@ -31,6 +31,7 @@ class Roll:
     def rollDice(self):
         """
         Method that determines the first dice roll
+        :return: The first roll result.
         """
         # clear current and keeper lists from previous roll
         self._keeperDiceList.clear()
@@ -38,31 +39,33 @@ class Roll:
 
         # set _currentDiceList to five random int between 1 and 6
         self._currentDiceList = [randint(1, 6) for d in range(5)]
-        print(f'FIRST ROLL: {self._currentDiceList}\n')
+
+        return self._currentDiceList
 
     def keepDice(self, playerNameCaps):
         """
         Method that allows keeping all, rerolling all, or selecting dice
 
-        :return: Current dice list.
         :param playerNameCaps: Capitalized player name.
+        :return: Current dice list.
         """
 
         # ask if user wants to KEEP ALL the dice
-        if pyip.inputYesNo(
-                prompt=(f"{playerNameCaps} do you want to "
-                        f"KEEP ALL dice?\n")) == 'no':
+        keepAll = pyip.inputYesNo(prompt=(f"{playerNameCaps} do you want to "
+                                          f"KEEP ALL dice?\n"))
+        if keepAll == 'no':
 
             # ask if the user wants to REROLL ALL the dice
-            if pyip.inputYesNo(
-                    prompt=(f'Do you want to REROLL ALL dice?\n')) == 'no':
+            reRollAll = pyip.inputYesNo(prompt=(f"Do you want to REROLL ALL "
+                                                f"dice?\n"))
+            if reRollAll == 'no':
 
                 while True:
 
                     # ask the user what dice to KEEP
-                    keepSome = pyip.inputInt(
-                        'Enter the dice you would like to KEEP (ex: 456):\n',
-                        blank=True)
+                    keepSome = pyip.inputInt("Enter the dice you would like "
+                                             "to KEEP (ex: 456):\n",
+                                             blank=True)
 
                     if keepSome == '':
 
@@ -106,6 +109,7 @@ class Roll:
         Method that rolls another time
 
         :param diceList: list of current dice from previous roll.
+        :return: The second roll result.
         """
         # roll current dice from previous roll
         self._currentDiceList = [randint(1, 6) for d in range(
@@ -116,8 +120,6 @@ class Roll:
 
         # clear keepers list
         self._keeperDiceList.clear()
-
-        print(f'\nSECOND ROLL: {self._currentDiceList}\n')
 
         return self._currentDiceList
 
@@ -126,6 +128,7 @@ class Roll:
         Method that rolls dice a final time
 
         :param diceList: list of current dice from previous roll.
+        :return: The final roll result.
         """
         # roll current dice from previous roll
         self._currentDiceList = [randint(1, 6) for d in range(
@@ -136,8 +139,6 @@ class Roll:
 
         # clear keepers list
         self._keeperDiceList.clear()
-
-        print(f'\nFINAL ROLL: {self._currentDiceList}\n')
 
         return self._currentDiceList
 
