@@ -166,7 +166,8 @@ class Roll:
         """
         diceList.sort()
 
-        if diceList[0] == diceList[2] or diceList[1] == diceList[3] or diceList[2] == diceList[4]:
+        if diceList[0] == diceList[2] or diceList[1] == diceList[3] or \
+           diceList[2] == diceList[4]:
             return sum(diceList)
         return 0
 
@@ -177,7 +178,9 @@ class Roll:
         :param diceList: The final roll.
         :return: Score for four of a kind.
         """
-        if len(set(diceList)) <= (len(diceList)-3):
+        diceList.sort()
+
+        if diceList[0] == diceList[3] or diceList[1] == diceList[4]:
             return sum(diceList)
         return 0
 
