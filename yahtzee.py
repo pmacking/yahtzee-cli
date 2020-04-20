@@ -30,15 +30,7 @@ class Yahtzee:
         self._scoreDictReferenceValues = {
                 'ones': 1, 'twos': 2, 'threes': 3,
                 'fours': 4, 'fives': 5, 'sixes': 6,
-                'full house': 25, 'small straight': 30, 'large straight': 35,
-                'yahtzee': 50, 'yahtzee bonus': 50,
                 }
-
-        # singles reference options when validating CHECK TOP SCORE
-        self._singlesOptions = [
-            'ones', 'twos', 'threes',
-            'fours', 'fives', 'sixes'
-            ]
 
         # player name strings
         self.numberOfPlayers = 0
@@ -319,7 +311,7 @@ class Yahtzee:
                         self.finalRoll)
 
                     # Check TOP SCORE and increment score
-                    if self.scoreSelected in self._singlesOptions:
+                    if self.scoreSelected in self._scoreDictReferenceValues:
                         self.checkTopScore(j)
 
                     # Check BOTTOM SCORE and increment score
