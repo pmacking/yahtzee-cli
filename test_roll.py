@@ -4,7 +4,6 @@ import unittest
 from unittest.mock import patch
 
 from roll import Roll
-from player import Player
 
 
 class TestRoll(unittest.TestCase):
@@ -34,21 +33,12 @@ class TestRoll(unittest.TestCase):
         # construct instance of Roll
         self.rollTest = Roll('rollTest')
 
-        # construct instance of Player
-        self.playerTest = Player('testPlayer')
-
     def tearDown(self):
         """
         Using tearDown instance method here for visibility on utility.
         No real purpose beyond creating namespace and viewing print output.
         """
         print('tearDown')
-
-        # # teardown instance of Roll
-        # self.rollTest.dispose()
-
-        # # tear down instance of Player
-        # self.playerTest.dispose()
 
     def test_instanceAttributes(self):
         """
