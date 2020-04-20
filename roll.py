@@ -10,6 +10,24 @@ from random import randint
 import pyinputplus as pyip
 
 
+def getKeepDiceCheck(inputPrompt):
+    """
+    Enables returning a yes or no response to an input prompt.
+
+    :param inputPrompt: String yes no question.
+    """
+    return pyip.inputYesNo(prompt=inputPrompt)
+
+
+def getKeepSomeCheck(inputPrompt):
+    """
+    Enables returning integer input, as well as a blank input.
+
+    :param inputPrompt: String prompt asking for integer of dice.
+    """
+    return pyip.inputInt(prompt=inputPrompt, blank=True)
+
+
 class Roll:
     """
     Objects instantiated by the :class:`Roll <Roll>` can be called to roll
@@ -51,28 +69,26 @@ class Roll:
         """
 
         # ask if user wants to KEEP ALL the dice
-        keepAll = pyip.inputYesNo(prompt=(f"{playerNameCaps} do you want to "
-                                          f"KEEP ALL dice?\n"))
+        keepAll = getKeepDiceCheck(f"{playerNameCaps} do you want to "
+                                   f"KEEP ALL dice?\n")
         if keepAll == 'no':
 
             # ask if the user wants to REROLL ALL the dice
-            reRollAll = pyip.inputYesNo(prompt=(f"Do you want to REROLL ALL "
-                                                f"dice?\n"))
+            reRollAll = getKeepDiceCheck(f"Do you want to REROLL ALL "
+                                         f"dice?\n")
             if reRollAll == 'no':
 
                 while True:
 
                     # ask the user what dice to KEEP
-                    keepSome = pyip.inputInt("Enter the dice you would like "
-                                             "to KEEP (ex: 456):\n",
-                                             blank=True)
-
+                    keepSome = getKeepSomeCheck("Enter the dice you would "
+                                                "like to KEEP (ex: 456):\n")
                     if keepSome == '':
 
                         # validate empty string and intent to REROLL ALL
-                        keepNoneCheck = pyip.inputYesNo(
-                            prompt=f"Are you sure you want to REROLL ALL the "
-                                   f"dice?\n")
+                        keepNoneCheck = getKeepDiceCheck(f"Are you sure you "
+                                                         f"want to REROLL ALL "
+                                                         f"the dice?\n")
 
                         if keepNoneCheck == 'yes':
                             return self._currentDiceList
@@ -110,25 +126,6 @@ class Roll:
 
         :param diceList: list of current dice from previous roll.
         :return: The second roll result.
-        """
-        # roll current dice from previous roll
-        self._currentDiceList = [randint(1, 6) for d in range(
-                                 0, (len(diceList)))]
-
-        # add the newly rolled current dice to keepers
-        self._currentDiceList = self._currentDiceList + self._keeperDiceList
-
-        # clear keepers list
-        self._keeperDiceList.clear()
-
-        return self._currentDiceList
-
-    def finalRollDice(self, diceList):
-        """
-        Method that rolls dice a final time
-
-        :param diceList: list of current dice from previous roll.
-        :return: The final roll result.
         """
         # roll current dice from previous roll
         self._currentDiceList = [randint(1, 6) for d in range(

@@ -181,7 +181,7 @@ class Yahtzee:
             self._playersList[playerIndex].name.upper())
 
         # third roll
-        self.finalRoll = self._rollsList[playerIndex].finalRollDice(
+        self.finalRoll = self._rollsList[playerIndex].reRollDice(
                                                     keepSecondRoll)
         print(f'\nFINAL ROLL: {self.finalRoll}\n')
 
