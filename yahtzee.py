@@ -30,15 +30,7 @@ class Yahtzee:
         self._scoreDictReferenceValues = {
                 'ones': 1, 'twos': 2, 'threes': 3,
                 'fours': 4, 'fives': 5, 'sixes': 6,
-                'full house': 25, 'small straight': 30, 'large straight': 35,
-                'yahtzee': 50, 'yahtzee bonus': 50,
                 }
-
-        # singles reference options when validating CHECK TOP SCORE
-        self._singlesOptions = [
-            'ones', 'twos', 'threes',
-            'fours', 'fives', 'sixes'
-            ]
 
         # player name strings
         self.numberOfPlayers = 0
@@ -49,7 +41,6 @@ class Yahtzee:
         self._rollsList = []
 
         # other objects
-        self.gameOver = False
         self.gameCounter = 0
         self.rankingDict = {}
         self.scoreSelected = ''
@@ -125,14 +116,11 @@ class Yahtzee:
 
     def yahtzeeGames(self):
         """Game loop logic."""
-        while self.gameOver is False:
+        while True:
 
             print(f"\nLET'S PLAY! GAME {self.gameCounter+1}")
 
             self.yahtzeeRounds()
-
-        # exit game
-        sys.exit()
 
     def printCurrentScores(self, roundNum, playerIndex):
         """
@@ -163,26 +151,31 @@ class Yahtzee:
 
     def rollTheDice(self, playerIndex):
         """
-        Roll dice during a player's turn.
+        Roll dice during a player's turn and print results.
 
         :param playerIndex: player index in playersList
         """
-
         # first roll
-        self._rollsList[playerIndex].rollDice()
-        # print(f'{self._playersList[playerIndex].name.upper()}', end='')
+        firstRollResult = self._rollsList[playerIndex].rollDice()
+        print(f'FIRST ROLL: {firstRollResult}\n')
+
+        # first roll: prompt player to keep, reroll, or select dice
         keepFirstRoll = self._rollsList[playerIndex].keepDice(
             self._playersList[playerIndex].name.upper())
 
         # second roll
-        self._rollsList[playerIndex].reRollDice(keepFirstRoll)
-        # print(f'{self._playersList[playerIndex].name.upper()}', end='')
+        secondRollResult = self._rollsList[playerIndex].reRollDice(
+                                                        keepFirstRoll)
+        print(f'\nSECOND ROLL: {secondRollResult}\n')
+
+        # second roll: prompt player to keep, reroll, or select dice
         keepSecondRoll = self._rollsList[playerIndex].keepDice(
             self._playersList[playerIndex].name.upper())
 
         # third roll
-        self.finalRoll = self._rollsList[playerIndex].finalRollDice(
+        self.finalRoll = self._rollsList[playerIndex].reRollDice(
                                                     keepSecondRoll)
+        print(f'\nFINAL ROLL: {self.finalRoll}\n')
 
     def checkTopScore(self, playerIndex):
         """
@@ -276,15 +269,17 @@ class Yahtzee:
             print(f"{k+1} {v[0]}: {v[1]}")
         print('\n')
 
-    def incrementGameCounter(self):
+    def endOfGame(self):
         """
         Increments gameCounter. Sets gameOver to True if count == 3.
         """
-        self.gameCounter += 1
+        endGame = pyip.inputYesNo(f'\nDo you want to play again?: ')
 
-        if self.gameCounter == 3:
-            print('\nGAME OVER')
-            self.gameOver = True
+        if endGame == 'no':
+            print('\n-- GAME OVER --')
+            sys.exit()
+        elif endGame == 'yes':
+            self.gameCounter += 1
 
     def yahtzeeRounds(self):
         """Round logic taken by each player within a game."""
@@ -316,7 +311,7 @@ class Yahtzee:
                         self.finalRoll)
 
                     # Check TOP SCORE and increment score
-                    if self.scoreSelected in self._singlesOptions:
+                    if self.scoreSelected in self._scoreDictReferenceValues:
                         self.checkTopScore(j)
 
                     # Check BOTTOM SCORE and increment score
@@ -350,12 +345,15 @@ class Yahtzee:
 
         # END OF ROUND CLEANUP
 
-        # reset each Player class instance scoring dict and total scores
-        print('\nResetting dice for next round...')
-        time.sleep(1)
-        self.resetPlayerScores()
+        # end game option
+        self.endOfGame()
 
-        self.incrementGameCounter()  # increment game counter
+        print('\nResetting dice for next round...')
+        print("-"*48)
+        time.sleep(2)
+
+        # reset each Player class instance scoring dict and total scores
+        self.resetPlayerScores()
 
     def play(self):
         """

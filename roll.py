@@ -10,6 +10,24 @@ from random import randint
 import pyinputplus as pyip
 
 
+def getKeepDiceCheck(inputPrompt):
+    """
+    Enables returning a yes or no response to an input prompt.
+
+    :param inputPrompt: String yes no question.
+    """
+    return pyip.inputYesNo(prompt=inputPrompt)
+
+
+def getKeepSomeCheck(inputPrompt):
+    """
+    Enables returning integer input, as well as a blank input.
+
+    :param inputPrompt: String prompt asking for integer of dice.
+    """
+    return pyip.inputInt(prompt=inputPrompt, blank=True)
+
+
 class Roll:
     """
     Objects instantiated by the :class:`Roll <Roll>` can be called to roll
@@ -31,6 +49,7 @@ class Roll:
     def rollDice(self):
         """
         Method that determines the first dice roll
+        :return: The first roll result.
         """
         # clear current and keeper lists from previous roll
         self._keeperDiceList.clear()
@@ -38,38 +57,38 @@ class Roll:
 
         # set _currentDiceList to five random int between 1 and 6
         self._currentDiceList = [randint(1, 6) for d in range(5)]
-        print(f'FIRST ROLL: {self._currentDiceList}\n')
+
+        return self._currentDiceList
 
     def keepDice(self, playerNameCaps):
         """
         Method that allows keeping all, rerolling all, or selecting dice
 
-        :return: Current dice list.
         :param playerNameCaps: Capitalized player name.
+        :return: Current dice list.
         """
 
         # ask if user wants to KEEP ALL the dice
-        if pyip.inputYesNo(
-                prompt=(f"{playerNameCaps} do you want to "
-                        f"KEEP ALL dice?\n")) == 'no':
+        keepAll = getKeepDiceCheck(f"{playerNameCaps} do you want to "
+                                   f"KEEP ALL dice?\n")
+        if keepAll == 'no':
 
             # ask if the user wants to REROLL ALL the dice
-            if pyip.inputYesNo(
-                    prompt=(f'Do you want to REROLL ALL dice?\n')) == 'no':
+            reRollAll = getKeepDiceCheck(f"Do you want to REROLL ALL "
+                                         f"dice?\n")
+            if reRollAll == 'no':
 
                 while True:
 
                     # ask the user what dice to KEEP
-                    keepSome = pyip.inputInt(
-                        'Enter the dice you would like to KEEP (ex: 456):\n',
-                        blank=True)
-
+                    keepSome = getKeepSomeCheck("Enter the dice you would "
+                                                "like to KEEP (ex: 456):\n")
                     if keepSome == '':
 
                         # validate empty string and intent to REROLL ALL
-                        keepNoneCheck = pyip.inputYesNo(
-                            prompt=f"Are you sure you want to REROLL ALL the "
-                                   f"dice?\n")
+                        keepNoneCheck = getKeepDiceCheck(f"Are you sure you "
+                                                         f"want to REROLL ALL "
+                                                         f"the dice?\n")
 
                         if keepNoneCheck == 'yes':
                             return self._currentDiceList
@@ -106,6 +125,7 @@ class Roll:
         Method that rolls another time
 
         :param diceList: list of current dice from previous roll.
+        :return: The second roll result.
         """
         # roll current dice from previous roll
         self._currentDiceList = [randint(1, 6) for d in range(
@@ -116,28 +136,6 @@ class Roll:
 
         # clear keepers list
         self._keeperDiceList.clear()
-
-        print(f'\nSECOND ROLL: {self._currentDiceList}\n')
-
-        return self._currentDiceList
-
-    def finalRollDice(self, diceList):
-        """
-        Method that rolls dice a final time
-
-        :param diceList: list of current dice from previous roll.
-        """
-        # roll current dice from previous roll
-        self._currentDiceList = [randint(1, 6) for d in range(
-                                 0, (len(diceList)))]
-
-        # add the newly rolled current dice to keepers
-        self._currentDiceList = self._currentDiceList + self._keeperDiceList
-
-        # clear keepers list
-        self._keeperDiceList.clear()
-
-        print(f'\nFINAL ROLL: {self._currentDiceList}\n')
 
         return self._currentDiceList
 
@@ -166,7 +164,10 @@ class Roll:
         :param diceList: The final roll.
         :return: Score for three of a kind.
         """
-        if len(set(diceList)) <= (len(diceList)-2):
+        diceList.sort()
+
+        if diceList[0] == diceList[2] or diceList[1] == diceList[3] or \
+           diceList[2] == diceList[4]:
             return sum(diceList)
         return 0
 
@@ -177,7 +178,9 @@ class Roll:
         :param diceList: The final roll.
         :return: Score for four of a kind.
         """
-        if len(set(diceList)) <= (len(diceList)-3):
+        diceList.sort()
+
+        if diceList[0] == diceList[3] or diceList[1] == diceList[4]:
             return sum(diceList)
         return 0
 
