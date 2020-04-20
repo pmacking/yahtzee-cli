@@ -164,7 +164,9 @@ class Roll:
         :param diceList: The final roll.
         :return: Score for three of a kind.
         """
-        if len(set(diceList)) <= (len(diceList)-2):
+        diceList.sort()
+
+        if diceList[0] == diceList[2] or diceList[1] == diceList[3] or diceList[2] == diceList[4]:
             return sum(diceList)
         return 0
 
