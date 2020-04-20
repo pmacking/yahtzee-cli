@@ -41,13 +41,17 @@ class Player:
     def getScoreOptions(self):
         """
         Gets list of non-False scoring options from scoreDict.
+
+        :returns: Score options list.
         """
         self.scoreOptions = []
 
         # create scoreOptions list
-        for i, scoreOption in enumerate(self.scoreDict):
-            if self.scoreDict[scoreOption] is False:
-                self.scoreOptions.append(scoreOption)
+        for i, option in enumerate(self.scoreDict):
+            if self.scoreDict[option] is False:
+                self.scoreOptions.append(option)
+
+        return self.scoreOptions
 
     def selectScore(self, finalRoll):
         """
@@ -63,7 +67,7 @@ class Player:
         while doubleCheck is False:
 
             # get scoring options
-            self.getScoreOptions()
+            self.scoreOptions = self.getScoreOptions()
 
             checkYahtzeeBonus = False
 
