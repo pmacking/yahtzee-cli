@@ -1,4 +1,4 @@
-"""Unit tests for yahtzee.py"""
+"""Unit tests for roll.py"""
 
 import unittest
 from unittest.mock import patch
@@ -136,68 +136,295 @@ class TestRoll(unittest.TestCase):
 
     # THIS SECTION tests checking score of final roll based on scoring option
 
-    def test_checkSingles(self):
+    def test_checkSingles_true(self):
         """
         Tests score based on final roll and selecting a singles option.
         """
+        referenceValue = 1
+        self.rollTest._currentDiceList = [1, 1, 1, 1, 2]
 
-        self.rollTest.checkSingles(self.rollTest._currentDiceList)
+        checkSinglesScore = self.rollTest.checkSingles(
+                                self.rollTest._currentDiceList,
+                                referenceValue
+                                )
 
-    def test_checkThreeOfAKind(self):
+        assert checkSinglesScore == 4
+        assert checkSinglesScore != sum(self.rollTest._currentDiceList)
+
+    def test_checkSingles_false(self):
+        """
+        Tests 0 score based on final roll and selecting a singles option.
+        """
+        referenceValue = 1
+        self.rollTest._currentDiceList = [2, 3, 4, 5, 6]
+
+        checkSinglesScore = self.rollTest.checkSingles(
+                                self.rollTest._currentDiceList,
+                                referenceValue
+                                )
+
+        assert checkSinglesScore == 0
+        assert checkSinglesScore != sum(self.rollTest._currentDiceList)
+
+    def test_checkThreeOfAKind_true(self):
         """
         Tests score based on final roll and selecting three of a kind.
         """
+        threeOfAKindFixtures = [[1, 1, 1, 1, 1],
+                                [1, 1, 1, 1, 2],
+                                [1, 1, 1, 2, 2],
+                                [2, 1, 1, 1, 2],
+                                [2, 2, 1, 1, 1],
+                                [2, 1, 1, 1, 1],
+                                ]
 
-        self.rollTest.checkThreeOfAKind(self.rollTest._currentDiceList)
+        for fixture in threeOfAKindFixtures:
+            score = self.rollTest.checkThreeOfAKind(fixture)
 
-    def test_checkFourOfAKind(self):
+            assert score == sum(fixture)
+            assert len(fixture) == 5
+
+    def test_checkThreeOfAKind_false(self):
+        """
+        Tests 0 score based on final roll and selecting three of a kind.
+        """
+        notThreeOfAKindFixtures = [[1, 2, 3, 4, 5],
+                                   [1, 1, 2, 2, 3],
+                                   [1, 1, 2, 3, 4]
+                                   ]
+
+        for fixture in notThreeOfAKindFixtures:
+            score = self.rollTest.checkThreeOfAKind(fixture)
+
+            self.assertNotEqual(score, sum(fixture))
+            self.assertEqual(score, 0)
+            self.assertEqual(len(fixture), 5)
+
+    def test_checkFourOfAKind_true(self):
         """
         Tests score based on final roll and selecting four of a kind.
         """
+        fourOfAKindFixtures = [[1, 1, 1, 1, 1],
+                               [1, 1, 1, 1, 2],
+                               [2, 1, 1, 1, 1],
+                               ]
 
-        self.rollTest.checkFourOfAKind(self.rollTest._currentDiceList)
+        for fixture in fourOfAKindFixtures:
+            score = self.rollTest.checkFourOfAKind(fixture)
 
-    def test_checkFullHouse(self):
+            self.assertEqual(score, sum(fixture))
+            self.assertEqual(len(fixture), 5)
+
+    def test_checkFourOfAKind_false(self):
+        """
+        Tests 0 score based on final roll and selecting four of a kind.
+        """
+        notFourOfAKindFixtures = [[1, 1, 1, 2, 2],
+                                  [2, 1, 1, 1, 2],
+                                  [2, 2, 1, 1, 1],
+                                  [1, 2, 3, 4, 5],
+                                  ]
+
+        for fixture in notFourOfAKindFixtures:
+            score = self.rollTest.checkFourOfAKind(fixture)
+
+            self.assertNotEqual(score, sum(fixture))
+            self.assertEqual(score, 0)
+            self.assertEqual(len(fixture), 5)
+
+    def test_checkFullHouse_true(self):
         """
         Tests score based on final roll and selecting full house.
         """
+        fullHouseFixtures = [[1, 1, 2, 2, 2],
+                             [1, 2, 2, 2, 1],
+                             [1, 2, 1, 2, 2],
+                             [1, 2, 2, 1, 2],
+                             [2, 1, 2, 2, 1],
+                             [2, 2, 1, 2, 1],
+                             [2, 2, 2, 1, 1],
+                             ]
 
-        self.rollTest.checkFullHouse(self.rollTest._currentDiceList)
+        for fixture in fullHouseFixtures:
+            score = self.rollTest.checkFullHouse(fixture)
 
-    def test_checkSmallStraight(self):
+            self.assertEqual(score, 25)
+            self.assertEqual(len(fixture), 5)
+
+    def test_checkFullHouse_false(self):
+        """
+        Tests 0 score based on final roll and selecting full house.
+        """
+        notFullHouseFixtures = [[1, 1, 1, 1, 2],
+                                [2, 1, 1, 1, 1],
+                                [1, 1, 2, 2, 3],
+                                [1, 2, 3, 4, 5],
+                                ]
+
+        for fixture in notFullHouseFixtures:
+            score = self.rollTest.checkFullHouse(fixture)
+
+            self.assertNotEqual(score, 25)
+            self.assertEqual(score, 0)
+            self.assertEqual(len(fixture), 5)
+
+    def test_checkSmallStraight_true(self):
         """
         Tests score based on final roll and selecting small straight.
         """
+        smallStraightFixtures = [[1, 2, 3, 4, 5],
+                                 [1, 2, 3, 4, 6],
+                                 [1, 3, 4, 5, 6],
+                                 [2, 3, 4, 5, 6],
+                                 [1, 2, 3, 4, 4],
+                                 [1, 2, 4, 3, 4],
+                                 [1, 4, 2, 3, 5],
+                                 ]
 
-        self.rollTest.checkSmallStraight(self.rollTest._currentDiceList)
+        for fixture in smallStraightFixtures:
+            score = self.rollTest.checkSmallStraight(fixture)
 
-    def test_checkLargeStraight(self):
+            self.assertEqual(score, 30)
+            self.assertEqual(len(fixture), 5)
+
+    def test_checkSmallStraight_false(self):
+        """
+        Tests 0 score based on final roll and selecting small straight.
+        """
+        notSmallStraightFixtures = [[1, 2, 3, 5, 6],
+                                    [1, 2, 4, 5, 6],
+                                    [1, 2, 3, 5, 5],
+                                    [1, 1, 3, 4, 5],
+                                    [1, 2, 4, 5, 6],
+                                    ]
+
+        for fixture in notSmallStraightFixtures:
+            score = self.rollTest.checkSmallStraight(fixture)
+
+            self.assertEqual(score, 0)
+            self.assertEqual(len(fixture), 5)
+
+    def test_checkLargeStraight_true(self):
         """
         Tests score based on final roll and selecting large straight.
         """
+        largeStraightFixtures = [[1, 2, 3, 4, 5],
+                                 [2, 3, 4, 5, 6],
+                                 ]
 
-        self.rollTest.checkLargeStraight(self.rollTest._currentDiceList)
+        for fixture in largeStraightFixtures:
+            score = self.rollTest.checkLargeStraight(fixture)
 
-    def test_checkYahtzee(self):
+            self.assertEqual(score, 35)
+            self.assertEqual(len(fixture), 5)
+
+    def test_checkLargeStraight_false(self):
+        """
+        Tests 0 score based on final roll and selecting large straight.
+        """
+        notLargeStraightFixtures = [[1, 2, 3, 4, 6],
+                                    [1, 3, 4, 5, 6],
+                                    ]
+
+        for fixture in notLargeStraightFixtures:
+            score = self.rollTest.checkLargeStraight(fixture)
+
+            self.assertNotEqual(score, 35)
+            self.assertEqual(score, 0)
+            self.assertEqual(len(fixture), 5)
+
+    def test_checkYahtzee_true(self):
         """
         Tests score based on final roll and selecting yahtzee.
         """
+        yahtzeeFixtures = [[1, 1, 1, 1, 1],
+                           [2, 2, 2, 2, 2],
+                           [3, 3, 3, 3, 3],
+                           [4, 4, 4, 4, 4],
+                           [5, 5, 5, 5, 5],
+                           [6, 6, 6, 6, 6],
+                           ]
 
-        self.rollTest.checkYahtzee(self.rollTest._currentDiceList)
+        for fixture in yahtzeeFixtures:
+            score = self.rollTest.checkYahtzee(fixture)
+
+            self.assertEqual(score, 50)
+            self.assertEqual(len(fixture), 5)
+
+    def test_checkYahtzee_false(self):
+        """
+        Tests 0 score based on final roll and selecting yahtzee.
+        """
+        notYahtzeeFixtures = [[1, 1, 1, 1, 2],
+                              [1, 1, 1, 2, 1],
+                              [1, 1, 2, 1, 1],
+                              [1, 2, 1, 1, 1],
+                              [2, 1, 1, 1, 1],
+                              ]
+
+        for fixture in notYahtzeeFixtures:
+            score = self.rollTest.checkYahtzee(fixture)
+
+            self.assertNotEqual(score, 50)
+            self.assertEqual(score, 0)
+            self.assertEqual(len(fixture), 5)
 
     def test_addChance(self):
         """
         Tests score based on final roll and selecting chance.
         """
+        chanceFixtures = [[1, 2, 3, 4, 5],
+                          [1, 1, 1, 1, 1],
+                          [6, 6, 6, 6, 6],
+                          [1, 1, 1, 1, 2],
+                          [1, 1, 1, 3, 3],
+                          [1, 2, 3, 4, 6],
+                          ]
 
-        self.rollTest.addChance(self.rollTest._currentDiceList)
+        for fixture in chanceFixtures:
+            score = self.rollTest.addChance(fixture)
 
-    def test_checkYahtzeeBonus(self):
+            self.assertEqual(score, sum(fixture))
+            self.assertNotEqual(score, 0)
+            self.assertEqual(len(fixture), 5)
+
+    def test_checkYahtzeeBonus_true(self):
         """
         Tests score based on final roll and selecting yahtzee bonus.
         """
 
-        self.rollTest.checkYahtzeeBonus(self.rollTest._currentDiceList)
+        yahtzeeBonusFixtures = [[1, 1, 1, 1, 1],
+                                [2, 2, 2, 2, 2],
+                                [3, 3, 3, 3, 3],
+                                [4, 4, 4, 4, 4],
+                                [5, 5, 5, 5, 5],
+                                [6, 6, 6, 6, 6],
+                                ]
+
+        for fixture in yahtzeeBonusFixtures:
+            score = self.rollTest.checkYahtzee(fixture)
+
+            self.assertEqual(score, 50)
+            self.assertEqual(len(fixture), 5)
+
+    def test_checkYahtzeeBonus_false(self):
+        """
+        Tests 0 score based on final roll and selecting yahtzee bonus.
+        """
+
+        notYahtzeeBonusFixtures = [[1, 1, 1, 1, 2],
+                                   [1, 1, 1, 2, 1],
+                                   [1, 1, 2, 1, 1],
+                                   [1, 2, 1, 1, 1],
+                                   [2, 1, 1, 1, 1],
+                                   ]
+
+        for fixture in notYahtzeeBonusFixtures:
+            score = self.rollTest.checkYahtzee(fixture)
+
+            self.assertNotEqual(score, 50)
+            self.assertEqual(score, 0)
+            self.assertEqual(len(fixture), 5)
 
 
 if __name__ == '__main__':
