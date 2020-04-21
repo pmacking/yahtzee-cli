@@ -44,9 +44,9 @@ class TestRoll(unittest.TestCase):
         """
         Test all instance attributes of class constructor __init__():
         """
-        assert self.roll.name == 'John Smith'
-        assert self.roll._currentDiceList == []
-        assert self.roll._keeperDiceList == []
+        self.assertEqual(self.roll.name, 'John Smith')
+        self.assertEqual(self.roll._currentDiceList, [])
+        self.assertEqual(self.roll._keeperDiceList, [])
 
     # TODO def test_getKeepDiceCheck (mock)
     # TODO def test_getKeepSomeCheck (mock)
@@ -61,11 +61,11 @@ class TestRoll(unittest.TestCase):
 
         self.roll.rollDice()
 
-        assert len(self.roll._currentDiceList) == 5
-        assert len(self.roll._keeperDiceList) == 0
+        self.assertEqual(len(self.roll._currentDiceList), 5)
+        self.assertEqual(len(self.roll._keeperDiceList), 0)
 
         for i, dice in enumerate(self.roll._currentDiceList):
-            assert 1 <= dice <= 6
+            self.assertTrue(1 <= dice <= 6)
 
     # set getKeepDiceCheck to return 'yes' to keepAll during this test
     @patch('roll.getKeepDiceCheck', return_value='yes', spec=True)
@@ -78,8 +78,8 @@ class TestRoll(unittest.TestCase):
 
         self.roll.keepDice('JOHN SMITH')
 
-        assert self.roll._currentDiceList == []
-        assert self.roll._keeperDiceList == [1, 2, 3, 4, 5]
+        self.assertEqual(self.roll._currentDiceList, [])
+        self.assertEqual(self.roll._keeperDiceList, [1, 2, 3, 4, 5])
 
     # set keepAll as 'no', reRollAll as 'yes' during this test
     @patch('roll.Roll.keepDice', spec=True, keepAll='no', reRollAll='yes')
@@ -92,9 +92,9 @@ class TestRoll(unittest.TestCase):
 
         self.roll.keepDice('JOHN SMITH')
 
-        assert self.roll._currentDiceList == [1, 2, 3, 4, 5]
-        assert self.roll._keeperDiceList == []
-        assert len(self.roll._currentDiceList) == 5
+        self.assertEqual(self.roll._currentDiceList, [1, 2, 3, 4, 5])
+        self.assertEqual(self.roll._keeperDiceList, [])
+        self.assertEqual(len(self.roll._currentDiceList), 5)
 
     # TODO Mocking issue - can't create two unique MagicMocks from same function. Mocking issue - can't pass attribute strings directly as here.
     # # set keepAll as 'no', reRollAll as 'no', keepSome as '45' during this test
@@ -122,10 +122,10 @@ class TestRoll(unittest.TestCase):
 
         self.roll.reRollDice(self.roll._currentDiceList)
 
-        assert len(self.roll._currentDiceList) == 5
-        assert len(self.roll._keeperDiceList) == 0
-        assert self.roll._currentDiceList[3] == 1
-        assert self.roll._currentDiceList[4] == 2
+        self.assertEqual(len(self.roll._currentDiceList), 5)
+        self.assertEqual(len(self.roll._keeperDiceList), 0)
+        self.assertEqual(self.roll._currentDiceList[3], 1)
+        self.assertEqual(self.roll._currentDiceList[4], 2)
 
     # THIS SECTION tests checking score of final roll based on scoring option
 
@@ -141,8 +141,8 @@ class TestRoll(unittest.TestCase):
                                 referenceValue
                                 )
 
-        assert checkSinglesScore == 4
-        assert checkSinglesScore != sum(self.roll._currentDiceList)
+        self.assertEqual(checkSinglesScore, 4)
+        self.assertNotEqual(checkSinglesScore, sum(self.roll._currentDiceList))
 
     def test_checkSingles_false(self):
         """
@@ -156,8 +156,8 @@ class TestRoll(unittest.TestCase):
                                 referenceValue
                                 )
 
-        assert checkSinglesScore == 0
-        assert checkSinglesScore != sum(self.roll._currentDiceList)
+        self.assertEqual(checkSinglesScore, 0)
+        self.assertNotEqual(checkSinglesScore, sum(self.roll._currentDiceList))
 
     def test_checkThreeOfAKind_true(self):
         """
@@ -174,8 +174,8 @@ class TestRoll(unittest.TestCase):
         for fixture in threeOfAKindFixtures:
             score = self.roll.checkThreeOfAKind(fixture)
 
-            assert score == sum(fixture)
-            assert len(fixture) == 5
+            self.assertEqual(score, sum(fixture))
+            self.assertEqual(len(fixture), 5)
 
     def test_checkThreeOfAKind_false(self):
         """
