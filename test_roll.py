@@ -4,7 +4,6 @@ import unittest
 from unittest.mock import patch
 
 from roll import Roll
-from player import Player
 
 
 class TestRoll(unittest.TestCase):
@@ -32,10 +31,7 @@ class TestRoll(unittest.TestCase):
         print('setUp')
 
         # construct instance of Roll
-        self.rollTest = Roll('rollTest')
-
-        # construct instance of Player
-        self.playerTest = Player('testPlayer')
+        self.roll = Roll('John Smith')
 
     def tearDown(self):
         """
@@ -44,35 +40,32 @@ class TestRoll(unittest.TestCase):
         """
         print('tearDown')
 
-        # # teardown instance of Roll
-        # self.rollTest.dispose()
-
-        # # tear down instance of Player
-        # self.playerTest.dispose()
-
     def test_instanceAttributes(self):
         """
         Test all instance attributes of class constructor __init__():
         """
-        assert self.rollTest.name == 'rollTest'
-        assert self.rollTest._currentDiceList == []
-        assert self.rollTest._keeperDiceList == []
+        self.assertEqual(self.roll.name, 'John Smith')
+        self.assertEqual(self.roll._currentDiceList, [])
+        self.assertEqual(self.roll._keeperDiceList, [])
+
+    # TODO def test_getKeepDiceCheck (mock)
+    # TODO def test_getKeepSomeCheck (mock)
 
     def test_rollDice(self):
         """
         Tests initial dice roll based on current dice and keeper dice lists.
         """
         # create partial current and keeper list to pass into rollDice
-        self.rollTest._currentDiceList = [1, 2, 3]
-        self.rollTest._keeperDiceList = [1, 2, 3]
+        self.roll._currentDiceList = [1, 2, 3]
+        self.roll._keeperDiceList = [1, 2, 3]
 
-        self.rollTest.rollDice()
+        self.roll.rollDice()
 
-        assert len(self.rollTest._currentDiceList) == 5
-        assert len(self.rollTest._keeperDiceList) == 0
+        self.assertEqual(len(self.roll._currentDiceList), 5)
+        self.assertEqual(len(self.roll._keeperDiceList), 0)
 
-        for i, dice in enumerate(self.rollTest._currentDiceList):
-            assert 1 <= dice <= 6
+        for i, dice in enumerate(self.roll._currentDiceList):
+            self.assertTrue(1 <= dice <= 6)
 
     # set getKeepDiceCheck to return 'yes' to keepAll during this test
     @patch('roll.getKeepDiceCheck', return_value='yes', spec=True)
@@ -80,13 +73,13 @@ class TestRoll(unittest.TestCase):
         """
         Tests keeping all dice.
         """
-        self.rollTest._currentDiceList = [1, 2, 3, 4, 5]
-        self.rollTest._keeperDiceList = []
+        self.roll._currentDiceList = [1, 2, 3, 4, 5]
+        self.roll._keeperDiceList = []
 
-        self.rollTest.keepDice('JOHN SMITH')
+        self.roll.keepDice('JOHN SMITH')
 
-        assert self.rollTest._currentDiceList == []
-        assert self.rollTest._keeperDiceList == [1, 2, 3, 4, 5]
+        self.assertEqual(self.roll._currentDiceList, [])
+        self.assertEqual(self.roll._keeperDiceList, [1, 2, 3, 4, 5])
 
     # set keepAll as 'no', reRollAll as 'yes' during this test
     @patch('roll.Roll.keepDice', spec=True, keepAll='no', reRollAll='yes')
@@ -94,14 +87,14 @@ class TestRoll(unittest.TestCase):
         """
         Tests rerolling all dice.
         """
-        self.rollTest._currentDiceList = [1, 2, 3, 4, 5]
-        self.rollTest._keeperDiceList = []
+        self.roll._currentDiceList = [1, 2, 3, 4, 5]
+        self.roll._keeperDiceList = []
 
-        self.rollTest.keepDice('JOHN SMITH')
+        self.roll.keepDice('JOHN SMITH')
 
-        assert self.rollTest._currentDiceList == [1, 2, 3, 4, 5]
-        assert self.rollTest._keeperDiceList == []
-        assert len(self.rollTest._currentDiceList) == 5
+        self.assertEqual(self.roll._currentDiceList, [1, 2, 3, 4, 5])
+        self.assertEqual(self.roll._keeperDiceList, [])
+        self.assertEqual(len(self.roll._currentDiceList), 5)
 
     # TODO Mocking issue - can't create two unique MagicMocks from same function. Mocking issue - can't pass attribute strings directly as here.
     # # set keepAll as 'no', reRollAll as 'no', keepSome as '45' during this test
@@ -111,28 +104,28 @@ class TestRoll(unittest.TestCase):
     #     """
     #     Tests keeping some dice.
     #     """
-    #     self.rollTest._currentDiceList = [1, 2, 3, 4, 5]
-    #     self.rollTest._keeperDiceList = []
+    #     self.roll._currentDiceList = [1, 2, 3, 4, 5]
+    #     self.roll._keeperDiceList = []
 
-    #     self.rollTest.keepDice('JOHN SMITH')
+    #     self.roll.keepDice('JOHN SMITH')
 
-    #     self.assertEqual(self.rollTest._currentDiceList, [1, 2, 3])
-    #     self.assertEqual(self.rollTest._keeperDiceList, [4, 5])
-    #     self.assertTrue(len(self.rollTest._currentDiceList) == 3)
+    #     self.assertEqual(self.roll._currentDiceList, [1, 2, 3])
+    #     self.assertEqual(self.roll._keeperDiceList, [4, 5])
+    #     self.assertTrue(len(self.roll._currentDiceList) == 3)
 
     def test_reRollDice(self):
         """
         Tests rolling the dice for the second turn.
         """
-        self.rollTest._currentDiceList = [1, 2, 3, ]
-        self.rollTest._keeperDiceList = [1, 2]
+        self.roll._currentDiceList = [1, 2, 3, ]
+        self.roll._keeperDiceList = [1, 2]
 
-        self.rollTest.reRollDice(self.rollTest._currentDiceList)
+        self.roll.reRollDice(self.roll._currentDiceList)
 
-        assert len(self.rollTest._currentDiceList) == 5
-        assert len(self.rollTest._keeperDiceList) == 0
-        assert self.rollTest._currentDiceList[3] == 1
-        assert self.rollTest._currentDiceList[4] == 2
+        self.assertEqual(len(self.roll._currentDiceList), 5)
+        self.assertEqual(len(self.roll._keeperDiceList), 0)
+        self.assertEqual(self.roll._currentDiceList[3], 1)
+        self.assertEqual(self.roll._currentDiceList[4], 2)
 
     # THIS SECTION tests checking score of final roll based on scoring option
 
@@ -141,30 +134,30 @@ class TestRoll(unittest.TestCase):
         Tests score based on final roll and selecting a singles option.
         """
         referenceValue = 1
-        self.rollTest._currentDiceList = [1, 1, 1, 1, 2]
+        self.roll._currentDiceList = [1, 1, 1, 1, 2]
 
-        checkSinglesScore = self.rollTest.checkSingles(
-                                self.rollTest._currentDiceList,
+        checkSinglesScore = self.roll.checkSingles(
+                                self.roll._currentDiceList,
                                 referenceValue
                                 )
 
-        assert checkSinglesScore == 4
-        assert checkSinglesScore != sum(self.rollTest._currentDiceList)
+        self.assertEqual(checkSinglesScore, 4)
+        self.assertNotEqual(checkSinglesScore, sum(self.roll._currentDiceList))
 
     def test_checkSingles_false(self):
         """
         Tests 0 score based on final roll and selecting a singles option.
         """
         referenceValue = 1
-        self.rollTest._currentDiceList = [2, 3, 4, 5, 6]
+        self.roll._currentDiceList = [2, 3, 4, 5, 6]
 
-        checkSinglesScore = self.rollTest.checkSingles(
-                                self.rollTest._currentDiceList,
+        checkSinglesScore = self.roll.checkSingles(
+                                self.roll._currentDiceList,
                                 referenceValue
                                 )
 
-        assert checkSinglesScore == 0
-        assert checkSinglesScore != sum(self.rollTest._currentDiceList)
+        self.assertEqual(checkSinglesScore, 0)
+        self.assertNotEqual(checkSinglesScore, sum(self.roll._currentDiceList))
 
     def test_checkThreeOfAKind_true(self):
         """
@@ -179,10 +172,10 @@ class TestRoll(unittest.TestCase):
                                 ]
 
         for fixture in threeOfAKindFixtures:
-            score = self.rollTest.checkThreeOfAKind(fixture)
+            score = self.roll.checkThreeOfAKind(fixture)
 
-            assert score == sum(fixture)
-            assert len(fixture) == 5
+            self.assertEqual(score, sum(fixture))
+            self.assertEqual(len(fixture), 5)
 
     def test_checkThreeOfAKind_false(self):
         """
@@ -194,7 +187,7 @@ class TestRoll(unittest.TestCase):
                                    ]
 
         for fixture in notThreeOfAKindFixtures:
-            score = self.rollTest.checkThreeOfAKind(fixture)
+            score = self.roll.checkThreeOfAKind(fixture)
 
             self.assertNotEqual(score, sum(fixture))
             self.assertEqual(score, 0)
@@ -210,7 +203,7 @@ class TestRoll(unittest.TestCase):
                                ]
 
         for fixture in fourOfAKindFixtures:
-            score = self.rollTest.checkFourOfAKind(fixture)
+            score = self.roll.checkFourOfAKind(fixture)
 
             self.assertEqual(score, sum(fixture))
             self.assertEqual(len(fixture), 5)
@@ -226,7 +219,7 @@ class TestRoll(unittest.TestCase):
                                   ]
 
         for fixture in notFourOfAKindFixtures:
-            score = self.rollTest.checkFourOfAKind(fixture)
+            score = self.roll.checkFourOfAKind(fixture)
 
             self.assertNotEqual(score, sum(fixture))
             self.assertEqual(score, 0)
@@ -246,7 +239,7 @@ class TestRoll(unittest.TestCase):
                              ]
 
         for fixture in fullHouseFixtures:
-            score = self.rollTest.checkFullHouse(fixture)
+            score = self.roll.checkFullHouse(fixture)
 
             self.assertEqual(score, 25)
             self.assertEqual(len(fixture), 5)
@@ -262,7 +255,7 @@ class TestRoll(unittest.TestCase):
                                 ]
 
         for fixture in notFullHouseFixtures:
-            score = self.rollTest.checkFullHouse(fixture)
+            score = self.roll.checkFullHouse(fixture)
 
             self.assertNotEqual(score, 25)
             self.assertEqual(score, 0)
@@ -282,7 +275,7 @@ class TestRoll(unittest.TestCase):
                                  ]
 
         for fixture in smallStraightFixtures:
-            score = self.rollTest.checkSmallStraight(fixture)
+            score = self.roll.checkSmallStraight(fixture)
 
             self.assertEqual(score, 30)
             self.assertEqual(len(fixture), 5)
@@ -299,7 +292,7 @@ class TestRoll(unittest.TestCase):
                                     ]
 
         for fixture in notSmallStraightFixtures:
-            score = self.rollTest.checkSmallStraight(fixture)
+            score = self.roll.checkSmallStraight(fixture)
 
             self.assertEqual(score, 0)
             self.assertEqual(len(fixture), 5)
@@ -313,7 +306,7 @@ class TestRoll(unittest.TestCase):
                                  ]
 
         for fixture in largeStraightFixtures:
-            score = self.rollTest.checkLargeStraight(fixture)
+            score = self.roll.checkLargeStraight(fixture)
 
             self.assertEqual(score, 35)
             self.assertEqual(len(fixture), 5)
@@ -327,7 +320,7 @@ class TestRoll(unittest.TestCase):
                                     ]
 
         for fixture in notLargeStraightFixtures:
-            score = self.rollTest.checkLargeStraight(fixture)
+            score = self.roll.checkLargeStraight(fixture)
 
             self.assertNotEqual(score, 35)
             self.assertEqual(score, 0)
@@ -346,7 +339,7 @@ class TestRoll(unittest.TestCase):
                            ]
 
         for fixture in yahtzeeFixtures:
-            score = self.rollTest.checkYahtzee(fixture)
+            score = self.roll.checkYahtzee(fixture)
 
             self.assertEqual(score, 50)
             self.assertEqual(len(fixture), 5)
@@ -363,7 +356,7 @@ class TestRoll(unittest.TestCase):
                               ]
 
         for fixture in notYahtzeeFixtures:
-            score = self.rollTest.checkYahtzee(fixture)
+            score = self.roll.checkYahtzee(fixture)
 
             self.assertNotEqual(score, 50)
             self.assertEqual(score, 0)
@@ -382,7 +375,7 @@ class TestRoll(unittest.TestCase):
                           ]
 
         for fixture in chanceFixtures:
-            score = self.rollTest.addChance(fixture)
+            score = self.roll.addChance(fixture)
 
             self.assertEqual(score, sum(fixture))
             self.assertNotEqual(score, 0)
@@ -402,7 +395,7 @@ class TestRoll(unittest.TestCase):
                                 ]
 
         for fixture in yahtzeeBonusFixtures:
-            score = self.rollTest.checkYahtzee(fixture)
+            score = self.roll.checkYahtzee(fixture)
 
             self.assertEqual(score, 50)
             self.assertEqual(len(fixture), 5)
@@ -420,7 +413,7 @@ class TestRoll(unittest.TestCase):
                                    ]
 
         for fixture in notYahtzeeBonusFixtures:
-            score = self.rollTest.checkYahtzee(fixture)
+            score = self.roll.checkYahtzee(fixture)
 
             self.assertNotEqual(score, 50)
             self.assertEqual(score, 0)
