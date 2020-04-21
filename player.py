@@ -53,6 +53,30 @@ class Player:
 
         return self.scoreOptions
 
+    def selectScoreOption(self, scoreOptions):
+        """
+        Gets scoreSelected from input menu of scoreOptions.
+
+        :param scoreOptions: List of remaining score options.
+        :return: The score option selected from the menu.
+        """
+        # inputMenu can present sigle list item if keyword blank=True
+        scoreSelected = pyip.inputMenu(scoreOptions, numbered=True,
+                                       blank=True)
+        return scoreSelected
+
+    def confirmSelectScoreOption(self, scoreSelected):
+        """
+        Confirms the scoreSelected.
+
+        :param scoreSelected: The score option string selected from the menu.
+        :return: 'yes' or 'no' response.
+        """
+        confirmScoreSelected = pyip.inputYesNo(
+                    prompt=f"\n{self.name.upper()} are you sure you want to "
+                           f"select {scoreSelected.upper()}?\n")
+        return confirmScoreSelected
+
     def selectScore(self, finalRoll):
         """
         Allows player to select the scoring option for final dice roll.
@@ -73,11 +97,8 @@ class Player:
 
             while checkYahtzeeBonus is False:
 
-                # inputMenu offers single list item if keyword blank=True
-                scoreSelected = pyip.inputMenu(
-                    self.scoreOptions,
-                    numbered=True,
-                    blank=True)
+                # get scoreSelected from input menu offering score options
+                scoreSelected = self.selectScoreOption(self.scoreOptions)
 
                 # validates user doesn't input blank
                 if scoreSelected == '':
@@ -102,29 +123,12 @@ class Player:
                         checkYahtzeeBonus = True
 
             # confirm option selection
-            if (pyip.inputYesNo(
-                    prompt=f"\n{self.name.upper()} are you sure you want to "
-                           f"select {scoreSelected.upper()}?\n") == 'yes'):
+            confirmScoreSelected = self.confirmSelectScoreOption(scoreSelected)
+
+            if confirmScoreSelected == 'yes':
                 doubleCheck = True
 
         return scoreSelected
-
-    def addScoreDict(self, scoreSelected, score):
-        """
-        Adds score to the scoring dictionary for the player turn.
-
-        :param scoreSelected: The score selected for scoring against.
-        :param score: The int score of the turn.
-        """
-        self.scoreDict[scoreSelected] = score
-
-    def addTopScore(self, score):
-        """
-        Adds rolled score to the top score.
-
-        :param score: The int score of the turn.
-        """
-        self.topScore += score
 
     def addTopBonusScore(self):
         """
