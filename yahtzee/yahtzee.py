@@ -17,9 +17,9 @@ import sys
 import pyinputplus as pyip
 from datetime import datetime
 
-from roll import Roll
-from player import Player
-from fileio import FileWriter
+from .roll import Roll
+from .player import Player
+from .fileio import FileWriter
 
 
 class Yahtzee:

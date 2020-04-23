@@ -8,7 +8,7 @@
 
 <h2>How to Play</h2>
 
-<p>Download/clone repo, activate virtual environment and run "pip install -r requirements.txt", then run "python __init__.py" to begin game.</p>
+<p>Download/clone repo, activate virtual environment and run "pip install -r requirements.txt", then run "python -m yahtzee" to begin game.</p>
 
 <p>Follow game instructions, and refer to <a href="https://www.hasbro.com/common/instruct/Yahtzee.pdf">Yahtzee Rules</a> as required </p>
 
