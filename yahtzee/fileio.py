@@ -14,9 +14,9 @@ from docx2pdf import convert
 
 def createFileioDirectory():
     """
-    Creates YahtzeeScores/ folder in cwd.
+    Creates data/ folder in cwd.
     """
-    os.makedirs(Path.cwd() / 'YahtzeeScores', exist_ok=True)
+    os.makedirs(Path.cwd() / 'data', exist_ok=True)
 
 
 def printFileioConfirmation(fileDirStr, fileName):
@@ -111,8 +111,8 @@ class TextFile:
         """
         Create TextFiles folder.
         """
-        os.makedirs(Path.cwd() / 'YahtzeeScores/TextFiles', exist_ok=True)
-        self.textFileDirStr = str(Path.cwd() / 'YahtzeeScores/TextFiles')
+        os.makedirs(Path.cwd() / 'data/TextFiles', exist_ok=True)
+        self.textFileDirStr = str(Path.cwd() / 'data/TextFiles')
 
     def createTextFilename(self, gameCounter, dateTimeToday):
         """
@@ -193,8 +193,8 @@ class DocxFile:
         :rtype: string
         :return: The docx directory Path.
         """
-        os.makedirs(Path.cwd() / 'YahtzeeScores/DocxFiles', exist_ok=True)
-        self.docxFileDirStr = str(Path.cwd() / 'YahtzeeScores/DocxFiles')
+        os.makedirs(Path.cwd() / 'data/DocxFiles', exist_ok=True)
+        self.docxFileDirStr = str(Path.cwd() / 'data/DocxFiles')
 
         return self.docxFileDirStr
 
@@ -290,8 +290,8 @@ class PdfFile:
         """
         Create PDF files folder.
         """
-        os.makedirs(Path.cwd() / 'YahtzeeScores/pdfFiles/', exist_ok=True)
-        self.pdfFileDirStr = str(Path.cwd() / 'YahtzeeScores/pdfFiles/')
+        os.makedirs(Path.cwd() / 'data/pdfFiles/', exist_ok=True)
+        self.pdfFileDirStr = str(Path.cwd() / 'data/pdfFiles/')
 
     def createPdfFilename(self, gameCounter, dateTimeToday):
         """
