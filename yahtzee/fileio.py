@@ -226,7 +226,8 @@ class DocxFile:
         doc.paragraphs[0].runs[0].add_break()
 
         # add picture of yahtzee game to document
-        doc.add_picture(str(Path.cwd() / 'yahtzeePicture.jpg'))
+        doc.add_picture(
+            str(Path.cwd() / 'yahtzee/resources/yahtzeePicture.jpg'))
 
         doc.add_heading('FINAL RANKINGS', 1)
         for k, v in enumerate(rankingDict):

@@ -3,7 +3,7 @@
 import unittest
 from unittest.mock import patch
 
-from roll import Roll
+from yahtzee.roll import Roll
 
 
 class TestRoll(unittest.TestCase):
@@ -68,7 +68,7 @@ class TestRoll(unittest.TestCase):
             self.assertTrue(1 <= dice <= 6)
 
     # set getKeepDiceCheck to return 'yes' to keepAll during this test
-    @patch('roll.getKeepDiceCheck', return_value='yes', spec=True)
+    @patch('yahtzee.roll.getKeepDiceCheck', return_value='yes', spec=True)
     def test_keepDice_keepAll(self, mock_input):
         """
         Tests keeping all dice.
@@ -82,7 +82,8 @@ class TestRoll(unittest.TestCase):
         self.assertEqual(self.roll._keeperDiceList, [1, 2, 3, 4, 5])
 
     # set keepAll as 'no', reRollAll as 'yes' during this test
-    @patch('roll.Roll.keepDice', spec=True, keepAll='no', reRollAll='yes')
+    @patch('yahtzee.roll.Roll.keepDice', spec=True,
+           keepAll='no', reRollAll='yes')
     def test_keepDice_reRollAll(self, mock_keepDice):
         """
         Tests rerolling all dice.

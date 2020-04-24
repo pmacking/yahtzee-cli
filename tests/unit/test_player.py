@@ -3,7 +3,7 @@
 import unittest
 from unittest.mock import patch
 
-from player import Player
+from yahtzee.player import Player
 
 
 class TestPlayer(unittest.TestCase):
@@ -83,11 +83,11 @@ class TestPlayer(unittest.TestCase):
                                                     'yahtzee bonus',
                                                     ])
 
-    @patch('player.Player.confirmSelectScoreOption',
+    @patch('yahtzee.player.Player.confirmSelectScoreOption',
            spec=True, return_value='yes')
-    @patch('player.Player.selectScoreOption',
+    @patch('yahtzee.player.Player.selectScoreOption',
            spec=True, return_value='sixes')
-    @patch('player.Player.getScoreOptions',
+    @patch('yahtzee.player.Player.getScoreOptions',
            spec=True, return_value=['sixes', 'yahtzee', 'yahtzee bonus'])
     def test_selectScore(self, mock_scoreOptions, mock_selectScoreOption,
                          mock_confirmSelectScoreOption):
@@ -100,11 +100,11 @@ class TestPlayer(unittest.TestCase):
 
         self.assertEqual(scoringOption, 'sixes')
 
-    @patch('player.Player.confirmSelectScoreOption',
+    @patch('yahtzee.player.Player.confirmSelectScoreOption',
            spec=True, return_value='yes')
-    @patch('player.Player.selectScoreOption',
+    @patch('yahtzee.player.Player.selectScoreOption',
            spec=True, return_value='yahtzee bonus')
-    @patch('player.Player.getScoreOptions',
+    @patch('yahtzee.player.Player.getScoreOptions',
            spec=True, return_value=['yahtzee bonus'])
     def test_selectScore_yahtzeeBonus(self, mock_scoreOptions,
                                       mock_selectScoreOption,
