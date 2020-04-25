@@ -12,13 +12,6 @@ import docx
 from docx2pdf import convert
 
 
-def createFileioDirectory():
-    """
-    Creates data/ folder in cwd.
-    """
-    os.makedirs(Path.cwd() / 'data', exist_ok=True)
-
-
 def printFileioConfirmation(fileDirStr, fileName):
     """
     Prints confirmation message when file creation completed.
@@ -33,6 +26,7 @@ class FileWriter:
     """
     Objects instantiated by :class: `FileWriter <FileWriter>` can be called as a factory to write file as output per file formats.
     """
+    # attributes specified for docx only to enable passing to pdf conversion
     def __init__(self):
         self.docxFileDirStr = ''
         self.docxFilename = ''
