@@ -2,6 +2,8 @@
 
 import unittest
 from unittest.mock import patch
+from pathlib import Path
+import os
 
 from yahtzee.fileio import FileWriter, TextFile, DocxFile, PdfFile
 from yahtzee.player import Player
@@ -36,9 +38,39 @@ class TestFileWriter(unittest.TestCase):
         # setup attributes
         self.dateTimeToday = '2020-04-20-04:20:00'
         self.gameCounter = 0
-        self.rankingDict = [('John Smith', 100)]
-        player = Player('John Smith')
-        self.playersList = [player]
+        self.rankingDict = [('Joanna Smith', 101), ('John Smith', 100)]
+        self.player1 = Player('John Smith')
+        self.player2 = Player('Joanna Smith')
+        self.playersList = [self.player1, self.player2]
+
+        # setup scores on player instance for file write testing
+        self.player1.scoreDict = {
+            'ones': 25, 'twos': 25, 'threes': 25,
+            'fours': 25, 'fives': 25, 'sixes': 25,
+            'three of a kind': 25, 'four of a kind': 25,
+            'full house': 25, 'small straight': 25,
+            'large straight': 25, 'yahtzee': 25,
+            'chance': 25, 'yahtzee bonus': 25
+            }
+        self.player1.topScore = 101
+        self.player1.topBonusScore = 101
+        self.player1.totalTopScore = 101
+        self.player1.totalBottomScore = 101
+        self.player1.grandTotalScore = 101
+
+        self.player2.scoreDict = {
+            'ones': 26, 'twos': 26, 'threes': 26,
+            'fours': 26, 'fives': 26, 'sixes': 26,
+            'three of a kind': 26, 'four of a kind': 26,
+            'full house': 26, 'small straight': 26,
+            'large straight': 26, 'yahtzee': 26,
+            'chance': 26, 'yahtzee bonus': 26
+            }
+        self.player2.topScore = 102
+        self.player2.topBonusScore = 102
+        self.player2.totalTopScore = 102
+        self.player2.totalBottomScore = 102
+        self.player2.grandTotalScore = 102
 
     def tearDown(self):
         """
@@ -52,16 +84,17 @@ class TestFileWriter(unittest.TestCase):
     def test_writeFile_txt(self, mock_textFileClass):
         fileFormats = ['txt']
 
-        # mock instance of TextFile and set path attributes
+        # mock instance of TextFile and set new test path attributes
         mockTextFile = mock_textFileClass()
-        mockTextFile.textFileDirStr = 'testTextFileDirStr'
+        mockTextFile.textFileDirStr = 'testdata/TextFiles'
         mockTextFile.textFilename = 'testTextFilename.txt'
 
         filewriter = FileWriter()
         filewriter.writeFile(self.dateTimeToday, self.gameCounter,
                              self.playersList, self.rankingDict, fileFormats)
 
-        self.assertTrue(True)
+        self.assertTrue(Path.cwd() / 'testdata/TextFiles/testTextFilename.txt')
+        # self.assertTrue(Path.cwd() / 'data/2020-04-20-04:20:00Game1.txt')
 
     # test FileWriter for file format 'docx'
     @patch('yahtzee.fileio.DocxFile', spec=True)
