@@ -99,15 +99,15 @@ class TestFileWriter(unittest.TestCase):
 
         self.assertTrue(Path.cwd() / 'data/2020-04-20-04:20:00.docx')
 
-    # test FileWriter for file format 'pdf'
-    def test_writeFile_pdf(self):
-        fileFormats = ['pdf']
+    # # test FileWriter for file format 'pdf'
+    # def test_writeFile_pdf(self):
+    #     fileFormats = ['pdf']
 
-        filewriter = FileWriter()
-        # docx dir and filename to test as convertDocxToPdf args
-        filewriter.docxFileDirStr = 'testDocxFileDir'
-        filewriter.docxFilename = 'testDocxFilename.docx'
-        filewriter.writeFile(self.dateTimeToday, self.gameCounter,
-                             self.playersList, self.rankingDict, fileFormats)
+    #     filewriter = FileWriter()
+    #     # docx dir and filename to test as convertDocxToPdf args
+    #     filewriter.docxFileDirStr = 'testDocxFileDir'
+    #     filewriter.docxFilename = 'testDocxFilename.docx'
+    #     filewriter.writeFile(self.dateTimeToday, self.gameCounter,
+    #                          self.playersList, self.rankingDict, fileFormats)
 
-        self.assertTrue(Path.cwd() / 'data/2020-04-20-04:20:00.pdf')
+    #     self.assertTrue(Path.cwd() / 'data/2020-04-20-04:20:00.pdf')
