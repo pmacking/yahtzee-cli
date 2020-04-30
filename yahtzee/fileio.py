@@ -9,14 +9,6 @@ github.com/pmacking/fileio.py
 import os
 from pathlib import Path
 import docx
-from docx2pdf import convert
-
-
-def createFileioDirectory():
-    """
-    Creates data/ folder in cwd.
-    """
-    os.makedirs(Path.cwd() / 'data', exist_ok=True)
 
 
 def printFileioConfirmation(fileDirStr, fileName):
@@ -33,6 +25,7 @@ class FileWriter:
     """
     Objects instantiated by :class: `FileWriter <FileWriter>` can be called as a factory to write file as output per file formats.
     """
+    # attributes specified for docx only to enable passing to pdf conversion
     def __init__(self):
         self.docxFileDirStr = ''
         self.docxFilename = ''
@@ -79,19 +72,20 @@ class FileWriter:
                 # write docxfile
                 docxfile.writeDocxFile(gameCounter, playersList, rankingDict)
 
-            elif fileFormat == 'pdf':
-                # PDF instance in fileio.py
-                pdffile = PdfFile()
+            # REMOVED: ISSUES WITH MSFT WORD and NOT SUPPORTED ON LINUX
+            # elif fileFormat == 'pdf':
+            #     # PDF instance in fileio.py
+            #     pdffile = PdfFile()
 
-                # create pdf file directory
-                pdffile.createPdfFileDir()
+            #     # create pdf file directory
+            #     pdffile.createPdfFileDir()
 
-                # create pdf file basename
-                pdffile.createPdfFilename(gameCounter, dateTimeToday)
+            #     # create pdf file basename
+            #     pdffile.createPdfFilename(gameCounter, dateTimeToday)
 
-                # convert docx to pdf
-                pdffile.convertDocxToPdf(self.docxFileDirStr,
-                                         self.docxFilename)
+            #     # convert docx to pdf
+            #     pdffile.convertDocxToPdf(self.docxFileDirStr,
+            #                              self.docxFilename)
 
 
 class TextFile:
