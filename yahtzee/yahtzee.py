@@ -46,7 +46,7 @@ class Yahtzee:
         self.scoreSelected = ''
         self.finalRoll = []
         self.dateTimeToday = ''
-        self.outputFileFormats = ['txt', 'docx', 'pdf']
+        self.outputFileFormats = ['txt', 'docx']
 
     def __repr__(self):
         return (f"{self.__class__.__name__}("
