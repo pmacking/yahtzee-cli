@@ -5,7 +5,7 @@ from unittest.mock import patch
 from pathlib import Path
 import os
 
-from yahtzee.fileio import FileWriter, TextFile, DocxFile, PdfFile
+from yahtzee.fileio import FileWriter
 from yahtzee.player import Player
 
 
@@ -80,47 +80,28 @@ class TestFileWriter(unittest.TestCase):
         print('tearDown')
 
     # test FileWriter for file format 'txt'
-    @patch('yahtzee.fileio.TextFile', spec=True)
-    def test_writeFile_txt(self, mock_textFileClass):
+    def test_writeFile_txt(self):
         fileFormats = ['txt']
 
-        # mock instance of TextFile and set new test path attributes
-        mockTextFile = mock_textFileClass()
-        mockTextFile.textFileDirStr = 'testdata/TextFiles'
-        mockTextFile.textFilename = 'testTextFilename.txt'
-
         filewriter = FileWriter()
         filewriter.writeFile(self.dateTimeToday, self.gameCounter,
                              self.playersList, self.rankingDict, fileFormats)
 
-        self.assertTrue(Path.cwd() / 'testdata/TextFiles/testTextFilename.txt')
-        # self.assertTrue(Path.cwd() / 'data/2020-04-20-04:20:00Game1.txt')
+        self.assertTrue(Path.cwd() / 'data/2020-04-20-04:20:00.txt')
 
     # test FileWriter for file format 'docx'
-    @patch('yahtzee.fileio.DocxFile', spec=True)
-    def test_writeFile_docx(self, mock_docxFileClass):
+    def test_writeFile_docx(self):
         fileFormats = ['docx']
-
-        # mock instance of DocxFile and set path attributes
-        mockDocxFile = mock_docxFileClass()
-        mockDocxFile.docxFileDirStr = 'testDocxFileDirStr'
-        mockDocxFile.docxFilename = 'testDocxFilename.docx'
 
         filewriter = FileWriter()
         filewriter.writeFile(self.dateTimeToday, self.gameCounter,
                              self.playersList, self.rankingDict, fileFormats)
 
-        self.assertTrue(True)
+        self.assertTrue(Path.cwd() / 'data/2020-04-20-04:20:00.docx')
 
     # test FileWriter for file format 'pdf'
-    @patch('yahtzee.fileio.PdfFile', spec=True)
-    def test_writeFile_pdf(self, mock_pdfFileClass):
+    def test_writeFile_pdf(self):
         fileFormats = ['pdf']
-
-        # mock instance of PdfFile and set path attributes
-        mockPdfFile = mock_pdfFileClass()
-        mockPdfFile.pdfFileDirStr = 'testPdfFileDirStr'
-        mockPdfFile.pdfFilename = 'testPdfFilename.pdf'
 
         filewriter = FileWriter()
         # docx dir and filename to test as convertDocxToPdf args
@@ -129,4 +110,4 @@ class TestFileWriter(unittest.TestCase):
         filewriter.writeFile(self.dateTimeToday, self.gameCounter,
                              self.playersList, self.rankingDict, fileFormats)
 
-        self.assertTrue(True)
+        self.assertTrue(Path.cwd() / 'data/2020-04-20-04:20:00.pdf')
