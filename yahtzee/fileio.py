@@ -23,7 +23,8 @@ def printFileioConfirmation(fileDirStr, fileName):
 
 class FileWriter:
     """
-    Objects instantiated by :class: `FileWriter <FileWriter>` can be called as a factory to write file as output per file formats.
+    Objects instantiated by :class: `FileWriter <FileWriter>` can be called as
+    a factory to write file as output per file formats.
     """
     # attributes specified for docx only to enable passing to pdf conversion
     def __init__(self):
@@ -36,7 +37,8 @@ class FileWriter:
     def writeFile(self, dateTimeToday, gameCounter, playersList,
                   rankingDict, fileFormats):
         """
-        The writeFile method creates instances of each fileFormat, including creating Path, filename, and writing or converting files.
+        The writeFile method creates instances of each fileFormat, including
+        creating Path, filename, and writing or converting files.
 
         :param dateTimeToday: The datetime today as string.
         :param gameCounter: The count of the game as int.
@@ -94,6 +96,7 @@ class TextFile:
     create a text file of players and scores.
     """
     def __init__(self):
+        self.relativePath = 'data/TextFiles'
         self.textFileDirStr = ''
         self.textFilename = ''
 
@@ -105,8 +108,8 @@ class TextFile:
         """
         Create TextFiles folder.
         """
-        os.makedirs(Path.cwd() / 'data/TextFiles', exist_ok=True)
-        self.textFileDirStr = str(Path.cwd() / 'data/TextFiles')
+        os.makedirs(Path.cwd() / f'{self.relativePath}', exist_ok=True)
+        self.textFileDirStr = str(Path.cwd() / f'{self.relativePath}')
 
     def createTextFilename(self, gameCounter, dateTimeToday):
         """
@@ -173,6 +176,7 @@ class DocxFile:
     create a docx file of players and scores.
     """
     def __init__(self):
+        self.relativePath = 'data/DocxFiles'
         self.docxFileDirStr = ''
         self.docxFilename = ''
 
@@ -187,8 +191,8 @@ class DocxFile:
         :rtype: string
         :return: The docx directory Path.
         """
-        os.makedirs(Path.cwd() / 'data/DocxFiles', exist_ok=True)
-        self.docxFileDirStr = str(Path.cwd() / 'data/DocxFiles')
+        os.makedirs(Path.cwd() / f'{self.relativePath}', exist_ok=True)
+        self.docxFileDirStr = str(Path.cwd() / f'{self.relativePath}')
 
         return self.docxFileDirStr
 
@@ -267,41 +271,41 @@ class DocxFile:
         printFileioConfirmation(self.docxFileDirStr, self.docxFilename)
 
 
-class PdfFile:
-    """
-    Objects instantiated by the :class:`DocxFile <DocxFile>` can be called to
-    convert a docx file to a pdf file
-    """
-    def __init__(self):
-        self.pdfFileDirStr = ''
-        self.pdfFilename = ''
+# class PdfFile:
+#     """
+#     Objects instantiated by the :class:`DocxFile <DocxFile>` can be called to
+#     convert a docx file to a pdf file
+#     """
+#     def __init__(self):
+#         self.pdfFileDirStr = ''
+#         self.pdfFilename = ''
 
-    def __repr__(self):
-        return (f"{self.__class__.__name__}("
-                f"{self.pdfFileDirStr}, {self.pdfFilename})")
+#     def __repr__(self):
+#         return (f"{self.__class__.__name__}("
+#                 f"{self.pdfFileDirStr}, {self.pdfFilename})")
 
-    def createPdfFileDir(self):
-        """
-        Create PDF files folder.
-        """
-        os.makedirs(Path.cwd() / 'data/pdfFiles/', exist_ok=True)
-        self.pdfFileDirStr = str(Path.cwd() / 'data/pdfFiles/')
+#     def createPdfFileDir(self):
+#         """
+#         Create PDF files folder.
+#         """
+#         os.makedirs(Path.cwd() / 'data/pdfFiles/', exist_ok=True)
+#         self.pdfFileDirStr = str(Path.cwd() / 'data/pdfFiles/')
 
-    def createPdfFilename(self, gameCounter, dateTimeToday):
-        """
-        Create pdf file filename with datetime and game number.
+#     def createPdfFilename(self, gameCounter, dateTimeToday):
+#         """
+#         Create pdf file filename with datetime and game number.
 
-        :param gameCounter: integer count of games played.
-        :param dateTimeToday: date str to standardize output file basename.
-        """
-        self.pdfFilename = f"{dateTimeToday}Game{gameCounter+1}.pdf"
+#         :param gameCounter: integer count of games played.
+#         :param dateTimeToday: date str to standardize output file basename.
+#         """
+#         self.pdfFilename = f"{dateTimeToday}Game{gameCounter+1}.pdf"
 
-    def convertDocxToPdf(self, docxFileDirStr, docxFilename):
-        """
-        Converts Docx file to Pdf file
-        """
-        convert(f"{docxFileDirStr}/{docxFilename}",
-                f"{self.pdfFileDirStr}/{self.pdfFilename}")
+#     def convertDocxToPdf(self, docxFileDirStr, docxFilename):
+#         """
+#         Converts Docx file to Pdf file
+#         """
+#         convert(f"{docxFileDirStr}/{docxFilename}",
+#                 f"{self.pdfFileDirStr}/{self.pdfFilename}")
 
-        # print file convert confirmation
-        printFileioConfirmation(self.pdfFileDirStr, self.pdfFilename)
+#         # print file convert confirmation
+#         printFileioConfirmation(self.pdfFileDirStr, self.pdfFilename)
