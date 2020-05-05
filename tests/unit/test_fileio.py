@@ -1,11 +1,10 @@
 """Unit test for fileio.py"""
 
 import unittest
-from unittest.mock import patch
 from pathlib import Path
 import os
 
-from yahtzee.fileio import FileWriter
+from yahtzee.fileio import FileWriter, TextFile
 from yahtzee.player import Player
 
 
@@ -78,36 +77,68 @@ class TestFileWriter(unittest.TestCase):
         No real purpose beyond creating namespace and viewing print output.
         """
         print('tearDown')
+        try:
+            os.remove(
+                Path.cwd() / 'data/TextFiles/2020-04-20-04:20:00Game1.txt')
+            os.remove(
+                Path.cwd() / 'data/DocxFiles/2020-04-20-04:20:00Game1.docx')
+        except FileNotFoundError:
+            pass
 
-    # test FileWriter for file format 'txt'
     def test_writeFile_txt(self):
+        """
+        Tests FileWriter for file format 'txt'
+        """
         fileFormats = ['txt']
 
         filewriter = FileWriter()
         filewriter.writeFile(self.dateTimeToday, self.gameCounter,
                              self.playersList, self.rankingDict, fileFormats)
 
-        self.assertTrue(Path.cwd() / 'data/2020-04-20-04:20:00.txt')
+        self.assertTrue(
+            os.path.exists(
+                Path.cwd() / 'data/TextFiles/2020-04-20-04:20:00Game1.txt')
+            )
 
-    # test FileWriter for file format 'docx'
     def test_writeFile_docx(self):
+        """
+        Tests FileWriter for file format 'docx'
+        """
         fileFormats = ['docx']
 
         filewriter = FileWriter()
         filewriter.writeFile(self.dateTimeToday, self.gameCounter,
                              self.playersList, self.rankingDict, fileFormats)
 
-        self.assertTrue(Path.cwd() / 'data/2020-04-20-04:20:00.docx')
+        self.assertTrue(
+            os.path.exists(
+                Path.cwd() / 'data/DocxFiles/2020-04-20-04:20:00Game1.docx')
+            )
 
-    # # test FileWriter for file format 'pdf'
-    # def test_writeFile_pdf(self):
-    #     fileFormats = ['pdf']
 
-    #     filewriter = FileWriter()
-    #     # docx dir and filename to test as convertDocxToPdf args
-    #     filewriter.docxFileDirStr = 'testDocxFileDir'
-    #     filewriter.docxFilename = 'testDocxFilename.docx'
-    #     filewriter.writeFile(self.dateTimeToday, self.gameCounter,
-    #                          self.playersList, self.rankingDict, fileFormats)
+# class TestTextFile(unittest.TestCase):
+#     """
+#     Unit tests for the :class: `TextFile <TextFile>`.
+#     """
+#     @classmethod
+#     def setUpClass(cls):
+#         print('setUpClass class method')
 
-    #     self.assertTrue(Path.cwd() / 'data/2020-04-20-04:20:00.pdf')
+#     @classmethod
+#     def tearDownClass(cls):
+#         print('tearDownClass class method')
+
+#     def setUp(self):
+#         """
+#         Sets up class instances required for all testing methods.
+#         """
+#         textfile = TextFile()
+#         textfile.relativePath = 'data/test_data/TextFile'
+
+#     def test_createTextFileDir(self):
+#         """
+#         Tests creating directory for textfile output.
+#         """
+#         textfile.createTextFileDir()
+
+
