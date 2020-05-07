@@ -52,7 +52,7 @@ class Yahtzee:
         return (f"{self.__class__.__name__}("
                 f"{self.numberOfPlayers}, {self.playersNames}, "
                 f"{self._playersList}, {self._rollsList}, "
-                f"{self.outputFileFormats})")
+                f"{self.gameCounter}, {self.outputFileFormats})")
 
     def getNumberOfPlayers(self):
         """
