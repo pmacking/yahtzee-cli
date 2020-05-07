@@ -19,7 +19,7 @@ class TestFileWriter(unittest.TestCase):
         Using setUpClass class method for visibility and practice utility.
         No real purpose beyond creating namespace and viewing print output.
         """
-        print('setUpClass class method')
+        pass
 
     @classmethod
     def tearDownClass(cls):
@@ -27,14 +27,12 @@ class TestFileWriter(unittest.TestCase):
         Using tearDownClass class method for visibility and practice utility.
         No real purpose beyond creating namespace and viewing print output.
         """
-        print('tearDownClass class method')
+        pass
 
     def setUp(self):
         """
         Sets up class instances required for all testing methods.
         """
-        print('setUp')
-
         # setup attributes
         self.dateTimeToday = '2020-04-20-04:20:00'
         self.gameCounter = 0
@@ -77,7 +75,6 @@ class TestFileWriter(unittest.TestCase):
         Using tearDown instance method here for visibility on utility.
         No real purpose beyond creating namespace and viewing print output.
         """
-        print('tearDown')
         try:
             os.remove(
                 Path.cwd() / 'data/TextFiles/2020-04-20-04:20:00Game1.txt')
@@ -123,11 +120,11 @@ class TestTextFile(unittest.TestCase):
     """
     @classmethod
     def setUpClass(cls):
-        print('setUpClass class method')
+        pass
 
     @classmethod
     def tearDownClass(cls):
-        print('tearDownClass class method')
+        pass
 
     def setUp(self):
         """
@@ -232,11 +229,11 @@ class TestDocxFile(unittest.TestCase):
     """
     @classmethod
     def setUpClass(cls):
-        print('setUpClass class method')
+        pass
 
     @classmethod
     def tearDownClass(cls):
-        print('tearDownClass class method')
+        pass
 
     def setUp(self):
         """
