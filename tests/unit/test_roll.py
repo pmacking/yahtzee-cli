@@ -14,7 +14,7 @@ class TestRoll(unittest.TestCase):
         Using setUpClass class method for visibility and practice utility.
         No real purpose beyond creating namespace and viewing print output.
         """
-        print('setUpClass class method')
+        pass
 
     @classmethod
     def tearDownClass(cls):
@@ -22,14 +22,12 @@ class TestRoll(unittest.TestCase):
         Using tearDownClass class method for visibility and practice utility.
         No real purpose beyond creating namespace and viewing print output.
         """
-        print('tearDownClass class method')
+        pass
 
     def setUp(self):
         """
         Sets up class instances required for all testing methods.
         """
-        print('setUp')
-
         # construct instance of Roll
         self.roll = Roll('John Smith')
 
@@ -38,7 +36,7 @@ class TestRoll(unittest.TestCase):
         Using tearDown instance method here for visibility on utility.
         No real purpose beyond creating namespace and viewing print output.
         """
-        print('tearDown')
+        pass
 
     def test_instanceAttributes(self):
         """
