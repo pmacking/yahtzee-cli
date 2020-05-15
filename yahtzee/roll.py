@@ -121,7 +121,7 @@ class Roll:
 
             return self.current_dice_list
 
-    def re_roll_dice(self, dice_list):
+    def reroll_dice(self, dice_list):
         """
         Method that rolls dice another time.
 

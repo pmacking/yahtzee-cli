@@ -59,8 +59,8 @@ class FileWriter:
                 textfile.create_textfile_name(game_counter, datetime_today)
 
                 # write textfile
-                textfile.write_text_file(game_counter, players_list,
-                                         ranking_dict)
+                textfile.write_textfile(game_counter, players_list,
+                                        ranking_dict)
 
             elif file_format == 'docx':
                 docxfile = DocxFile()
@@ -122,7 +122,7 @@ class TextFile:
         """
         self.textfile_name = f"{datetime_today}Game{game_counter + 1}.txt"
 
-    def write_text_file(self, game_counter, players_list, ranking_dict):
+    def write_textfile(self, game_counter, players_list, ranking_dict):
         """
         Writes players scores to textfile.
 
@@ -162,7 +162,8 @@ class TextFile:
 
                 f.write(f"\n{'TOTAL SCORES'.rjust(19)}\n")
                 f.write(f"{players_list[j].get_total_top_score()}\n".rjust(20))
-                f.write(f"{players_list[j].get_total_bottom_score()}\n".rjust(20))
+                f.write(f"{players_list[j].get_total_bottom_score()}"
+                        f"\n".rjust(20))
 
                 f.write(f"{'-'*21}\n")
                 f.write(f"{players_list[j].get_grand_total_score()}".rjust(20))

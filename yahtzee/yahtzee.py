@@ -156,7 +156,7 @@ class Yahtzee:
             self._players_list[player_index].name.upper())
 
         # second roll
-        second_roll_result = self._rolls_list[player_index].re_roll_dice(
+        second_roll_result = self._rolls_list[player_index].reroll_dice(
                                                         keep_first_roll)
         print(f'\nSECOND ROLL: {second_roll_result}\n')
 
@@ -165,7 +165,7 @@ class Yahtzee:
             self._players_list[player_index].name.upper())
 
         # third roll
-        self.final_roll = self._rolls_list[player_index].re_roll_dice(
+        self.final_roll = self._rolls_list[player_index].reroll_dice(
                                                     keep_second_roll)
         print(f'\nFINAL ROLL: {self.final_roll}\n')
 
@@ -180,7 +180,8 @@ class Yahtzee:
                             self._score_dict_ref_values[self.score_selected])
 
         # incremenet option, top score, top total, grand total
-        self._players_list[player_index].score_dict[self.score_selected] += score
+        self._players_list[player_index].score_dict[
+            self.score_selected] += score
         self._players_list[player_index].top_score += score
         self._players_list[player_index].total_top_score += score
         self._players_list[player_index].grand_total_score += score
@@ -191,8 +192,8 @@ class Yahtzee:
         # increment top total and grand total with delta bonus
         self._players_list[player_index].total_top_score += self._players_list[
             player_index].top_bonus_score_delta
-        self._players_list[player_index].grand_total_score += self._players_list[
-            player_index].top_bonus_score_delta
+        self._players_list[player_index].grand_total_score \
+            += self._players_list[player_index].top_bonus_score_delta
 
     def check_bottom_score(self, player_index):
         """
@@ -237,7 +238,8 @@ class Yahtzee:
                 score = 0
 
         # increment round, total bottom, and grand total scores
-        self._players_list[player_index].score_dict[self.score_selected] += score
+        self._players_list[player_index].score_dict[self.score_selected] \
+            += score
         self._players_list[player_index].total_bottom_score += score
         self._players_list[player_index].grand_total_score += score
 

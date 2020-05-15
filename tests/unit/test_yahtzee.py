@@ -30,12 +30,12 @@ class TestYahtzee(unittest.TestCase):
         self.yahtzee = Yahtzee()
 
         # setup player name strings
-        self.yahtzee.numberOfPlayers = 2
-        self.yahtzee.playersNames = ['John', 'Joanna']
+        self.yahtzee.number_of_players = 2
+        self.yahtzee.players_names = ['John', 'Joanna']
 
         # setup lists of player and roll class instances
-        self.yahtzee._playersList = [Player('John'), Player('Joanna')]
-        self.yahtzee._rollsList = [Roll('John'), Roll('Joanna')]
+        self.yahtzee._players_list = [Player('John'), Player('Joanna')]
+        self.yahtzee._rolls_list = [Roll('John'), Roll('Joanna')]
 
     def tearDown(self):
         pass
@@ -47,113 +47,88 @@ class TestYahtzee(unittest.TestCase):
         """
         self.yahtzee.create_number_of_players()
 
-        self.assertEqual(self.yahtzee.numberOfPlayers, 2)
+        self.assertEqual(self.yahtzee.number_of_players, 2)
 
     @patch('yahtzee.yahtzee.pyip.inputStr', return_value='John')
     def test_getPlayerNames(self, mock_pyip_John):
         """
         Test (re)setting playersNames for 2 players.
         """
-        self.yahtzee.playersNames.clear()
+        self.yahtzee.players_names.clear()
 
         self.yahtzee.create_players()
 
-        self.assertEqual(self.yahtzee.playersNames, ['John', 'John'])
+        self.assertEqual(self.yahtzee.players_names, ['John', 'John'])
 
-    # TODO: understand why identical lists of Player instances are not equal
-    # def test_createPlayersList(self):
+    # TODO: below testing of yahtzee methods
+    # def test_sort_ranking_dict(self):
     #     """
-    #     Tests creating playersList of 2 player instances.
+    #     Tests getting ranking dict of player and grand total score
     #     """
-    #     # clear list object (syntax avoids just assigning new empty list)
-    #     self.yahtzee._playersList[:] = []
+    #     pass
 
-    #     self.yahtzee.createPlayersList()
-
-    #     self.assertEqual(self.yahtzee._playersList,
-    #                      [Player('John'), Player('Joanna')])
-
-    # TODO: understand why identical lists of Roll instances are not equal
-    # def test_createRollsList(self):
+    # def test_set_datetime_today(self):
     #     """
-    #     Tests creating rollssList of 2 roll instances.
+    #     Tests setting date today object for File I/O.
     #     """
-    #     # clear list object (syntax avoids just assigning new empty list)
-    #     self.yahtzee._rollsList[:] = []
+    #     pass
 
-    #     self.yahtzee.createRollsList()
+    # def test_reset_player_scores(self):
+    #     """
+    #     Tests reseting scores in all Player class instances for next game.
+    #     """
+    #     pass
 
-    #     self.assertEqual(self.yahtzee._rollsList,
-    #                      [Roll('John'), Roll('Joanna')])
+    # def test_print_current_scores(self):
+    #     """
+    #     Tests Printing current scores and totals before rolling.
+    #     """
+    #     pass
 
-    def test_sortRankingDict(self):
-        """
-        Tests getting ranking dict of player and grand total score
-        """
-        pass
+    # def test_roll_the_dice(self):
+    #     """
+    #     Tests rolling dice during a player's turn and printing results.
+    #     """
+    #     pass
 
-    def test_setDateTimeToday(self):
-        """
-        Tests setting date today object for File I/O.
-        """
-        pass
+    # def test_check_top_score(self):
+    #     """
+    #     Tests checking & setting score in top scores section of scoring_dict.
+    #     """
+    #     pass
 
-    def test_resetPlayerScores(self):
-        """
-        Tests reseting scores in all Player class instances for next game.
-        """
-        pass
+    # def test_check_bottom_score(self):
+    #     """
+    #     Tests checking & setting score in top scores section of scoring_dict.
+    #     """
+    #     pass
 
-    def test_printCurrentScores(self):
-        """
-        Tests Printing current scores and totals before rolling.
-        """
-        pass
+    # def test_print_end_of_turn_grand_total(self):
+    #     """
+    #     Tests printing grand total score for end of player turn.
+    #     """
+    #     pass
 
-    def test_rollTheDice(self):
-        """
-        Tests rolling dice during a player's turn and printing results.
-        """
-        pass
+    # def test_print_end_of_round_rankings(self):
+    #     """
+    #     Tests printing player rankings and grand total scores.
+    #     """
+    #     pass
 
-    def test_checkTopScore(self):
-        """
-        Tests checking and setting score in top scores section of scoringDict
-        """
-        pass
+    # def test_end_of_game(self):
+    #     """
+    #     Tests increment game_counter; setting game_over True if count == 3.
+    #     """
+    #     pass
 
-    def test_checkBottomScore(self):
-        """
-        Tests checking and setting score in top scores section of scoringDict
-        """
-        pass
+    # def test_yahtzee_rounds(self):
+    #     """
+    #     Tests round logic taken by each player within a game.
+    #     """
+    #     pass
 
-    def test_printEndOfTurnGrandTotal(self):
-        """
-        Tests printing grand total score for end of player turn.
-        """
-        pass
-
-    def test_printEndOfRoundRankings(self):
-        """
-        Tests printing player rankings and grand total scores.
-        """
-        pass
-
-    def test_endOfGame(self):
-        """
-        Tests incrementing gameCounter; setting gameOver to True if count == 3.
-        """
-        pass
-
-    def test_yahtzeeRounds(self):
-        """
-        Tests round logic taken by each player within a game.
-        """
-        pass
-
-    def test_play(self):
-        """
-        Tests initializing players and rolls instances.
-        """
-        pass
+    # def test_play(self):
+    #     """
+    #     Tests initializing players and rolls instances.
+    #     """
+    #     pass
