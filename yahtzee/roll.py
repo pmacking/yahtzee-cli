@@ -46,7 +46,7 @@ class Roll:
                 f"{self._currentDiceList!r}, {self._keeperDiceList})")
 
     # This section outlines dice roll actions
-    def rollDice(self):
+    def roll_dice(self):
         """
         Method that determines the first dice roll
         :return: The first roll result.
@@ -60,7 +60,7 @@ class Roll:
 
         return self._currentDiceList
 
-    def keepDice(self, playerNameCaps):
+    def keep_dice(self, playerNameCaps):
         """
         Method that allows keeping all, rerolling all, or selecting dice
 
@@ -120,7 +120,7 @@ class Roll:
 
             return self._currentDiceList
 
-    def reRollDice(self, diceList):
+    def re_roll_dice(self, diceList):
         """
         Method that rolls another time
 
@@ -141,7 +141,7 @@ class Roll:
 
     # This section checks scoring of final roll
 
-    def checkSingles(self, diceList, referenceValue):
+    def check_singles(self, diceList, referenceValue):
         """
         Checks the value of selected singles and updates scoring dictionary
 
@@ -157,7 +157,7 @@ class Roll:
 
         return checkSinglesScore
 
-    def checkThreeOfAKind(self, diceList):
+    def check_three_of_a_kind(self, diceList):
         """
         Checks if there are three of a kind; if so sums all dice as score.
 
@@ -171,7 +171,7 @@ class Roll:
             return sum(diceList)
         return 0
 
-    def checkFourOfAKind(self, diceList):
+    def check_four_of_a_kind(self, diceList):
         """
         Checks if there are four of a kind; if so sums all dice as score.
 
@@ -184,7 +184,7 @@ class Roll:
             return sum(diceList)
         return 0
 
-    def checkFullHouse(self, diceList):
+    def check_full_house(self, diceList):
         """
         Checks for full house; if so returns 25 as score.
 
@@ -197,7 +197,7 @@ class Roll:
 
         return 0
 
-    def checkSmallStraight(self, diceList):
+    def check_small_straight(self, diceList):
         """
         Checks for small straight (4 sequential); if so adds 30 as score.
 
@@ -239,7 +239,7 @@ class Roll:
         else:
             return 0
 
-    def checkLargeStraight(self, diceList):
+    def check_large_straight(self, diceList):
         """
         Checks for large straight (5 sequential); if so adds 35 to score.
 
@@ -259,7 +259,7 @@ class Roll:
         else:
             return 0
 
-    def checkYahtzee(self, diceList):
+    def check_yahtzee(self, diceList):
         """
         Checks for yahtzee (five of a kind), and adds 50 to score.
 
@@ -271,7 +271,7 @@ class Roll:
 
         return 0
 
-    def addChance(self, diceList):
+    def add_chance(self, diceList):
         """
         Sum the dice score for chance score.
 
@@ -280,7 +280,7 @@ class Roll:
         """
         return sum(diceList)
 
-    def checkYahtzeeBonus(self, diceList):
+    def check_yahtzee_bonus(self, diceList):
         """
         Checks for yahtzee (five of a kind), and adds 50 to score.
 

@@ -49,15 +49,15 @@ class TestRoll(unittest.TestCase):
     # TODO def test_getKeepDiceCheck (mock)
     # TODO def test_getKeepSomeCheck (mock)
 
-    def test_rollDice(self):
+    def test_roll_dice(self):
         """
         Tests initial dice roll based on current dice and keeper dice lists.
         """
-        # create partial current and keeper list to pass into rollDice
+        # create partial current and keeper list to pass into roll_dice
         self.roll._currentDiceList = [1, 2, 3]
         self.roll._keeperDiceList = [1, 2, 3]
 
-        self.roll.rollDice()
+        self.roll.roll_dice()
 
         self.assertEqual(len(self.roll._currentDiceList), 5)
         self.assertEqual(len(self.roll._keeperDiceList), 0)
@@ -74,7 +74,7 @@ class TestRoll(unittest.TestCase):
         self.roll._currentDiceList = [1, 2, 3, 4, 5]
         self.roll._keeperDiceList = []
 
-        self.roll.keepDice('JOHN SMITH')
+        self.roll.keep_dice('JOHN SMITH')
 
         self.assertEqual(self.roll._currentDiceList, [])
         self.assertEqual(self.roll._keeperDiceList, [1, 2, 3, 4, 5])
@@ -89,7 +89,7 @@ class TestRoll(unittest.TestCase):
         self.roll._currentDiceList = [1, 2, 3, 4, 5]
         self.roll._keeperDiceList = []
 
-        self.roll.keepDice('JOHN SMITH')
+        self.roll.keep_dice('JOHN SMITH')
 
         self.assertEqual(self.roll._currentDiceList, [1, 2, 3, 4, 5])
         self.assertEqual(self.roll._keeperDiceList, [])
@@ -119,7 +119,7 @@ class TestRoll(unittest.TestCase):
         self.roll._currentDiceList = [1, 2, 3, ]
         self.roll._keeperDiceList = [1, 2]
 
-        self.roll.reRollDice(self.roll._currentDiceList)
+        self.roll.re_roll_dice(self.roll._currentDiceList)
 
         self.assertEqual(len(self.roll._currentDiceList), 5)
         self.assertEqual(len(self.roll._keeperDiceList), 0)
@@ -135,7 +135,7 @@ class TestRoll(unittest.TestCase):
         referenceValue = 1
         self.roll._currentDiceList = [1, 1, 1, 1, 2]
 
-        checkSinglesScore = self.roll.checkSingles(
+        checkSinglesScore = self.roll.check_singles(
                                 self.roll._currentDiceList,
                                 referenceValue
                                 )
@@ -150,7 +150,7 @@ class TestRoll(unittest.TestCase):
         referenceValue = 1
         self.roll._currentDiceList = [2, 3, 4, 5, 6]
 
-        checkSinglesScore = self.roll.checkSingles(
+        checkSinglesScore = self.roll.check_singles(
                                 self.roll._currentDiceList,
                                 referenceValue
                                 )
@@ -171,7 +171,7 @@ class TestRoll(unittest.TestCase):
                                 ]
 
         for fixture in threeOfAKindFixtures:
-            score = self.roll.checkThreeOfAKind(fixture)
+            score = self.roll.check_three_of_a_kind(fixture)
 
             self.assertEqual(score, sum(fixture))
             self.assertEqual(len(fixture), 5)
@@ -186,7 +186,7 @@ class TestRoll(unittest.TestCase):
                                    ]
 
         for fixture in notThreeOfAKindFixtures:
-            score = self.roll.checkThreeOfAKind(fixture)
+            score = self.roll.check_three_of_a_kind(fixture)
 
             self.assertNotEqual(score, sum(fixture))
             self.assertEqual(score, 0)
@@ -202,7 +202,7 @@ class TestRoll(unittest.TestCase):
                                ]
 
         for fixture in fourOfAKindFixtures:
-            score = self.roll.checkFourOfAKind(fixture)
+            score = self.roll.check_four_of_a_kind(fixture)
 
             self.assertEqual(score, sum(fixture))
             self.assertEqual(len(fixture), 5)
@@ -218,7 +218,7 @@ class TestRoll(unittest.TestCase):
                                   ]
 
         for fixture in notFourOfAKindFixtures:
-            score = self.roll.checkFourOfAKind(fixture)
+            score = self.roll.check_four_of_a_kind(fixture)
 
             self.assertNotEqual(score, sum(fixture))
             self.assertEqual(score, 0)
@@ -238,7 +238,7 @@ class TestRoll(unittest.TestCase):
                              ]
 
         for fixture in fullHouseFixtures:
-            score = self.roll.checkFullHouse(fixture)
+            score = self.roll.check_full_house(fixture)
 
             self.assertEqual(score, 25)
             self.assertEqual(len(fixture), 5)
@@ -254,7 +254,7 @@ class TestRoll(unittest.TestCase):
                                 ]
 
         for fixture in notFullHouseFixtures:
-            score = self.roll.checkFullHouse(fixture)
+            score = self.roll.check_full_house(fixture)
 
             self.assertNotEqual(score, 25)
             self.assertEqual(score, 0)
@@ -274,7 +274,7 @@ class TestRoll(unittest.TestCase):
                                  ]
 
         for fixture in smallStraightFixtures:
-            score = self.roll.checkSmallStraight(fixture)
+            score = self.roll.check_small_straight(fixture)
 
             self.assertEqual(score, 30)
             self.assertEqual(len(fixture), 5)
@@ -291,12 +291,12 @@ class TestRoll(unittest.TestCase):
                                     ]
 
         for fixture in notSmallStraightFixtures:
-            score = self.roll.checkSmallStraight(fixture)
+            score = self.roll.check_small_straight(fixture)
 
             self.assertEqual(score, 0)
             self.assertEqual(len(fixture), 5)
 
-    def test_checkLargeStraight_true(self):
+    def test_check_large_straight_true(self):
         """
         Tests score based on final roll and selecting large straight.
         """
@@ -305,12 +305,12 @@ class TestRoll(unittest.TestCase):
                                  ]
 
         for fixture in largeStraightFixtures:
-            score = self.roll.checkLargeStraight(fixture)
+            score = self.roll.check_large_straight(fixture)
 
             self.assertEqual(score, 35)
             self.assertEqual(len(fixture), 5)
 
-    def test_checkLargeStraight_false(self):
+    def test_check_large_straight_false(self):
         """
         Tests 0 score based on final roll and selecting large straight.
         """
@@ -319,7 +319,7 @@ class TestRoll(unittest.TestCase):
                                     ]
 
         for fixture in notLargeStraightFixtures:
-            score = self.roll.checkLargeStraight(fixture)
+            score = self.roll.check_large_straight(fixture)
 
             self.assertNotEqual(score, 35)
             self.assertEqual(score, 0)
@@ -338,7 +338,7 @@ class TestRoll(unittest.TestCase):
                            ]
 
         for fixture in yahtzeeFixtures:
-            score = self.roll.checkYahtzee(fixture)
+            score = self.roll.check_yahtzee(fixture)
 
             self.assertEqual(score, 50)
             self.assertEqual(len(fixture), 5)
@@ -355,7 +355,7 @@ class TestRoll(unittest.TestCase):
                               ]
 
         for fixture in notYahtzeeFixtures:
-            score = self.roll.checkYahtzee(fixture)
+            score = self.roll.check_yahtzee(fixture)
 
             self.assertNotEqual(score, 50)
             self.assertEqual(score, 0)
@@ -374,7 +374,7 @@ class TestRoll(unittest.TestCase):
                           ]
 
         for fixture in chanceFixtures:
-            score = self.roll.addChance(fixture)
+            score = self.roll.add_chance(fixture)
 
             self.assertEqual(score, sum(fixture))
             self.assertNotEqual(score, 0)
@@ -394,7 +394,7 @@ class TestRoll(unittest.TestCase):
                                 ]
 
         for fixture in yahtzeeBonusFixtures:
-            score = self.roll.checkYahtzee(fixture)
+            score = self.roll.check_yahtzee_bonus(fixture)
 
             self.assertEqual(score, 50)
             self.assertEqual(len(fixture), 5)
@@ -412,7 +412,7 @@ class TestRoll(unittest.TestCase):
                                    ]
 
         for fixture in notYahtzeeBonusFixtures:
-            score = self.roll.checkYahtzee(fixture)
+            score = self.roll.check_yahtzee_bonus(fixture)
 
             self.assertNotEqual(score, 50)
             self.assertEqual(score, 0)

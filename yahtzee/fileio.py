@@ -155,15 +155,15 @@ class TextFile:
                 # write top, total, and grand total scores to file
                 f.write(f"\n{'-'*21}\n")
                 f.write(f"{'TOP SCORE BONUS'.rjust(19)}\n")
-                f.write(f"{playersList[j].getTopScore()}\n".rjust(20))
-                f.write(f"{playersList[j].getTopBonusScore()}\n".rjust(20))
+                f.write(f"{playersList[j].get_top_score()}\n".rjust(20))
+                f.write(f"{playersList[j].get_top_bonus_score()}\n".rjust(20))
 
                 f.write(f"\n{'TOTAL SCORES'.rjust(19)}\n")
-                f.write(f"{playersList[j].getTotalTopScore()}\n".rjust(20))
-                f.write(f"{playersList[j].getTotalBottomScore()}\n".rjust(20))
+                f.write(f"{playersList[j].get_total_top_score()}\n".rjust(20))
+                f.write(f"{playersList[j].get_total_bottom_score()}\n".rjust(20))
 
                 f.write(f"{'-'*21}\n")
-                f.write(f"{playersList[j].getGrandTotalScore()}".rjust(20))
+                f.write(f"{playersList[j].get_grand_total_score()}".rjust(20))
                 f.write('\n')
 
             # print file creation confirmation
@@ -250,15 +250,15 @@ class DocxFile:
 
             # write top score and bonus
             doc.add_heading('TOP SCORE BONUS', 3)
-            doc.add_paragraph(f"{playersList[j].getTopScore()}")
-            doc.add_paragraph(f"{playersList[j].getTopBonusScore()}")
+            doc.add_paragraph(f"{playersList[j].get_top_score()}")
+            doc.add_paragraph(f"{playersList[j].get_top_bonus_score()}")
 
             # write total scores and grand total
             doc.add_heading('TOTAL SCORES', 3)
-            doc.add_paragraph(f"{playersList[j].getTotalTopScore()}")
-            doc.add_paragraph(f"{playersList[j].getTotalBottomScore()}")
+            doc.add_paragraph(f"{playersList[j].get_total_top_score()}")
+            doc.add_paragraph(f"{playersList[j].get_total_bottom_score()}")
             paraObjGT = doc.add_paragraph(
-                            f"{playersList[j].getGrandTotalScore()}")
+                            f"{playersList[j].get_grand_total_score()}")
 
             # add pagebreak before writing next player scores to docx
             if j != (len(playersList)-1):

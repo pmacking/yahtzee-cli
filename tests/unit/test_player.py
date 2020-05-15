@@ -94,7 +94,7 @@ class TestPlayer(unittest.TestCase):
         """
         finalRoll = [2, 3, 4, 5, 6]
 
-        scoringOption = self.player.selectScore(finalRoll)
+        scoringOption = self.player.select_score(finalRoll)
 
         self.assertEqual(scoringOption, 'sixes')
 
@@ -114,7 +114,7 @@ class TestPlayer(unittest.TestCase):
         self.player.scoreDict['yahtzee'] = 50
         finalRoll = [2, 3, 4, 5, 6]
 
-        scoringOption = self.player.selectScore(finalRoll)
+        scoringOption = self.player.select_score(finalRoll)
 
         self.assertEqual(scoringOption, 'yahtzee bonus')
 
@@ -125,7 +125,7 @@ class TestPlayer(unittest.TestCase):
         self.player.topScore = 63
         self.player.topBonusScore = 0
 
-        self.player.addTopBonusScore()
+        self.player.add_top_bonus_score()
 
         self.assertEqual(self.player.topBonusScore, 35)
         self.assertEqual(self.player.topBonusScoreDelta, 35)
@@ -139,7 +139,7 @@ class TestPlayer(unittest.TestCase):
         self.player.topScore = 63
         self.player.topBonusScore = 35
 
-        self.player.addTopBonusScore()
+        self.player.add_top_bonus_score()
 
         self.assertEqual(self.player.topBonusScore, 35)
         self.assertEqual(self.player.topBonusScoreDelta, 0)
@@ -162,7 +162,7 @@ class TestPlayer(unittest.TestCase):
         self.player.totalBottomScore = 100
         self.player.grandTotalScore = 100
 
-        self.player.resetAllScores()
+        self.player.reset_all_scores()
 
         self.assertEqual(self.player.scoreDict, {
             'ones': False, 'twos': False, 'threes': False, 'fours': False,

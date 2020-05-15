@@ -41,11 +41,11 @@ class TestYahtzee(unittest.TestCase):
         pass
 
     @patch('yahtzee.yahtzee.pyip.inputInt', return_value=2)
-    def test_getNumberOfPlayers_happy(self, mock_pyip):
+    def test_create_number_of_players_happy(self, mock_pyip):
         """
         Tests getting the correct number of players (1 to 4).
         """
-        self.yahtzee.getNumberOfPlayers()
+        self.yahtzee.create_number_of_players()
 
         self.assertEqual(self.yahtzee.numberOfPlayers, 2)
 
@@ -56,7 +56,7 @@ class TestYahtzee(unittest.TestCase):
         """
         self.yahtzee.playersNames.clear()
 
-        self.yahtzee.getPlayerNames()
+        self.yahtzee.create_players()
 
         self.assertEqual(self.yahtzee.playersNames, ['John', 'John'])
 

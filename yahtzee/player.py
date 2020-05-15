@@ -16,27 +16,27 @@ class Player:
     """
     def __init__(self, name):
         self.name = name
-        self.scoreDict = {
+        self.score_dict = {
             'ones': False, 'twos': False, 'threes': False, 'fours': False,
             'fives': False, 'sixes': False, 'three of a kind': False,
             'four of a kind': False, 'full house': False,
             'small straight': False, 'large straight': False, 'yahtzee': False,
             'chance': False, 'yahtzee bonus': False,
             }
-        self.topScore = 0
-        self.topBonusScore = 0
-        self.topBonusScoreDelta = 0
-        self.totalTopScore = 0
-        self.totalBottomScore = 0
-        self.grandTotalScore = 0
+        self.top_score = 0
+        self.top_bonus_score = 0
+        self.top_bonus_score_delta = 0
+        self.total_top_score = 0
+        self.total_bottom_score = 0
+        self.grand_total_score = 0
 
-        self.scoreOptions = []
+        self.score_options = []
 
     def __repr__(self):
         return (f"{self.__class__.__name__}("
-                f"{self.name}, {self.scoreDict!r}, "
-                f"{self.topScore!r}, {self.topBonusScore!r}, "
-                f"{self.totalBottomScore!r}, {self.grandTotalScore!r})")
+                f"{self.name}, {self.score_dict!r}, "
+                f"{self.top_score!r}, {self.top_bonus_score!r}, "
+                f"{self.total_bottom_score!r}, {self.grand_total_score!r})")
 
     def getScoreOptions(self):
         """
@@ -44,14 +44,14 @@ class Player:
 
         :returns: Score options list.
         """
-        self.scoreOptions = []
+        self.score_options = []
 
         # create scoreOptions list
-        for i, option in enumerate(self.scoreDict):
-            if self.scoreDict[option] is False:
-                self.scoreOptions.append(option)
+        for i, option in enumerate(self.score_dict):
+            if self.score_dict[option] is False:
+                self.score_options.append(option)
 
-        return self.scoreOptions
+        return self.score_options
 
     def selectScoreOption(self, scoreOptions):
         """
@@ -77,7 +77,7 @@ class Player:
                            f"select {scoreSelected.upper()}?\n")
         return confirmScoreSelected
 
-    def selectScore(self, finalRoll):
+    def select_score(self, finalRoll):
         """
         Allows player to select the scoring option for final dice roll.
 
@@ -91,14 +91,14 @@ class Player:
         while doubleCheck is False:
 
             # get scoring options
-            self.scoreOptions = self.getScoreOptions()
+            self.score_options = self.getScoreOptions()
 
             checkYahtzeeBonus = False
 
             while checkYahtzeeBonus is False:
 
                 # get scoreSelected from input menu offering score options
-                scoreSelected = self.selectScoreOption(self.scoreOptions)
+                scoreSelected = self.selectScoreOption(self.score_options)
 
                 # validates user doesn't input blank
                 if scoreSelected == '':
@@ -108,13 +108,13 @@ class Player:
                 else:
                     # valid yahtzee bonus selected after yahtzee
                     if (scoreSelected == 'yahtzee bonus'
-                            and self.scoreDict['yahtzee'] is False):
+                            and self.score_dict['yahtzee'] is False):
                         print('\nYou must score yahtzee before yahtzee bonus. '
                               'Please select another option:\n')
 
                     # validate yahtzee bonus can't be used to stash 0 score
                     elif (scoreSelected == 'yahtzee bonus'
-                          and len(self.scoreOptions) != 1
+                          and len(self.score_options) != 1
                           and len(set(finalRoll)) != 1):
                         print('\nYou cannot select yahtzee bonus to stash a 0 '
                               'score if other options are available. Please '
@@ -130,27 +130,27 @@ class Player:
 
         return scoreSelected
 
-    def addTopBonusScore(self):
+    def add_top_bonus_score(self):
         """
         Checks the top score and if at the bonus threshold 63, adds bonus of 50
         """
         bonusThreshold = 63
 
         # checks top score and threshold to apply top bonus
-        if self.topScore >= bonusThreshold and self.topBonusScore == 0:
-            self.topBonusScore = 35
+        if self.top_score >= bonusThreshold and self.top_bonus_score == 0:
+            self.top_bonus_score = 35
 
             # used to increment total bottom and grand total by delta only once
-            self.topBonusScoreDelta = 35
+            self.top_bonus_score_delta = 35
 
         else:
-            self.topBonusScoreDelta = 0
+            self.top_bonus_score_delta = 0
 
-    def printStackedScoreDict(self):
+    def print_stacked_score_dict(self):
         """
         Prints the scoring dictionary for the player.
         """
-        for key, value in self.scoreDict.items():
+        for key, value in self.score_dict.items():
             if value is False:
                 print(f'{key.rjust(15)}: -')
             else:
@@ -160,55 +160,55 @@ class Player:
         """
         Returns the score dictionary.
         """
-        return self.scoreDict
+        return self.score_dict
 
-    def getTopScore(self):
+    def get_top_score(self):
         """
         Prints the top score (before bonus).
         """
-        return f'Top Score: {self.topScore}'
+        return f'Top Score: {self.top_score}'
 
-    def getTopBonusScore(self):
+    def get_top_bonus_score(self):
         """
         Prints the top bonus score.
         """
-        return f'Top Bonus Score: {self.topBonusScore}'
+        return f'Top Bonus Score: {self.top_bonus_score}'
 
-    def getTotalTopScore(self):
+    def get_total_top_score(self):
         """
         Returns the total top score for the player.
         """
-        return f'Total Top Score: {self.totalTopScore}'
+        return f'Total Top Score: {self.total_top_score}'
 
-    def getTotalBottomScore(self):
+    def get_total_bottom_score(self):
         """
         Returns the total top score for the player.
         """
-        return f'Total Bottom Score: {self.totalBottomScore}'
+        return f'Total Bottom Score: {self.total_bottom_score}'
 
-    def getGrandTotalScore(self):
+    def get_grand_total_score(self):
         """
         Returns the total top score for the player.
         """
-        return f'GRAND TOTAL: {self.grandTotalScore}'
+        return f'GRAND TOTAL: {self.grand_total_score}'
 
-    def getNameAndGrandTotalScore(self):
+    def get_name_and_grand_total_score(self):
         """
         Returns string player name and string grand total score.
         """
-        return f'{self.name}', f'{self.grandTotalScore}'
+        return f'{self.name}', f'{self.grand_total_score}'
 
-    def resetAllScores(self):
+    def reset_all_scores(self):
         """
         Clears the scoreDict, and sets top, bottom, and grand total score to 0.
         """
 
         # resets scoreDict values to False
-        for i, k in enumerate(self.scoreDict):
-            self.scoreDict[k] = False
+        for i, k in enumerate(self.score_dict):
+            self.score_dict[k] = False
 
-        self.topScore = 0
-        self.topBonusScore = 0
-        self.totalTopScore = 0
-        self.totalBottomScore = 0
-        self.grandTotalScore = 0
+        self.top_score = 0
+        self.top_bonus_score = 0
+        self.total_top_score = 0
+        self.total_bottom_score = 0
+        self.grand_total_score = 0
