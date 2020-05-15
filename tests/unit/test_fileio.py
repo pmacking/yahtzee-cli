@@ -34,15 +34,15 @@ class TestFileWriter(unittest.TestCase):
         Sets up class instances required for all testing methods.
         """
         # setup attributes
-        self.dateTimeToday = '2020-04-20-04:20:00'
-        self.gameCounter = 0
-        self.rankingDict = [('Joanna Smith', 101), ('John Smith', 100)]
+        self.datetime_today = '2020-04-20-04:20:00'
+        self.game_counter = 0
+        self.ranking_dict = [('Joanna Smith', 101), ('John Smith', 100)]
         self.player1 = Player('John Smith')
         self.player2 = Player('Joanna Smith')
-        self.playersList = [self.player1, self.player2]
+        self.players_list = [self.player1, self.player2]
 
         # setup scores on player instance for file write testing
-        self.player1.scoreDict = {
+        self.player1.score_dict = {
             'ones': 25, 'twos': 25, 'threes': 25,
             'fours': 25, 'fives': 25, 'sixes': 25,
             'three of a kind': 25, 'four of a kind': 25,
@@ -50,13 +50,13 @@ class TestFileWriter(unittest.TestCase):
             'large straight': 25, 'yahtzee': 25,
             'chance': 25, 'yahtzee bonus': 25
             }
-        self.player1.topScore = 101
-        self.player1.topBonusScore = 101
-        self.player1.totalTopScore = 101
-        self.player1.totalBottomScore = 101
-        self.player1.grandTotalScore = 101
+        self.player1.top_score = 101
+        self.player1.top_bonus_score = 101
+        self.player1.total_top_score = 101
+        self.player1.total_bottom_score = 101
+        self.player1.grand_total_score = 101
 
-        self.player2.scoreDict = {
+        self.player2.score_dict = {
             'ones': 26, 'twos': 26, 'threes': 26,
             'fours': 26, 'fives': 26, 'sixes': 26,
             'three of a kind': 26, 'four of a kind': 26,
@@ -64,11 +64,11 @@ class TestFileWriter(unittest.TestCase):
             'large straight': 26, 'yahtzee': 26,
             'chance': 26, 'yahtzee bonus': 26
             }
-        self.player2.topScore = 102
-        self.player2.topBonusScore = 102
-        self.player2.totalTopScore = 102
-        self.player2.totalBottomScore = 102
-        self.player2.grandTotalScore = 102
+        self.player2.top_score = 102
+        self.player2.top_bonus_score = 102
+        self.player2.total_top_score = 102
+        self.player2.total_bottom_score = 102
+        self.player2.grand_total_score = 102
 
     def tearDown(self):
         """
@@ -77,40 +77,42 @@ class TestFileWriter(unittest.TestCase):
         """
         try:
             os.remove(
-                Path.cwd() / 'data/TextFiles/2020-04-20-04:20:00Game1.txt')
+                Path.cwd() / 'data/Textfiles/2020-04-20-04:20:00Game1.txt')
             os.remove(
-                Path.cwd() / 'data/DocxFiles/2020-04-20-04:20:00Game1.docx')
+                Path.cwd() / 'data/Docxfiles/2020-04-20-04:20:00Game1.docx')
         except FileNotFoundError:
             pass
 
-    def test_writeFile_txt(self):
+    def test_write_file_txt(self):
         """
         Tests FileWriter for file format 'txt'
         """
-        fileFormats = ['txt']
+        file_formats = ['txt']
 
         filewriter = FileWriter()
-        filewriter.write_file(self.dateTimeToday, self.gameCounter,
-                              self.playersList, self.rankingDict, fileFormats)
+        filewriter.write_file(self.datetime_today, self.game_counter,
+                              self.players_list, self.ranking_dict,
+                              file_formats)
 
         self.assertTrue(
             os.path.exists(
-                Path.cwd() / 'data/TextFiles/2020-04-20-04:20:00Game1.txt')
+                Path.cwd() / 'data/Textfiles/2020-04-20-04:20:00Game1.txt')
             )
 
-    def test_writeFile_docx(self):
+    def test_write_file_docx(self):
         """
         Tests FileWriter for file format 'docx'
         """
-        fileFormats = ['docx']
+        file_formats = ['docx']
 
         filewriter = FileWriter()
-        filewriter.write_file(self.dateTimeToday, self.gameCounter,
-                              self.playersList, self.rankingDict, fileFormats)
+        filewriter.write_file(self.datetime_today, self.game_counter,
+                              self.players_list, self.ranking_dict,
+                              file_formats)
 
         self.assertTrue(
             os.path.exists(
-                Path.cwd() / 'data/DocxFiles/2020-04-20-04:20:00Game1.docx')
+                Path.cwd() / 'data/Docxfiles/2020-04-20-04:20:00Game1.docx')
             )
 
 
@@ -134,18 +136,18 @@ class TestTextFile(unittest.TestCase):
         self.textfile = TextFile()
 
         # setup attributes
-        self.textfile.relativePath = 'data/test_data/TextFile'
-        self.textfile.dateTimeToday = '2020-04-20-04:20:00'
-        self.textfile.gameCounter = 0
-        self.textfile.rankingDict = [('Joanna Smith', 101),
-                                     ('John Smith', 100)]
+        self.textfile.relative_path = 'data/test_data/Textfiles'
+        self.textfile.datetime_today = '2020-04-20-04:20:00'
+        self.textfile.game_counter = 0
+        self.textfile.ranking_dict = [('Joanna Smith', 101),
+                                      ('John Smith', 100)]
         self.textfile.player1 = Player('John Smith')
         self.textfile.player2 = Player('Joanna Smith')
-        self.textfile.playersList = [self.textfile.player1,
-                                     self.textfile.player2]
+        self.textfile.players_list = [self.textfile.player1,
+                                      self.textfile.player2]
 
         # setup scores on player instance for file write testing
-        self.textfile.player1.scoreDict = {
+        self.textfile.player1.score_dict = {
             'ones': 25, 'twos': 25, 'threes': 25,
             'fours': 25, 'fives': 25, 'sixes': 25,
             'three of a kind': 25, 'four of a kind': 25,
@@ -153,13 +155,13 @@ class TestTextFile(unittest.TestCase):
             'large straight': 25, 'yahtzee': 25,
             'chance': 25, 'yahtzee bonus': 25
             }
-        self.textfile.player1.topScore = 101
-        self.textfile.player1.topBonusScore = 101
-        self.textfile.player1.totalTopScore = 101
-        self.textfile.player1.totalBottomScore = 101
-        self.textfile.player1.grandTotalScore = 101
+        self.textfile.player1.top_score = 101
+        self.textfile.player1.top_bonus_score = 101
+        self.textfile.player1.total_top_score = 101
+        self.textfile.player1.total_bottom_score = 101
+        self.textfile.player1.grand_total_score = 101
 
-        self.textfile.player2.scoreDict = {
+        self.textfile.player2.score_dict = {
             'ones': 26, 'twos': 26, 'threes': 26,
             'fours': 26, 'fives': 26, 'sixes': 26,
             'three of a kind': 26, 'four of a kind': 26,
@@ -167,11 +169,11 @@ class TestTextFile(unittest.TestCase):
             'large straight': 26, 'yahtzee': 26,
             'chance': 26, 'yahtzee bonus': 26
             }
-        self.textfile.player2.topScore = 102
-        self.textfile.player2.topBonusScore = 102
-        self.textfile.player2.totalTopScore = 102
-        self.textfile.player2.totalBottomScore = 102
-        self.textfile.player2.grandTotalScore = 102
+        self.textfile.player2.top_score = 102
+        self.textfile.player2.top_bonus_score = 102
+        self.textfile.player2.total_top_score = 102
+        self.textfile.player2.total_bottom_score = 102
+        self.textfile.player2.grand_total_score = 102
 
     def tearDown(self):
         """
@@ -190,36 +192,36 @@ class TestTextFile(unittest.TestCase):
 
         self.assertTrue(
             os.path.exists(
-                Path.cwd() / self.textfile.relativePath)
+                Path.cwd() / self.textfile.relative_path)
             )
 
     def test_create_textfile_name(self):
         """
         Tests creating textfile filename for textfile output.
         """
-        self.textfile.create_textfile_name(self.textfile.gameCounter,
-                                           self.textfile.dateTimeToday)
+        self.textfile.create_textfile_name(self.textfile.game_counter,
+                                           self.textfile.datetime_today)
 
-        self.assertEqual(self.textfile.textFilename,
+        self.assertEqual(self.textfile.textfile_name,
                          '2020-04-20-04:20:00Game1.txt')
 
-    def test_writeTextFile(self):
+    def test_write_textfile(self):
         """
         Tests writing textfile.
         """
         # create directory and filename
         self.textfile.create_textfile_dir()
         print()
-        self.textfile.create_textfile_name(self.textfile.gameCounter,
-                                           self.textfile.dateTimeToday)
+        self.textfile.create_textfile_name(self.textfile.game_counter,
+                                           self.textfile.datetime_today)
 
         # act on file write test
-        self.textfile.write_text_file(self.textfile.gameCounter,
-                                      self.textfile.playersList,
-                                      self.textfile.rankingDict)
+        self.textfile.write_textfile(self.textfile.game_counter,
+                                     self.textfile.players_list,
+                                     self.textfile.ranking_dict)
 
         self.assertTrue(os.path.exists(
-            Path.cwd() / f'data/test_data/TextFile/'
+            Path.cwd() / f'data/test_data/Textfiles/'
                          f'2020-04-20-04:20:00Game1.txt'))
 
 
@@ -243,18 +245,18 @@ class TestDocxFile(unittest.TestCase):
         self.docxfile = DocxFile()
 
         # setup attributes
-        self.docxfile.relativePath = 'data/test_data/DocxFile'
-        self.docxfile.dateTimeToday = '2020-04-20-04:20:00'
-        self.docxfile.gameCounter = 0
-        self.docxfile.rankingDict = [('Joanna Smith', 101),
-                                     ('John Smith', 100)]
+        self.docxfile.relative_path = 'data/test_data/Docxfiles'
+        self.docxfile.datetime_today = '2020-04-20-04:20:00'
+        self.docxfile.game_counter = 0
+        self.docxfile.ranking_dict = [('Joanna Smith', 101),
+                                      ('John Smith', 100)]
         self.docxfile.player1 = Player('John Smith')
         self.docxfile.player2 = Player('Joanna Smith')
-        self.docxfile.playersList = [self.docxfile.player1,
-                                     self.docxfile.player2]
+        self.docxfile.players_list = [self.docxfile.player1,
+                                      self.docxfile.player2]
 
         # setup scores on player instance for file write testing
-        self.docxfile.player1.scoreDict = {
+        self.docxfile.player1.score_dict = {
             'ones': 25, 'twos': 25, 'threes': 25,
             'fours': 25, 'fives': 25, 'sixes': 25,
             'three of a kind': 25, 'four of a kind': 25,
@@ -262,13 +264,13 @@ class TestDocxFile(unittest.TestCase):
             'large straight': 25, 'yahtzee': 25,
             'chance': 25, 'yahtzee bonus': 25
             }
-        self.docxfile.player1.topScore = 101
-        self.docxfile.player1.topBonusScore = 101
-        self.docxfile.player1.totalTopScore = 101
-        self.docxfile.player1.totalBottomScore = 101
-        self.docxfile.player1.grandTotalScore = 101
+        self.docxfile.player1.top_score = 101
+        self.docxfile.player1.top_bonus_score = 101
+        self.docxfile.player1.total_top_score = 101
+        self.docxfile.player1.total_bottom_score = 101
+        self.docxfile.player1.grand_total_score = 101
 
-        self.docxfile.player2.scoreDict = {
+        self.docxfile.player2.score_dict = {
             'ones': 26, 'twos': 26, 'threes': 26,
             'fours': 26, 'fives': 26, 'sixes': 26,
             'three of a kind': 26, 'four of a kind': 26,
@@ -276,11 +278,11 @@ class TestDocxFile(unittest.TestCase):
             'large straight': 26, 'yahtzee': 26,
             'chance': 26, 'yahtzee bonus': 26
             }
-        self.docxfile.player2.topScore = 102
-        self.docxfile.player2.topBonusScore = 102
-        self.docxfile.player2.totalTopScore = 102
-        self.docxfile.player2.totalBottomScore = 102
-        self.docxfile.player2.grandTotalScore = 102
+        self.docxfile.player2.top_score = 102
+        self.docxfile.player2.top_bonus_score = 102
+        self.docxfile.player2.total_top_score = 102
+        self.docxfile.player2.total_bottom_score = 102
+        self.docxfile.player2.grand_total_score = 102
 
     def tearDown(self):
         """
@@ -299,17 +301,17 @@ class TestDocxFile(unittest.TestCase):
 
         self.assertTrue(
             os.path.exists(
-                Path.cwd() / self.docxfile.relativePath)
+                Path.cwd() / self.docxfile.relative_path)
             )
 
     def test_create_docx_filename(self):
         """
         Tests creating docx filename for docx file output.
         """
-        self.docxfile.create_docx_filename(self.docxfile.gameCounter,
-                                           self.docxfile.dateTimeToday)
+        self.docxfile.create_docx_filename(self.docxfile.game_counter,
+                                           self.docxfile.datetime_today)
 
-        self.assertEqual(self.docxfile.docxFilename,
+        self.assertEqual(self.docxfile.docx_filename,
                          '2020-04-20-04:20:00Game1.docx')
 
     def test_write_docxfile(self):
@@ -319,14 +321,14 @@ class TestDocxFile(unittest.TestCase):
         # create directory and filename
         self.docxfile.create_docxfile_dir()
         print()
-        self.docxfile.create_docx_filename(self.docxfile.gameCounter,
-                                           self.docxfile.dateTimeToday)
+        self.docxfile.create_docx_filename(self.docxfile.game_counter,
+                                           self.docxfile.datetime_today)
 
         # act on file write test
-        self.docxfile.write_docxfile(self.docxfile.gameCounter,
-                                     self.docxfile.playersList,
-                                     self.docxfile.rankingDict)
+        self.docxfile.write_docxfile(self.docxfile.game_counter,
+                                     self.docxfile.players_list,
+                                     self.docxfile.ranking_dict)
 
         self.assertTrue(os.path.exists(
-            Path.cwd() / f'data/test_data/DocxFile/'
+            Path.cwd() / f'data/test_data/Docxfiles/'
                          f'2020-04-20-04:20:00Game1.docx'))
