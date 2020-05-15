@@ -77,11 +77,11 @@ class TestFileWriter(unittest.TestCase):
         """
         try:
             os.remove(
-                Path.cwd() / 'data/Textfiles/2020-04-20-04:20:00Game1.txt')
+                Path.cwd() / 'data/textfiles/2020-04-20-04:20:00Game1.txt')
             os.remove(
-                Path.cwd() / 'data/Docxfiles/2020-04-20-04:20:00Game1.docx')
-        except FileNotFoundError:
-            pass
+                Path.cwd() / 'data/docxfiles/2020-04-20-04:20:00Game1.docx')
+        except FileNotFoundError as e:
+            print(e)
 
     def test_write_file_txt(self):
         """
@@ -96,7 +96,7 @@ class TestFileWriter(unittest.TestCase):
 
         self.assertTrue(
             os.path.exists(
-                Path.cwd() / 'data/Textfiles/2020-04-20-04:20:00Game1.txt')
+                Path.cwd() / 'data/textfiles/2020-04-20-04:20:00Game1.txt')
             )
 
     def test_write_file_docx(self):
@@ -112,7 +112,7 @@ class TestFileWriter(unittest.TestCase):
 
         self.assertTrue(
             os.path.exists(
-                Path.cwd() / 'data/Docxfiles/2020-04-20-04:20:00Game1.docx')
+                Path.cwd() / 'data/docxfiles/2020-04-20-04:20:00Game1.docx')
             )
 
 
@@ -181,8 +181,8 @@ class TestTextFile(unittest.TestCase):
         """
         try:
             shutil.rmtree(Path.cwd() / 'data/test_data')
-        except FileNotFoundError:
-            pass
+        except FileNotFoundError as e:
+            print(e)
 
     def test_create_textfile_dir(self):
         """
