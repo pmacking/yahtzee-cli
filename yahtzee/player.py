@@ -167,7 +167,7 @@ class Player:
         """
         Returns the top score (before bonus).
         """
-        return {self.top_score}
+        return self.top_score
 
     def get_top_bonus_score(self):
         """

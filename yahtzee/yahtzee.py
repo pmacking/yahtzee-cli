@@ -130,7 +130,7 @@ class Yahtzee:
 
         print('-'*21)
         print('TOP SCORE BONUS'.rjust(19))
-        print(self._players_list[player_index].get_top_score())
+        print(f"Top Score: {self._players_list[player_index].get_top_score()}")
         print(self._players_list[player_index].get_top_bonus_score())
 
         print('-'*21)
