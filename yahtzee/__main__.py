@@ -10,8 +10,8 @@ from .yahtzee import Yahtzee
 
 
 def main():
-    yahtzeeGame = Yahtzee()
-    yahtzeeGame.play()
+    yahtzee_game = Yahtzee()
+    yahtzee_game.play()
 
 
 if __name__ == "__main__":

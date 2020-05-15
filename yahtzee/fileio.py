@@ -11,14 +11,14 @@ from pathlib import Path
 import docx
 
 
-def printFileioConfirmation(fileDirStr, fileName):
+def print_fileio_confirmation(file_dir_str, file_name):
     """
     Prints confirmation message when file creation completed.
 
-    :param fileDirStr: textfile directory as string
-    :param fileName: textfile basename
+    :param file_dir_str: textfile directory as string
+    :param file_name: textfile basename
     """
-    print(f"\nSaved file: '{fileDirStr}/{fileName}'")
+    print(f"\nSaved file: '{file_dir_str}/{file_name}'")
 
 
 class FileWriter:
@@ -28,146 +28,159 @@ class FileWriter:
     """
     # attributes specified for docx only to enable passing to pdf conversion
     def __init__(self):
-        self.docxFileDirStr = ''
-        self.docxFilename = ''
+        self.docxfile_dir_str = ''
+        self.docx_filename = ''
 
     def __repr__(self):
         return f"{self.__class__.__name__}()"
 
-    def writeFile(self, dateTimeToday, gameCounter, playersList,
-                  rankingDict, fileFormats):
+    def write_file(self, datetime_today, game_counter,
+                   players_list, ranking_dict, file_formats):
         """
-        The writeFile method creates instances of each fileFormat, including
+        The write_file method creates instances of each file_format, including
         creating Path, filename, and writing or converting files.
 
-        :param dateTimeToday: The datetime today as string.
-        :param gameCounter: The count of the game as int.
-        :param playersList: The list of player instances.
-        :param rankingDict: The ranking dictionary for the current round.
-        :param fileFormats: The file formats to write as list.
+        :param datetime_today: The datetime today as string.
+        :param game_counter: The count of the game as int.
+        :param players_list: The list of player instances.
+        :param ranking_dict: The ranking dictionary for the current round.
+        :param file_formats: The file formats to write as list.
         """
 
-        # create class and write file for each format in fileFormats
-        for fileFormat in fileFormats:
-            if fileFormat == 'txt':
+        # create class and write file for each format in file_formats
+        for file_format in file_formats:
+            if file_format == 'txt':
                 textfile = TextFile()
 
                 # create textfile directory
-                textfile.createTextFileDir()
+                textfile.create_textfile_dir()
 
                 # create textfile basename
-                textfile.createTextFilename(gameCounter, dateTimeToday)
+                textfile.create_textfile_name(game_counter, datetime_today)
 
                 # write textfile
-                textfile.writeTextFile(gameCounter, playersList, rankingDict)
+                textfile.write_textfile(game_counter, players_list,
+                                        ranking_dict)
 
-            elif fileFormat == 'docx':
+            elif file_format == 'docx':
                 docxfile = DocxFile()
 
                 # create docx directory and set locally for pdf convert
-                self.docxFileDirStr = docxfile.createDocxFileDir()
+                self.docxfile_dir_str = docxfile.create_docxfile_dir()
 
                 # create docx basename and set locally for pdf convert
-                self.docxFilename = docxfile.createDocxFilename(
-                                        gameCounter, dateTimeToday)
+                self.docx_filename = docxfile.create_docx_filename(
+                                        game_counter, datetime_today)
 
                 # write docxfile
-                docxfile.writeDocxFile(gameCounter, playersList, rankingDict)
+                docxfile.write_docxfile(game_counter, players_list,
+                                        ranking_dict)
 
             # REMOVED: ISSUES WITH MSFT WORD and NOT SUPPORTED ON LINUX
-            # elif fileFormat == 'pdf':
+            # elif file_format == 'pdf':
             #     # PDF instance in fileio.py
             #     pdffile = PdfFile()
 
             #     # create pdf file directory
-            #     pdffile.createPdfFileDir()
+            #     pdffile.create_pdffile_dir()
 
             #     # create pdf file basename
-            #     pdffile.createPdfFilename(gameCounter, dateTimeToday)
+            #     pdffile.create_pdf_filename(game_counter, datetime_today)
 
             #     # convert docx to pdf
-            #     pdffile.convertDocxToPdf(self.docxFileDirStr,
-            #                              self.docxFilename)
+            #     pdffile.convertDocxToPdf(self.docxfile_dir_str,
+            #                              self.docx_filename)
 
 
 class TextFile:
     """
     Objects instantiated by the :class:`TextFile <Textfile>` can be called to
-    create a text file of players and scores.
+    create a textfile of players and scores.
     """
     def __init__(self):
-        self.relativePath = 'data/TextFiles'
-        self.textFileDirStr = ''
-        self.textFilename = ''
+        self.relative_path = 'data/textfiles'
+        self.textfile_dir_str = ''
+        self.textfile_name = ''
 
     def __repr__(self):
         return (f"{self.__class__.__name__}("
-                f"{self.textfileDirStr}, {self.textFilename})")
+                f"{self.textfile_dir_str}, {self.textfile_name})")
 
-    def createTextFileDir(self):
+    def create_textfile_dir(self):
         """
-        Create TextFiles folder.
+        Create textfiles folder.
         """
-        os.makedirs(Path.cwd() / f'{self.relativePath}', exist_ok=True)
-        self.textFileDirStr = str(Path.cwd() / f'{self.relativePath}')
+        os.makedirs(Path.cwd() / f'{self.relative_path}', exist_ok=True)
+        self.textfile_dir_str = str(Path.cwd() / f'{self.relative_path}')
 
-    def createTextFilename(self, gameCounter, dateTimeToday):
+    def create_textfile_name(self, game_counter, datetime_today):
         """
-        Create text file filename with datetime and game number.
+        Create textfile filename with datetime and game number.
 
-        :param gameCounter: integer count of games played.
-        :param dateTimeToday: date str to standardize output file basename.
+        :param game_counter: integer count of games played.
+        :param datetime_today: date str to standardize output file basename.
         """
-        self.textFilename = f"{dateTimeToday}Game{gameCounter+1}.txt"
+        self.textfile_name = f"{datetime_today}Game{game_counter + 1}.txt"
 
-    def writeTextFile(self, gameCounter, playersList, rankingDict):
+    def write_textfile(self, game_counter, players_list, ranking_dict):
         """
-        Writes players scores to text file.
+        Writes players scores to textfile.
 
-        :param gameCounter: integer count of games played.
-        :param playersList: list of Player class instances.
-        :param rankingDict: ranking of players and grand total scores.
+        :param game_counter: integer count of games played.
+        :param players_list: list of Player class instances.
+        :param ranking_dict: ranking of players and grand total scores.
         """
-        with open(f'{self.textFileDirStr}/{self.textFilename}', 'w') as f:
-            f.write(f'YAHTZEE GAME {gameCounter+1}\n')
-            f.write('FINAL RANKINGS\n')
+        with open(f'{self.textfile_dir_str}/{self.textfile_name}', 'w') as f:
+            f.write(f'YAHTZEE GAME {game_counter+1}'.center(21))
+            f.write('\n')
+            f.write('FINAL RANKINGS'.center(21))
+            f.write('\n')
 
             # write ranking of all players to file
             f.write(f"{'-'*21}")
-            for k, v in enumerate(rankingDict):
-                f.write(f"\n{v[0]}: {v[1]}")
-            f.write(f"\n{'-'*21}\n")
+            f.write('\n')
+            for k, v in enumerate(ranking_dict):
+                f.write(f"{v[0]}:".ljust(18) + f"{v[1]}".rjust(3))
+                f.write('\n')
 
             # enumerate players and write scores to file
-            for j, player in enumerate(playersList):
+            for j, player in enumerate(players_list):
                 f.write(f"\n{'-'*21}")
-                f.write(f"\n{'-'*21}")
-                f.write(f"\n{' '*2}{playersList[j].name.upper()} "
-                        f"FINAL SCORES\n")
+                f.write(f"\n{'-'*21}\n")
+                f.write(f"{players_list[j].name.upper()} "
+                        f"FINAL SCORES".center(21))
 
-                f.write(f"\n{'ROLL SCORES'.rjust(16)}")
+                f.write('\n\n')
+                f.write(f"ROLL SCORES".rjust(19))
 
                 # write player's score dictionary to file
-                outputScoreDict = playersList[j].getScoreDict()
-                for i, k in enumerate(outputScoreDict):
-                    f.write(f"\n{k.rjust(15)}: {outputScoreDict[k]}")
+                output_score_dict = players_list[j].get_score_dict()
+                for i, k in enumerate(output_score_dict):
+                    f.write(f"\n{k.rjust(15)}: {output_score_dict[k]}")
 
                 # write top, total, and grand total scores to file
                 f.write(f"\n{'-'*21}\n")
                 f.write(f"{'TOP SCORE BONUS'.rjust(19)}\n")
-                f.write(f"{playersList[j].getTopScore()}\n".rjust(20))
-                f.write(f"{playersList[j].getTopBonusScore()}\n".rjust(20))
+                f.write(f"Top Score: {players_list[j].get_top_score()}"
+                        f"\n".rjust(20))
+                f.write(f"Top Bonus Score: "
+                        f"{players_list[j].get_top_bonus_score()}\n".rjust(20))
 
                 f.write(f"\n{'TOTAL SCORES'.rjust(19)}\n")
-                f.write(f"{playersList[j].getTotalTopScore()}\n".rjust(20))
-                f.write(f"{playersList[j].getTotalBottomScore()}\n".rjust(20))
+                f.write(f"Total Top: "
+                        f"{players_list[j].get_total_top_score()}\n".rjust(20))
+                f.write(f"Total Bottom: "
+                        f"{players_list[j].get_total_bottom_score()}"
+                        f"\n".rjust(20))
 
                 f.write(f"{'-'*21}\n")
-                f.write(f"{playersList[j].getGrandTotalScore()}".rjust(20))
+                f.write(f"GRAND TOTAL: "
+                        f"{players_list[j].get_grand_total_score()}".rjust(19))
                 f.write('\n')
 
             # print file creation confirmation
-            printFileioConfirmation(self.textFileDirStr, self.textFilename)
+            print_fileio_confirmation(self.textfile_dir_str,
+                                      self.textfile_name)
 
 
 class DocxFile:
@@ -176,51 +189,50 @@ class DocxFile:
     create a docx file of players and scores.
     """
     def __init__(self):
-        self.relativePath = 'data/DocxFiles'
-        self.docxFileDirStr = ''
-        self.docxFilename = ''
+        self.relative_path = 'data/docxfiles'
+        self.docxfile_dir_str = ''
+        self.docx_filename = ''
 
     def __repr__(self):
         return (f"{self.__class__.__name__}("
-                f"{self.docxFileDirStr}, {self.docxFilename})")
+                f"{self.docxfile_dir_str}, {self.docx_filename})")
 
-    def createDocxFileDir(self):
+    def create_docxfile_dir(self):
         """
-        Create DocxFiles folder.
+        Create docxfiles folder.
 
         :rtype: string
         :return: The docx directory Path.
         """
-        os.makedirs(Path.cwd() / f'{self.relativePath}', exist_ok=True)
-        self.docxFileDirStr = str(Path.cwd() / f'{self.relativePath}')
+        os.makedirs(Path.cwd() / f'{self.relative_path}', exist_ok=True)
+        self.docxfile_dir_str = str(Path.cwd() / f'{self.relative_path}')
 
-        return self.docxFileDirStr
+        return self.docxfile_dir_str
 
-    def createDocxFilename(self, gameCounter, dateTimeToday):
+    def create_docx_filename(self, game_counter, datetime_today):
         """
-        Create docx file filename with datetime and game number.
+        Create docx filename with datetime and game number.
 
-        :param gameCounter: integer count of games played.
-        :param dateTimeToday: date str to standardize output file basename.
+        :param game_counter: integer count of games played.
+        :param datetime_today: date str to standardize output file basename.
 
-        :rtype: string
-        :return: The docx filename.
+        :return: The docx filename as string.
         """
-        self.docxFilename = f"{dateTimeToday}Game{gameCounter+1}.docx"
+        self.docx_filename = f"{datetime_today}Game{game_counter+1}.docx"
 
-        return self.docxFilename
+        return self.docx_filename
 
-    def writeDocxFile(self, gameCounter, playersList, rankingDict):
+    def write_docxfile(self, game_counter, players_list, ranking_dict):
         """
         Writes players scores to docx file.
 
-        :param gameCounter: integer count of games played.
-        :param playersList: list of Player class instances.
-        :param rankingDict: ranking of players and grand total scores.
+        :param game_counter: integer count of games played.
+        :param players_list: list of Player class instances.
+        :param ranking_dict: ranking of players and grand total scores.
         """
         # open blank Document object
         doc = docx.Document()
-        doc.add_paragraph(f'YAHTZEE GAME {gameCounter+1}', 'Title')
+        doc.add_paragraph(f'YAHTZEE GAME {game_counter + 1}', 'Title')
         doc.paragraphs[0].runs[0].add_break()
 
         # add picture of yahtzee game to document
@@ -228,47 +240,52 @@ class DocxFile:
             str(Path.cwd() / 'yahtzee/resources/yahtzeePicture.jpg'))
 
         doc.add_heading('FINAL RANKINGS', 1)
-        for k, v in enumerate(rankingDict):
+        for k, v in enumerate(ranking_dict):
             doc.add_paragraph(f"{v[0]}: {v[1]}")
 
         # add page break after rankings
-        paraObjRankings = doc.add_paragraph('   ')
-        paraObjRankings.runs[0].add_break(docx.enum.text.WD_BREAK.PAGE)
+        para_obj_rankings = doc.add_paragraph('   ')
+        para_obj_rankings.runs[0].add_break(docx.enum.text.WD_BREAK.PAGE)
 
         # write each player score dict and total scores to file
         doc.add_heading('PLAYER SCORES AND TOTALS', 1)
-        for j, player in enumerate(playersList):
+        for j, player in enumerate(players_list):
 
             # write player name as header
-            doc.add_heading(f"{playersList[j].name.upper()}", 2)
+            doc.add_heading(f"{players_list[j].name.upper()}", 2)
 
             # write scores for each scoring option
             doc.add_heading('ROLL SCORES', 3)
-            outputScoreDict = playersList[j].getScoreDict()
-            for i, k in enumerate(outputScoreDict):
-                doc.add_paragraph(f"{k}: {outputScoreDict[k]}")
+            output_score_dict = players_list[j].get_score_dict()
+            for i, k in enumerate(output_score_dict):
+                doc.add_paragraph(f"{k}: {output_score_dict[k]}")
 
             # write top score and bonus
             doc.add_heading('TOP SCORE BONUS', 3)
-            doc.add_paragraph(f"{playersList[j].getTopScore()}")
-            doc.add_paragraph(f"{playersList[j].getTopBonusScore()}")
+            doc.add_paragraph(f"Top Score: {players_list[j].get_top_score()}")
+            doc.add_paragraph(f"Top Bonus Score: "
+                              f"{players_list[j].get_top_bonus_score()}")
 
             # write total scores and grand total
             doc.add_heading('TOTAL SCORES', 3)
-            doc.add_paragraph(f"{playersList[j].getTotalTopScore()}")
-            doc.add_paragraph(f"{playersList[j].getTotalBottomScore()}")
-            paraObjGT = doc.add_paragraph(
-                            f"{playersList[j].getGrandTotalScore()}")
+            doc.add_paragraph(f"Total Top: "
+                              f"{players_list[j].get_total_top_score()}")
+            doc.add_paragraph(f"Total Bottom: "
+                              f"{players_list[j].get_total_bottom_score()}")
+            para_obj_grand_total = doc.add_paragraph(
+                            f"GRAND TOTAL: "
+                            f"{players_list[j].get_grand_total_score()}")
 
             # add pagebreak before writing next player scores to docx
-            if j != (len(playersList)-1):
-                paraObjGT.runs[0].add_break(docx.enum.text.WD_BREAK.PAGE)
+            if j != (len(players_list)-1):
+                para_obj_grand_total.runs[0].add_break(
+                    docx.enum.text.WD_BREAK.PAGE)
 
-        # save Document object as docxFilename
-        doc.save(f"{self.docxFileDirStr}/{self.docxFilename}")
+        # save Document object as docx filename
+        doc.save(f"{self.docxfile_dir_str}/{self.docx_filename}")
 
         # print file creation confirmation
-        printFileioConfirmation(self.docxFileDirStr, self.docxFilename)
+        print_fileio_confirmation(self.docxfile_dir_str, self.docx_filename)
 
 
 # class PdfFile:
@@ -277,35 +294,35 @@ class DocxFile:
 #     convert a docx file to a pdf file
 #     """
 #     def __init__(self):
-#         self.pdfFileDirStr = ''
-#         self.pdfFilename = ''
+#         self.pdffile_dir_str = ''
+#         self.pdf_filename = ''
 
 #     def __repr__(self):
 #         return (f"{self.__class__.__name__}("
-#                 f"{self.pdfFileDirStr}, {self.pdfFilename})")
+#                 f"{self.pdffile_dir_str}, {self.pdf_filename})")
 
-#     def createPdfFileDir(self):
+#     def create_pdffile_dir(self):
 #         """
 #         Create PDF files folder.
 #         """
-#         os.makedirs(Path.cwd() / 'data/pdfFiles/', exist_ok=True)
-#         self.pdfFileDirStr = str(Path.cwd() / 'data/pdfFiles/')
+#         os.makedirs(Path.cwd() / 'data/pdf_files/', exist_ok=True)
+#         self.pdffile_dir_str = str(Path.cwd() / 'data/pdf_files/')
 
-#     def createPdfFilename(self, gameCounter, dateTimeToday):
+#     def create_pdf_filename(self, game_counter, datetime_today):
 #         """
-#         Create pdf file filename with datetime and game number.
+#         Create pdf filename with datetime and game number.
 
-#         :param gameCounter: integer count of games played.
-#         :param dateTimeToday: date str to standardize output file basename.
+#         :param game_counter: integer count of games played.
+#         :param datetime_today: date str to standardize output file basename.
 #         """
-#         self.pdfFilename = f"{dateTimeToday}Game{gameCounter+1}.pdf"
+#         self.pdf_filename = f"{datetime_today}Game{game_counter + 1}.pdf"
 
-#     def convertDocxToPdf(self, docxFileDirStr, docxFilename):
+#     def convertDocxToPdf(self, docxfile_dir_str, docx filename):
 #         """
 #         Converts Docx file to Pdf file
 #         """
-#         convert(f"{docxFileDirStr}/{docxFilename}",
-#                 f"{self.pdfFileDirStr}/{self.pdfFilename}")
+#         convert(f"{docxfile_dir_str}/{docx filename}",
+#                 f"{self.pdffile_dir_str}/{self.pdf_filename}")
 
 #         # print file convert confirmation
-#         printFileioConfirmation(self.pdfFileDirStr, self.pdfFilename)
+#         print_fileio_confirmation(self.pdffile_dir_str, self.pdf_filename)
