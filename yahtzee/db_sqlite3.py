@@ -104,6 +104,3 @@ def create_sqlite_database():
         print("Error, cannot create the database connection.")
 
     connection.close()
-
-
-create_sqlite_database()
