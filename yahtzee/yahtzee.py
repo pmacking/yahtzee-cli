@@ -114,144 +114,149 @@ class Yahtzee:
         for j, player in enumerate(self._players_list):
             self._players_list[j].reset_all_scores()
 
-    def print_current_scores(self, round_num, player_index):
+    def print_current_scores(self, round_num, index):
         """
         Print current scores and totals before rolling.
 
         :param round_num: integer of the round
-        :param player_index: player index in players_list
+        :param index: player index in players_list
         """
-        print(f'\n{self._players_list[player_index].name.upper()} '
+        print(f'\n{self._players_list[index].name.upper()} '
               f'YOUR TURN. ROUND: {round_num + 1}')
 
         print('-'*21)
         print('ROLL SCORES'.rjust(16))
-        self._players_list[player_index].print_stacked_score_dict()
+        self._players_list[index].print_stacked_score_dict()
 
         print('-'*21)
         print('TOP SCORE BONUS'.rjust(19))
-        print(f"Top Score: {self._players_list[player_index].get_top_score()}")
-        print(self._players_list[player_index].get_top_bonus_score())
+        print(f"Top Score:".ljust(16) +
+              f"{self._players_list[index].get_top_score()}".rjust(3))
+        print(f"Top Bonus Score:".ljust(16) +
+              f"{self._players_list[index].get_top_bonus_score()}".rjust(3))
 
         print('-'*21)
         print('TOTAL SCORES'.rjust(19))
-        print(self._players_list[player_index].get_total_top_score())
-        print(self._players_list[player_index].get_total_bottom_score())
+        print(f"Total Top:".ljust(16) +
+              f"{self._players_list[index].get_total_top_score()}".rjust(3))
+        print(f"Total Bottom:".ljust(16) +
+              f"{self._players_list[index].get_total_bottom_score()}".rjust(3))
 
         print('-'*21)
-        print(f"{self._players_list[player_index].get_grand_total_score()}\n")
+        print(f"GRAND TOTAL:".ljust(16) +
+              f"{self._players_list[index].get_grand_total_score()}".rjust(3))
 
-    def roll_the_dice(self, player_index):
+    def roll_the_dice(self, index):
         """
         Roll dice during a player's turn and print results.
 
-        :param player_index: player index in players_list
+        :param index: player index in players_list
         """
         # first roll
-        first_roll_result = self._rolls_list[player_index].roll_dice()
+        first_roll_result = self._rolls_list[index].roll_dice()
         print(f'FIRST ROLL: {first_roll_result}\n')
 
         # first roll: prompt player to keep, reroll, or select dice
-        keep_first_roll = self._rolls_list[player_index].keep_dice(
-            self._players_list[player_index].name.upper())
+        keep_first_roll = self._rolls_list[index].keep_dice(
+            self._players_list[index].name.upper())
 
         # second roll
-        second_roll_result = self._rolls_list[player_index].reroll_dice(
+        second_roll_result = self._rolls_list[index].reroll_dice(
                                                         keep_first_roll)
         print(f'\nSECOND ROLL: {second_roll_result}\n')
 
         # second roll: prompt player to keep, reroll, or select dice
-        keep_second_roll = self._rolls_list[player_index].keep_dice(
-            self._players_list[player_index].name.upper())
+        keep_second_roll = self._rolls_list[index].keep_dice(
+            self._players_list[index].name.upper())
 
         # third roll
-        self.final_roll = self._rolls_list[player_index].reroll_dice(
+        self.final_roll = self._rolls_list[index].reroll_dice(
                                                     keep_second_roll)
         print(f'\nFINAL ROLL: {self.final_roll}\n')
 
-    def check_top_score(self, player_index):
+    def check_top_score(self, index):
         """
         Checks / sets final roll score in top scores sec of scoring_dict
 
-        :param player_index: Player index in players_list and rolls_list.
+        :param index: Player index in players_list and rolls_list.
         """
-        score = self._rolls_list[player_index].check_singles(
+        score = self._rolls_list[index].check_singles(
                             self.final_roll,
                             self._score_dict_ref_values[self.score_selected])
 
         # incremenet option, top score, top total, grand total
-        self._players_list[player_index].score_dict[
+        self._players_list[index].score_dict[
             self.score_selected] += score
-        self._players_list[player_index].top_score += score
-        self._players_list[player_index].total_top_score += score
-        self._players_list[player_index].grand_total_score += score
+        self._players_list[index].top_score += score
+        self._players_list[index].total_top_score += score
+        self._players_list[index].grand_total_score += score
 
         # check top bonus
-        self._players_list[player_index].add_top_bonus_score()
+        self._players_list[index].add_top_bonus_score()
 
         # increment top total and grand total with delta bonus
-        self._players_list[player_index].total_top_score += self._players_list[
-            player_index].top_bonus_score_delta
-        self._players_list[player_index].grand_total_score \
-            += self._players_list[player_index].top_bonus_score_delta
+        self._players_list[index].total_top_score += self._players_list[
+            index].top_bonus_score_delta
+        self._players_list[index].grand_total_score \
+            += self._players_list[index].top_bonus_score_delta
 
-    def check_bottom_score(self, player_index):
+    def check_bottom_score(self, index):
         """
         Checks / sets final roll score in bottom scores sec of scoring_dict
 
-        :param player_index: Player index in players_list and rolls_list.
+        :param index: Player index in players_list and rolls_list.
         """
         if self.score_selected == 'three of a kind':
-            score = self._rolls_list[player_index].check_three_of_a_kind(
+            score = self._rolls_list[index].check_three_of_a_kind(
                     self.final_roll)
 
         elif self.score_selected == 'four of a kind':
-            score = self._rolls_list[player_index].check_four_of_a_kind(
+            score = self._rolls_list[index].check_four_of_a_kind(
                     self.final_roll)
 
         elif self.score_selected == 'full house':
-            score = self._rolls_list[player_index].check_full_house(
+            score = self._rolls_list[index].check_full_house(
                     self.final_roll)
 
         elif self.score_selected == 'small straight':
-            score = self._rolls_list[player_index].check_small_straight(
+            score = self._rolls_list[index].check_small_straight(
                     self.final_roll)
 
         elif self.score_selected == 'large straight':
-            score = self._rolls_list[player_index].check_large_straight(
+            score = self._rolls_list[index].check_large_straight(
                     self.final_roll)
 
         elif self.score_selected == 'yahtzee':
-            score = self._rolls_list[player_index].check_yahtzee(
+            score = self._rolls_list[index].check_yahtzee(
                     self.final_roll)
 
         elif self.score_selected == 'chance':
-            score = self._rolls_list[player_index].add_chance(
+            score = self._rolls_list[index].add_chance(
                     self.final_roll)
 
         elif self.score_selected == 'yahtzee bonus':
-            score = self._rolls_list[player_index].check_yahtzee_bonus(
+            score = self._rolls_list[index].check_yahtzee_bonus(
                     self.final_roll)
 
             # cannot score 50 for yahztee bonus if did not score 50 yahtzee
-            if self._players_list[player_index].score_dict['yahtzee'] != 50:
+            if self._players_list[index].score_dict['yahtzee'] != 50:
                 score = 0
 
         # increment round, total bottom, and grand total scores
-        self._players_list[player_index].score_dict[self.score_selected] \
+        self._players_list[index].score_dict[self.score_selected] \
             += score
-        self._players_list[player_index].total_bottom_score += score
-        self._players_list[player_index].grand_total_score += score
+        self._players_list[index].total_bottom_score += score
+        self._players_list[index].grand_total_score += score
 
-    def print_end_of_turn_grand_total(self, player_index):
+    def print_end_of_turn_grand_total(self, index):
         """
         Print grand total score for end of player turn.
 
-        :param player_index: player index in players_list
+        :param index: player index in players_list
         """
-        print(f"\n{self._players_list[player_index].name.upper()} "
+        print(f"\n{self._players_list[index].name.upper()} "
               f"GRAND TOTAL: "
-              f"{self._players_list[player_index].grand_total_score}")
+              f"{self._players_list[index].grand_total_score}")
 
     def print_end_of_round_rankings(self):
         """
@@ -295,6 +300,7 @@ class Yahtzee:
 
                 else:
                     self.print_current_scores(i, j)  # print scores b4 rolling
+                    print("\n")
                     print("-"*48)
 
                     # roll the dice

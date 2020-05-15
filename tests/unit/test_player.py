@@ -82,14 +82,14 @@ class TestPlayer(unittest.TestCase):
                                         'yahtzee bonus',
                                         ])
 
-    @patch('yahtzee.player.Player.confirm_select_score_option',
+    @patch('yahtzee.player.Player.confirm_score_selected',
            spec=True, return_value='yes')
     @patch('yahtzee.player.Player.select_score_option',
            spec=True, return_value='sixes')
     @patch('yahtzee.player.Player.get_score_options',
            spec=True, return_value=['sixes', 'yahtzee', 'yahtzee bonus'])
     def test_select_score(self, mock_score_options, mock_select_score_option,
-                          mock_confirm_select_score_option):
+                          mock_confirm_score_selected):
         """
         Tests the selection of a valid scoring option.
         """
@@ -99,7 +99,7 @@ class TestPlayer(unittest.TestCase):
 
         self.assertEqual(scoring_option, 'sixes')
 
-    @patch('yahtzee.player.Player.confirm_select_score_option',
+    @patch('yahtzee.player.Player.confirm_score_selected',
            spec=True, return_value='yes')
     @patch('yahtzee.player.Player.select_score_option',
            spec=True, return_value='yahtzee bonus')
@@ -107,7 +107,7 @@ class TestPlayer(unittest.TestCase):
            spec=True, return_value=['yahtzee bonus'])
     def test_select_score_yahtzee_Bonus(self, mock_score_options,
                                         mock_select_score_option,
-                                        mock_confirm_select_score_option):
+                                        mock_confirm_score_selected):
         """
         Tests selecting 'yahtzee bonus' as valid final scoring option.
         """

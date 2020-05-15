@@ -98,7 +98,7 @@ class TextFile:
     create a textfile of players and scores.
     """
     def __init__(self):
-        self.relative_path = 'data/Textfiles'
+        self.relative_path = 'data/textfiles'
         self.textfile_dir_str = ''
         self.textfile_name = ''
 
@@ -108,7 +108,7 @@ class TextFile:
 
     def create_textfile_dir(self):
         """
-        Create Textfiles folder.
+        Create textfiles folder.
         """
         os.makedirs(Path.cwd() / f'{self.relative_path}', exist_ok=True)
         self.textfile_dir_str = str(Path.cwd() / f'{self.relative_path}')
@@ -131,23 +131,27 @@ class TextFile:
         :param ranking_dict: ranking of players and grand total scores.
         """
         with open(f'{self.textfile_dir_str}/{self.textfile_name}', 'w') as f:
-            f.write(f'YAHTZEE GAME {game_counter+1}\n')
-            f.write('FINAL RANKINGS\n')
+            f.write(f'YAHTZEE GAME {game_counter+1}'.center(21))
+            f.write('\n')
+            f.write('FINAL RANKINGS'.center(21))
+            f.write('\n')
 
             # write ranking of all players to file
             f.write(f"{'-'*21}")
+            f.write('\n')
             for k, v in enumerate(ranking_dict):
-                f.write(f"\n{v[0]}: {v[1]}")
-            f.write(f"\n{'-'*21}\n")
+                f.write(f"{v[0]}:".ljust(18) + f"{v[1]}".rjust(3))
+                f.write('\n')
 
             # enumerate players and write scores to file
             for j, player in enumerate(players_list):
                 f.write(f"\n{'-'*21}")
-                f.write(f"\n{'-'*21}")
-                f.write(f"\n{' '*2}{players_list[j].name.upper()} "
-                        f"FINAL SCORES\n")
+                f.write(f"\n{'-'*21}\n")
+                f.write(f"{players_list[j].name.upper()} "
+                        f"FINAL SCORES".center(21))
 
-                f.write(f"\n{'ROLL SCORES'.rjust(16)}")
+                f.write('\n\n')
+                f.write(f"ROLL SCORES".rjust(19))
 
                 # write player's score dictionary to file
                 output_score_dict = players_list[j].get_score_dict()
@@ -157,16 +161,21 @@ class TextFile:
                 # write top, total, and grand total scores to file
                 f.write(f"\n{'-'*21}\n")
                 f.write(f"{'TOP SCORE BONUS'.rjust(19)}\n")
-                f.write(f"{players_list[j].get_top_score()}\n".rjust(20))
-                f.write(f"{players_list[j].get_top_bonus_score()}\n".rjust(20))
+                f.write(f"Top Score: {players_list[j].get_top_score()}"
+                        f"\n".rjust(20))
+                f.write(f"Top Bonus Score: "
+                        f"{players_list[j].get_top_bonus_score()}\n".rjust(20))
 
                 f.write(f"\n{'TOTAL SCORES'.rjust(19)}\n")
-                f.write(f"{players_list[j].get_total_top_score()}\n".rjust(20))
-                f.write(f"{players_list[j].get_total_bottom_score()}"
+                f.write(f"Total Top: "
+                        f"{players_list[j].get_total_top_score()}\n".rjust(20))
+                f.write(f"Total Bottom: "
+                        f"{players_list[j].get_total_bottom_score()}"
                         f"\n".rjust(20))
 
                 f.write(f"{'-'*21}\n")
-                f.write(f"{players_list[j].get_grand_total_score()}".rjust(20))
+                f.write(f"GRAND TOTAL: "
+                        f"{players_list[j].get_grand_total_score()}".rjust(19))
                 f.write('\n')
 
             # print file creation confirmation
@@ -180,7 +189,7 @@ class DocxFile:
     create a docx file of players and scores.
     """
     def __init__(self):
-        self.relative_path = 'data/Docxfiles'
+        self.relative_path = 'data/docxfiles'
         self.docxfile_dir_str = ''
         self.docx_filename = ''
 
@@ -190,7 +199,7 @@ class DocxFile:
 
     def create_docxfile_dir(self):
         """
-        Create Docxfiles folder.
+        Create docxfiles folder.
 
         :rtype: string
         :return: The docx directory Path.
@@ -253,14 +262,18 @@ class DocxFile:
 
             # write top score and bonus
             doc.add_heading('TOP SCORE BONUS', 3)
-            doc.add_paragraph(f"{players_list[j].get_top_score()}")
-            doc.add_paragraph(f"{players_list[j].get_top_bonus_score()}")
+            doc.add_paragraph(f"Top Score: {players_list[j].get_top_score()}")
+            doc.add_paragraph(f"Top Bonus Score: "
+                              f"{players_list[j].get_top_bonus_score()}")
 
             # write total scores and grand total
             doc.add_heading('TOTAL SCORES', 3)
-            doc.add_paragraph(f"{players_list[j].get_total_top_score()}")
-            doc.add_paragraph(f"{players_list[j].get_total_bottom_score()}")
+            doc.add_paragraph(f"Total Top: "
+                              f"{players_list[j].get_total_top_score()}")
+            doc.add_paragraph(f"Total Bottom: "
+                              f"{players_list[j].get_total_bottom_score()}")
             para_obj_grand_total = doc.add_paragraph(
+                            f"GRAND TOTAL: "
                             f"{players_list[j].get_grand_total_score()}")
 
             # add pagebreak before writing next player scores to docx

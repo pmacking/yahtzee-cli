@@ -55,7 +55,7 @@ class Player:
 
     def select_score_option(self, score_options):
         """
-        Gets score_selected from input menu of score_options.
+        Player inputs score_selected from input menu of score_options.
 
         :param score_options: List of remaining score options.
         :return: The score option selected from the menu.
@@ -65,7 +65,7 @@ class Player:
                                         blank=True)
         return score_selected
 
-    def confirm_select_score_option(self, score_selected):
+    def confirm_score_selected(self, score_selected):
         """
         Confirms the score_selected.
 
@@ -123,7 +123,7 @@ class Player:
                         check_yahtzee_bonus = True
 
             # confirm option selection
-            confirm_score_selected = self.confirm_select_score_option(
+            confirm_score_selected = self.confirm_score_selected(
                                         score_selected)
 
             if confirm_score_selected == 'yes':
@@ -173,31 +173,31 @@ class Player:
         """
         Returns the top bonus score.
         """
-        return f'Top Bonus Score: {self.top_bonus_score}'
+        return self.top_bonus_score
 
     def get_total_top_score(self):
         """
         Returns the total top score for the player.
         """
-        return f'Total Top Score: {self.total_top_score}'
+        return self.total_top_score
 
     def get_total_bottom_score(self):
         """
         Returns the total top score for the player.
         """
-        return f'Total Bottom Score: {self.total_bottom_score}'
+        return self.total_bottom_score
 
     def get_grand_total_score(self):
         """
         Returns the total top score for the player.
         """
-        return f'GRAND TOTAL: {self.grand_total_score}'
+        return self.grand_total_score
 
     def get_name_and_grand_total_score(self):
         """
         Returns string player name and string grand total score.
         """
-        return f'{self.name}', f'{self.grand_total_score}'
+        return self.name, self.grand_total_score
 
     def reset_all_scores(self):
         """
