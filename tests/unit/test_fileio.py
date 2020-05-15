@@ -90,8 +90,8 @@ class TestFileWriter(unittest.TestCase):
         fileFormats = ['txt']
 
         filewriter = FileWriter()
-        filewriter.writeFile(self.dateTimeToday, self.gameCounter,
-                             self.playersList, self.rankingDict, fileFormats)
+        filewriter.write_file(self.dateTimeToday, self.gameCounter,
+                              self.playersList, self.rankingDict, fileFormats)
 
         self.assertTrue(
             os.path.exists(
@@ -105,8 +105,8 @@ class TestFileWriter(unittest.TestCase):
         fileFormats = ['docx']
 
         filewriter = FileWriter()
-        filewriter.writeFile(self.dateTimeToday, self.gameCounter,
-                             self.playersList, self.rankingDict, fileFormats)
+        filewriter.write_file(self.dateTimeToday, self.gameCounter,
+                              self.playersList, self.rankingDict, fileFormats)
 
         self.assertTrue(
             os.path.exists(
@@ -182,23 +182,23 @@ class TestTextFile(unittest.TestCase):
         except FileNotFoundError:
             pass
 
-    def test_createTextFileDir(self):
+    def test_create_textfile_dir(self):
         """
         Tests creating directory for textfile output.
         """
-        self.textfile.createTextFileDir()
+        self.textfile.create_textfile_dir()
 
         self.assertTrue(
             os.path.exists(
                 Path.cwd() / self.textfile.relativePath)
             )
 
-    def test_createTextFilename(self):
+    def test_create_textfile_name(self):
         """
         Tests creating textfile filename for textfile output.
         """
-        self.textfile.createTextFilename(self.textfile.gameCounter,
-                                         self.textfile.dateTimeToday)
+        self.textfile.create_textfile_name(self.textfile.gameCounter,
+                                           self.textfile.dateTimeToday)
 
         self.assertEqual(self.textfile.textFilename,
                          '2020-04-20-04:20:00Game1.txt')
@@ -208,15 +208,15 @@ class TestTextFile(unittest.TestCase):
         Tests writing textfile.
         """
         # create directory and filename
-        self.textfile.createTextFileDir()
+        self.textfile.create_textfile_dir()
         print()
-        self.textfile.createTextFilename(self.textfile.gameCounter,
-                                         self.textfile.dateTimeToday)
+        self.textfile.create_textfile_name(self.textfile.gameCounter,
+                                           self.textfile.dateTimeToday)
 
         # act on file write test
-        self.textfile.writeTextFile(self.textfile.gameCounter,
-                                    self.textfile.playersList,
-                                    self.textfile.rankingDict)
+        self.textfile.write_text_file(self.textfile.gameCounter,
+                                      self.textfile.playersList,
+                                      self.textfile.rankingDict)
 
         self.assertTrue(os.path.exists(
             Path.cwd() / f'data/test_data/TextFile/'
@@ -291,41 +291,41 @@ class TestDocxFile(unittest.TestCase):
         except FileNotFoundError:
             pass
 
-    def test_createDocxFileDir(self):
+    def test_create_docxfile_dir(self):
         """
         Tests creating directory for docx file output.
         """
-        self.docxfile.createDocxFileDir()
+        self.docxfile.create_docxfile_dir()
 
         self.assertTrue(
             os.path.exists(
                 Path.cwd() / self.docxfile.relativePath)
             )
 
-    def test_createDocxFilename(self):
+    def test_create_docx_filename(self):
         """
         Tests creating docx filename for docx file output.
         """
-        self.docxfile.createDocxFilename(self.docxfile.gameCounter,
-                                         self.docxfile.dateTimeToday)
+        self.docxfile.create_docx_filename(self.docxfile.gameCounter,
+                                           self.docxfile.dateTimeToday)
 
         self.assertEqual(self.docxfile.docxFilename,
                          '2020-04-20-04:20:00Game1.docx')
 
-    def test_writeDocxFile(self):
+    def test_write_docxfile(self):
         """
         Tests writing docx file.
         """
         # create directory and filename
-        self.docxfile.createDocxFileDir()
+        self.docxfile.create_docxfile_dir()
         print()
-        self.docxfile.createDocxFilename(self.docxfile.gameCounter,
-                                         self.docxfile.dateTimeToday)
+        self.docxfile.create_docx_filename(self.docxfile.gameCounter,
+                                           self.docxfile.dateTimeToday)
 
         # act on file write test
-        self.docxfile.writeDocxFile(self.docxfile.gameCounter,
-                                    self.docxfile.playersList,
-                                    self.docxfile.rankingDict)
+        self.docxfile.write_docxfile(self.docxfile.gameCounter,
+                                     self.docxfile.playersList,
+                                     self.docxfile.rankingDict)
 
         self.assertTrue(os.path.exists(
             Path.cwd() / f'data/test_data/DocxFile/'

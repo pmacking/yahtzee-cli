@@ -330,11 +330,11 @@ class Yahtzee:
         self.set_datetime_today()
 
         file_write = FileWriter()
-        file_write.writeFile(self.datetime_today,
-                             self.game_counter,
-                             self._players_list,
-                             self.ranking_dict,
-                             self.output_file_formats)
+        file_write.write_file(self.datetime_today,
+                              self.game_counter,
+                              self._players_list,
+                              self.ranking_dict,
+                              self.output_file_formats)
 
         # END OF ROUND CLEANUP
 
