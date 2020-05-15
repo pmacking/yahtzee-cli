@@ -38,109 +38,110 @@ class Player:
                 f"{self.top_score!r}, {self.top_bonus_score!r}, "
                 f"{self.total_bottom_score!r}, {self.grand_total_score!r})")
 
-    def getScoreOptions(self):
+    def get_score_options(self):
         """
-        Gets list of non-False scoring options from scoreDict.
+        Gets list of non-False scoring options from score_dict.
 
         :returns: Score options list.
         """
         self.score_options = []
 
-        # create scoreOptions list
+        # create score_options list
         for i, option in enumerate(self.score_dict):
             if self.score_dict[option] is False:
                 self.score_options.append(option)
 
         return self.score_options
 
-    def selectScoreOption(self, scoreOptions):
+    def select_score_option(self, score_options):
         """
-        Gets scoreSelected from input menu of scoreOptions.
+        Gets score_selected from input menu of score_options.
 
-        :param scoreOptions: List of remaining score options.
+        :param score_options: List of remaining score options.
         :return: The score option selected from the menu.
         """
         # inputMenu can present sigle list item if keyword blank=True
-        scoreSelected = pyip.inputMenu(scoreOptions, numbered=True,
-                                       blank=True)
-        return scoreSelected
+        score_selected = pyip.inputMenu(score_options, numbered=True,
+                                        blank=True)
+        return score_selected
 
-    def confirmSelectScoreOption(self, scoreSelected):
+    def confirm_select_score_option(self, score_selected):
         """
-        Confirms the scoreSelected.
+        Confirms the score_selected.
 
-        :param scoreSelected: The score option string selected from the menu.
+        :param score_selected: The score option string selected from the menu.
         :return: 'yes' or 'no' response.
         """
-        confirmScoreSelected = pyip.inputYesNo(
+        confirm_score_selected = pyip.inputYesNo(
                     prompt=f"\n{self.name.upper()} are you sure you want to "
-                           f"select {scoreSelected.upper()}?\n")
-        return confirmScoreSelected
+                           f"select {score_selected.upper()}?\n")
+        return confirm_score_selected
 
-    def select_score(self, finalRoll):
+    def select_score(self, final_roll):
         """
         Allows player to select the scoring option for final dice roll.
 
-        :param finalRoll: The final dice roll results.
-        :return: The scoreSelected string.
+        :param final_roll: The final dice roll results.
+        :return: The score_selected string.
         """
 
-        doubleCheck = False
+        double_check = False
 
         # get list of scoring options from player's scoring dictionary
-        while doubleCheck is False:
+        while double_check is False:
 
             # get scoring options
-            self.score_options = self.getScoreOptions()
+            self.score_options = self.get_score_options()
 
-            checkYahtzeeBonus = False
+            check_yahtzee_bonus = False
 
-            while checkYahtzeeBonus is False:
+            while check_yahtzee_bonus is False:
 
-                # get scoreSelected from input menu offering score options
-                scoreSelected = self.selectScoreOption(self.score_options)
+                # get score_selected from input menu offering score options
+                score_selected = self.select_score_option(self.score_options)
 
                 # validates user doesn't input blank
-                if scoreSelected == '':
+                if score_selected == '':
                     print('\nPlease select a valid score option:\n')
 
                 # validating yahtzee bonus
                 else:
                     # valid yahtzee bonus selected after yahtzee
-                    if (scoreSelected == 'yahtzee bonus'
+                    if (score_selected == 'yahtzee bonus'
                             and self.score_dict['yahtzee'] is False):
                         print('\nYou must score yahtzee before yahtzee bonus. '
                               'Please select another option:\n')
 
                     # validate yahtzee bonus can't be used to stash 0 score
-                    elif (scoreSelected == 'yahtzee bonus'
+                    elif (score_selected == 'yahtzee bonus'
                           and len(self.score_options) != 1
-                          and len(set(finalRoll)) != 1):
+                          and len(set(final_roll)) != 1):
                         print('\nYou cannot select yahtzee bonus to stash a 0 '
                               'score if other options are available. Please '
                               'select another option:\n')
                     else:
-                        checkYahtzeeBonus = True
+                        check_yahtzee_bonus = True
 
             # confirm option selection
-            confirmScoreSelected = self.confirmSelectScoreOption(scoreSelected)
+            confirm_score_selected = self.confirm_select_score_option(
+                                        score_selected)
 
-            if confirmScoreSelected == 'yes':
-                doubleCheck = True
+            if confirm_score_selected == 'yes':
+                double_check = True
 
-        return scoreSelected
+        return score_selected
 
     def add_top_bonus_score(self):
         """
-        Checks the top score and if at the bonus threshold 63, adds bonus of 50
+        Checks the top score and if >= threshold of 63, adds bonus delta of 35.
         """
-        bonusThreshold = 63
+        bonus_threshold = 63
 
         # checks top score and threshold to apply top bonus
-        if self.top_score >= bonusThreshold and self.top_bonus_score == 0:
+        if self.top_score >= bonus_threshold and self.top_bonus_score == 0:
             self.top_bonus_score = 35
 
-            # used to increment total bottom and grand total by delta only once
+            # Delta used to increment total bottom and grand total only once.
             self.top_bonus_score_delta = 35
 
         else:
@@ -156,7 +157,7 @@ class Player:
             else:
                 print(f'{key.rjust(15)}: {value*1}')
 
-    def getScoreDict(self):
+    def get_score_dict(self):
         """
         Returns the score dictionary.
         """
@@ -164,13 +165,13 @@ class Player:
 
     def get_top_score(self):
         """
-        Prints the top score (before bonus).
+        Returns the top score (before bonus).
         """
-        return f'Top Score: {self.top_score}'
+        return {self.top_score}
 
     def get_top_bonus_score(self):
         """
-        Prints the top bonus score.
+        Returns the top bonus score.
         """
         return f'Top Bonus Score: {self.top_bonus_score}'
 
@@ -200,13 +201,13 @@ class Player:
 
     def reset_all_scores(self):
         """
-        Clears the scoreDict, and sets top, bottom, and grand total score to 0.
+        Clears the score_dict; sets top, bottom, and grand total score to 0.
         """
-
-        # resets scoreDict values to False
+        # resets score_dict values to False
         for i, k in enumerate(self.score_dict):
             self.score_dict[k] = False
 
+        # resets score attributes to 0
         self.top_score = 0
         self.top_bonus_score = 0
         self.total_top_score = 0

@@ -148,7 +148,7 @@ class TextFile:
                 f.write(f"\n{'ROLL SCORES'.rjust(16)}")
 
                 # write player's score dictionary to file
-                outputScoreDict = playersList[j].getScoreDict()
+                outputScoreDict = playersList[j].get_score_dict()
                 for i, k in enumerate(outputScoreDict):
                     f.write(f"\n{k.rjust(15)}: {outputScoreDict[k]}")
 
@@ -244,7 +244,7 @@ class DocxFile:
 
             # write scores for each scoring option
             doc.add_heading('ROLL SCORES', 3)
-            outputScoreDict = playersList[j].getScoreDict()
+            outputScoreDict = playersList[j].get_score_dict()
             for i, k in enumerate(outputScoreDict):
                 doc.add_paragraph(f"{k}: {outputScoreDict[k]}")
 

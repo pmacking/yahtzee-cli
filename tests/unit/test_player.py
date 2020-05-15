@@ -71,7 +71,7 @@ class TestPlayer(unittest.TestCase):
             'chance': 30, 'yahtzee bonus': False,
             }
 
-        self.player.getScoreOptions()
+        self.player.get_score_options()
 
         self.assertEqual(self.player.scoreOptions, ['twos', 'threes', 'fours',
                                                     'sixes', 'three of a kind',
